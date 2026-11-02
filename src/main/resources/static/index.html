@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIT Cupcakes - Catálogo de Cupcakes</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="brand-title">PIT Cupcakes</a>
+      <span class="brand-subtitle">Doces Artesanais</span>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <h1 class="page-title">Catálogo de Cupcakes</h1>
+      <p class="page-description">Conheça nossos deliciosos cupcakes feitos com ingredientes selecionados e receitas exclusivas.</p>
+    </section>
+
+    <!-- Estado de carregamento -->
+    <section id="loadingState" class="state-box state-loading" aria-live="polite">
+      <p>Carregando catálogo de cupcakes...</p>
+    </section>
+
+    <!-- Estado de catálogo vazio -->
+    <section id="emptyState" class="state-box state-empty hidden" aria-live="polite">
+      <p>Nenhum cupcake encontrado no momento.</p>
+    </section>
+
+    <!-- Estado de erro -->
+    <section id="errorState" class="state-box state-error hidden" aria-live="assertive">
+      <p id="errorMessage">Não foi possível carregar os produtos.</p>
+      <button id="retryButton" class="btn btn-retry" type="button">Tentar novamente</button>
+    </section>
+
+    <!-- Grid do catalogo de produtos -->
+    <section id="catalogGrid" class="catalog-grid hidden" aria-label="Lista de cupcakes disponíveis"></section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Cupcakes - Projeto Integrador Transdisciplinar em Engenharia de Software</p>
+  </footer>
+
+  <script type="module" src="assets/js/cliente/catalogo.js"></script>
+</body>
+</html>
+

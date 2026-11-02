@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: ${DB_TEST_URL:jdbc:h2:mem:cupcakes_test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE}
+    username: ${DB_TEST_USERNAME:sa}
+    password: ${DB_TEST_PASSWORD:}
+    driver-class-name: ${DB_TEST_DRIVER:org.h2.Driver}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    enabled: false
+
+server:
+  port: ${PORT:8080}

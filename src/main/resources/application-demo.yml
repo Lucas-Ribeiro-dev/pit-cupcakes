@@ -1,0 +1,5 @@
+# Perfil de demonstracao: ativa a carga controlada de dados ficticios na inicializacao
+pit:
+  demo:
+    enabled: true
+

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="100%" height="100%" role="img" aria-label="Cupcake de Caramelo Salgado">
+  <rect width="300" height="300" fill="#fdfaf4" rx="12"/>
+  <!-- Forminha -->
+  <path d="M85 185 L105 265 L195 265 L215 185 Z" fill="#b08d57" stroke="#7a5829" stroke-width="3"/>
+  <line x1="115" y1="185" x2="125" y2="265" stroke="#94713c" stroke-width="2"/>
+  <line x1="150" y1="185" x2="150" y2="265" stroke="#94713c" stroke-width="2"/>
+  <line x1="185" y1="185" x2="175" y2="265" stroke="#94713c" stroke-width="2"/>
+  <!-- Cobertura de caramelo dourado -->
+  <path d="M75 185 C70 145 110 135 125 125 C140 100 160 100 175 125 C190 135 230 145 225 185 C215 195 85 195 75 185 Z" fill="#d99b43" stroke="#a0681a" stroke-width="3"/>
+  <ellipse cx="150" cy="115" rx="28" ry="18" fill="#e8ad54" stroke="#a0681a" stroke-width="2"/>
+  <!-- Calda escorrendo -->
+  <path d="M120 180 Q125 210 130 190" stroke="#a0681a" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M170 180 Q175 215 180 190" stroke="#a0681a" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <!-- Cristais de flor de sal -->
+  <polygon points="140,110 144,114 140,118 136,114" fill="#ffffff" stroke="#c0c0c0" stroke-width="0.5"/>
+  <polygon points="160,120 164,123 161,127 157,124" fill="#ffffff" stroke="#c0c0c0" stroke-width="0.5"/>
+  <polygon points="148,135 152,138 149,142 145,139" fill="#ffffff" stroke="#c0c0c0" stroke-width="0.5"/>
+</svg>

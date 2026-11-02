@@ -1,0 +1,44 @@
+target/
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+
+### IDE ###
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+### Logs & Temp ###
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.local.properties
+application-secrets.*
+application-private.*
+__pycache__/
+*.py[cod]
+.venv/
+
+# Contexto e ferramentas locais fora do marco do catalogo
+/operacional/
+/.agents/
+/skills-lock.json
+
+# Captura de terminal contem caminho pessoal da maquina
+/docs/testes/evidencias/PG_integracao-catalogo_5-testes-aprovados.png
+
+### OS ###
+.DS_Store
+Thumbs.db
+

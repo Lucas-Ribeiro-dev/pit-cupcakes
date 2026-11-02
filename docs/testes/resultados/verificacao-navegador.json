@@ -1,0 +1,46 @@
+[
+  {
+    "cenario": "TC01 catálogo real e contrato público",
+    "resultado": "aprovado"
+  },
+  {
+    "cenario": "TC03 detalhes reais",
+    "resultado": "aprovado"
+  },
+  {
+    "cenario": "TC04 produto inexistente",
+    "resultado": "aprovado"
+  },
+  {
+    "cenario": "TC05 IDs ausente, alfabético, zero e negativo sem fetch inválido",
+    "resultado": "aprovado"
+  },
+  {
+    "cenario": "TC06 indisponibilidade e imagem substituta",
+    "resultado": "aprovado"
+  },
+  {
+    "cenario": "TC07 catalogo: falha real de requisição e tentar novamente",
+    "resultado": "aprovado"
+  },
+  {
+    "cenario": "TC07 detalhes: falha real de requisição e tentar novamente",
+    "resultado": "aprovado"
+  },
+  {
+    "cenario": "TC09 catalogo 360px: largura, foco e ativação por teclado",
+    "resultado": "aprovado"
+  },
+  {
+    "cenario": "TC09 detalhes 360px: largura, foco e ativação por teclado",
+    "resultado": "aprovado"
+  },
+  {
+    "cenario": "TC09 catalogo 1280px: largura, foco e ativação por teclado",
+    "resultado": "aprovado"
+  },
+  {
+    "cenario": "TC09 detalhes 1280px: largura, foco e ativação por teclado",
+    "resultado": "aprovado"
+  }
+]

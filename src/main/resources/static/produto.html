@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIT Cupcakes - Detalhes do Produto</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="brand-title">PIT Cupcakes</a>
+      <span class="brand-subtitle">Doces Artesanais</span>
+    </div>
+  </header>
+
+  <main>
+    <nav aria-label="Navegação estrutural">
+      <a href="index.html" class="btn-voltar">&larr; Voltar ao Catálogo</a>
+    </nav>
+
+    <!-- Estado de carregamento -->
+    <section id="loadingState" class="state-box state-loading" aria-live="polite">
+      <p>Carregando informações do cupcake...</p>
+    </section>
+
+    <!-- Estado de produto nao encontrado -->
+    <section id="notFoundState" class="state-box state-empty hidden" aria-live="polite">
+      <p>Produto não encontrado no catálogo. Verifique o link informado ou volte à página inicial.</p>
+    </section>
+
+    <!-- Estado de erro -->
+    <section id="errorState" class="state-box state-error hidden" aria-live="assertive">
+      <p id="errorMessage">Ocorreu um erro ao carregar o produto.</p>
+      <button id="retryButton" class="btn btn-retry" type="button">Tentar novamente</button>
+    </section>
+
+    <!-- Detalhes do produto -->
+    <article id="detailCard" class="detail-card hidden">
+      <div class="detail-image-wrapper">
+        <img id="detailImage" class="detail-image" src="" alt="Cupcake">
+      </div>
+      <div class="detail-info">
+        <h1 id="detailTitle" class="detail-title">Nome do Cupcake</h1>
+        <p id="detailDescription" class="detail-description">Descrição detalhada do cupcake.</p>
+        <p id="detailPrice" class="detail-price">R$ 0,00</p>
+        <div>
+          <span id="detailBadge" class="badge">Disponibilidade</span>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Cupcakes - Projeto Integrador Transdisciplinar em Engenharia de Software</p>
+  </footer>
+
+  <script type="module" src="assets/js/cliente/detalhes.js"></script>
+</body>
+</html>
+
