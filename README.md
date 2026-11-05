@@ -1,6 +1,6 @@
-# PIT Cupcakes — catálogo e detalhes
+# PIT Cupcakes — catálogo e autenticação
 
-Primeiro marco de uma loja virtual acadêmica: catálogo público e página de detalhes de produtos. HU01 e HU02 estão atendidas parcialmente; cadastro, login, carrinho, checkout e administração ficam fora desta entrega. O sistema completo não está concluído.
+Loja virtual acadêmica com catálogo público, detalhes e segunda etapa de cadastro, login, sessão e logout. A implementação de autenticação segue a [SPEC](specs/09-SPEC-AUTENTICACAO.md); os relatórios atuais registram sete testes PostgreSQL aprovados e a verificação real no navegador está documentada no [registro da segunda etapa](docs/testes/resultados/verificacao-segunda-etapa.md). Carrinho, checkout, endereços e administração ficam para etapas futuras. O sistema completo não está concluído.
 
 Java 21, Spring Boot 3.4.2, Maven 3.9.9 pelo Wrapper, Spring Data JPA, Bean Validation, PostgreSQL, Flyway e HTML/CSS/JavaScript vanilla. A integração conferida usou PostgreSQL 18.6. Dependências e versões estão fixadas no [pom.xml](pom.xml) e nas [propriedades do Wrapper](.mvn/wrapper/maven-wrapper.properties).
 
@@ -75,7 +75,7 @@ $env:DB_TEST_URL = 'jdbc:postgresql://localhost:5432/cupcakes_test'
 .\mvnw.cmd '-Dtest=ProductPostgresIntegrationTest' test
 ```
 
-O comando da integração foi executado pelo responsável; os relatórios atuais confirmam cinco aprovações, sem falhas, erros ou ignorados. O perfil `test-pg` mantém Flyway habilitado, Hibernate `validate` e proíbe substituição por H2. A proteção exige a configuração autorizada e consulta `current_database()` nas conexões antes de permitir migrações e limpezas. Conexão ou configuração inválida causa erro de execução; os testes não são ignorados silenciosamente.
+O relatório histórico da primeira etapa confirma cinco aprovações de catálogo, sem falhas, erros ou ignorados. Os relatórios atuais do marco de autenticação acrescentam `AuthenticationPostgresIntegrationTest` e `AuthenticationRestartPostgresTest`, totalizando sete testes PostgreSQL aprovados; o detalhamento está no [registro da segunda etapa](docs/testes/resultados/verificacao-segunda-etapa.md). O perfil `test-pg` mantém Flyway habilitado, Hibernate `validate` e proíbe substituição por H2. A proteção exige a configuração autorizada e consulta `current_database()` nas conexões antes de permitir migrações e limpezas. Conexão ou configuração inválida causa erro de execução; os testes não são ignorados silenciosamente.
 
 `./mvnw test` ou `.\mvnw.cmd test` inclui a integração e exige suas credenciais. Os testes H2 não comprovam comportamento PostgreSQL. Relatórios brutos ficam em `target/surefire-reports`, fora do Git; o [resumo sanitizado](docs/testes/resultados/testes-automatizados.json) registra contagens, casos e hashes dos relatórios conferidos, sem propriedades locais ou credenciais.
 
@@ -118,3 +118,25 @@ A comparação confere todos os campos dos produtos, IDs, quantidades e históri
 - [Código principal](src/main/), [testes](src/test/) e [evidências](docs/testes/evidencias/)
 
 Builds, logs, segredos, configurações de IDE, contexto e prompts operacionais permanecem locais. Este marco não publica a aplicação nem cria repositório remoto.
+
+## Cadastro, login e minha conta
+
+- [Criar conta](http://localhost:8080/paginas/conta/cadastro.html): nome, e-mail, senha e confirmação somente na interface. O cadastro cria CLIENTE e não inicia sessão automaticamente.
+- [Entrar](http://localhost:8080/paginas/conta/login.html): usa e-mail normalizado e senha literal, incluindo espaços. Não há recuperação de senha ou confirmação por e-mail nesta etapa.
+- [Minha conta](http://localhost:8080/paginas/conta/minha-conta.html): nome/e-mail da sessão atual. Sair exige POST com CSRF; atualizar a conta após sair direciona ao login.
+
+Spring Security 6.4.2 é gerenciado pelo Boot 3.4.2. O encoder delegante grava `{bcrypt}` com custo padrão 10. Sessão usa cookie HttpOnly, SameSite=Lax e inatividade de 30 minutos. Ative `prod` junto da configuração do ambiente HTTPS para exigir cookie Secure. Não use `prod` no HTTP local para os testes de navegador.
+
+| Endpoint | Entrada | Sucesso |
+| --- | --- | --- |
+| GET `/api/autenticacao/csrf` | — | Token, nome do cabeçalho e parâmetro |
+| POST `/api/usuarios` | JSON `nome`, `email`, `senha`; CSRF | 201; `id`, `nome`, `email`, `perfil` |
+| POST `/api/autenticacao/login` | Form URL encoded `email`, `senha`; CSRF | 200; dados públicos e sessão |
+| GET `/api/autenticacao/sessao` | Cookie de sessão | 200; somente usuário atual; 401 visitante |
+| POST `/api/autenticacao/logout` | Cookie e CSRF | 204; invalida sessão e remove cookie |
+
+Busque o token antes do primeiro POST e envie o cabeçalho informado. Busque outro após login/logout. O módulo [api.js](src/main/resources/static/assets/js/compartilhado/api.js) faz isso, recupera CSRF inválido sem repetir automaticamente o POST e usa apenas memória para o token. APIs retornam erros JSON com `codigo` e `mensagem`; não redirecionam fetch ao login. Conteúdo privado usa `Cache-Control: no-store`.
+
+`/api/admin/**` exige ADMIN e `/api/conta/**` exige autenticação. Não há operações administrativas nem credencial padrão. Visitante recebe 401; cliente sem permissão recebe 403; ADMIN pode ultrapassar a regra e receber 404 em rota ainda inexistente.
+
+Antes de disponibilização pública, continuam pendentes proteção contra abuso, calibração do custo de senha no ambiente final e validação HTTPS. Carrinho será retomado em outra etapa. Não há checkout, endereços, ViaCEP ou alteração de perfil nesta entrega.

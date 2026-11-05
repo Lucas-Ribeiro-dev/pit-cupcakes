@@ -25,8 +25,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
-@Import(GlobalExceptionHandler.class)
+@Import({GlobalExceptionHandler.class, br.com.pit.cupcakes.config.SecurityConfig.class,
+        br.com.pit.cupcakes.identidade.service.UserAuthenticationService.class})
 class ProductControllerTest {
+
+    @MockitoBean
+    private br.com.pit.cupcakes.identidade.repository.UserRepository userRepository;
 
     @Autowired
     private MockMvc mockMvc;

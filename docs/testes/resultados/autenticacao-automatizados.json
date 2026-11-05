@@ -1,0 +1,128 @@
+{
+    "ambiente":  "Windows; Java 21.0.7; Maven 3.9.9; Spring Boot 3.4.2; Spring Security 6.4.2",
+    "resultado":  "BUILD SUCCESS",
+    "total":  33,
+    "falhas":  0,
+    "erros":  0,
+    "ignorados":  0,
+    "postgresAutenticacao":  "Aprovado: 7 testes PostgreSQL, zero falhas, erros ou ignorados",
+    "navegadorAutenticacao":  "Aprovado: 15 verificações automatizadas em localhost:8091; 12 capturas",
+    "duplicidadeEmailManual":  "Aprovado: HTTP 409 e mensagem E-mail já cadastrado. usando conta fictícia",
+    "relatoriosPostgres":  [
+                              "AuthenticationPostgresIntegrationTest: 1 aprovado",
+                              "AuthenticationRestartPostgresTest: 1 aprovado",
+                              "ProductPostgresIntegrationTest: 5 aprovados"
+                          ],
+    "relatorios":  [
+                       {
+                           "classe":  "br.com.pit.cupcakes.identidade.AuthenticationSecurityTest",
+                           "testes":  8,
+                           "falhas":  0,
+                           "erros":  0,
+                           "ignorados":  0,
+                           "sha256":  "30A155F4D028F5C506E218A0D950CF02539A070D1E9819220B8D69D04D5D557F",
+                           "casos":  [
+                                         "shouldRefreshTokenLogoutAndAllowNewLogin",
+                                         "shouldUseGenericCredentialErrors",
+                                         "shouldAuthorizeRolesBeforeMissingBusinessRoutes",
+                                         "shouldReturnCreatedCustomerWithoutAuthenticationAndConflictForNormalizedEmail",
+                                         "shouldNormalizeLoginRotateSessionAndPersistAuthentication",
+                                         "shouldRejectInvalidRegistrationFieldsWithoutSavingOrEchoingPassword",
+                                         "shouldRejectMissingAndInvalidCsrfOnEveryPost",
+                                         "shouldRejectMalformedUnknownAndUnsupportedRegistration"
+                                     ]
+                       },
+                       {
+                           "classe":  "br.com.pit.cupcakes.identidade.RegistrationServiceTest",
+                           "testes":  5,
+                           "falhas":  0,
+                           "erros":  0,
+                           "ignorados":  0,
+                           "sha256":  "8A4CEBB54A564E4457307A968DE0A8997948D56350F66F6531E137AC670DCD84",
+                           "casos":  [
+                                         "shouldTranslateDuplicatePrecheckAndConcurrentUniqueViolation",
+                                         "shouldRejectInvalidFieldsBeforeSaving",
+                                         "shouldValidateUnicodeCodePointsAndUtf8BytesWithoutTruncation",
+                                         "shouldNormalizeCreateOnlyCustomerAndHashLiteralPassword",
+                                         "shouldNotTranslateUnrelatedPersistenceErrorsAsDuplicateEmail"
+                                     ]
+                       },
+                       {
+                           "classe":  "br.com.pit.cupcakes.catalogo.controller.ProductControllerTest",
+                           "testes":  7,
+                           "falhas":  0,
+                           "erros":  0,
+                           "ignorados":  0,
+                           "sha256":  "DA8DF80DA9EC8BB25AC72CEB98A0DCBB576FA1194EBBA8DD27AFF7ABAB7BD9C7",
+                           "casos":  [
+                                         "shouldReturnEmptyCatalog",
+                                         "shouldReturn400WhenIdIsNotNumeric",
+                                         "shouldReturn500OnInternalError",
+                                         "shouldReturnProductWhenIdExists",
+                                         "shouldReturn400WhenIdIsZeroOrNegative",
+                                         "shouldReturn404WhenProductNotFound",
+                                         "shouldReturnPopulatedCatalog"
+                                     ]
+                       },
+                       {
+                           "classe":  "br.com.pit.cupcakes.catalogo.service.ProductServiceTest",
+                           "testes":  5,
+                           "falhas":  0,
+                           "erros":  0,
+                           "ignorados":  0,
+                           "sha256":  "046E1AB8236B9EDFD0C4F536F79A1DF45E7A27E33769A0F75ADAF36745D9A33F",
+                           "casos":  [
+                                         "shouldThrowProductNotFoundException",
+                                         "shouldReturnAllProductsOrderedById",
+                                         "shouldReturnEmptyListWhenNoProductsExist",
+                                         "shouldReturnProductById",
+                                         "shouldThrowInvalidIdException"
+                                     ]
+                       },
+                       {
+                           "classe":  "br.com.pit.cupcakes.catalogo.repository.ProductRepositoryTest",
+                           "testes":  2,
+                           "falhas":  0,
+                           "erros":  0,
+                           "ignorados":  0,
+                           "sha256":  "5B21F5E50E3AE5DC7978F70D4AF16CFE374ABB614D33B5EA30B7A7ADCF05C088",
+                           "casos":  [
+                                         "shouldFindAllOrderedByIdAsc",
+                                         "shouldPersistAndFindById"
+                                     ]
+                       },
+                       {
+                           "classe":  "br.com.pit.cupcakes.catalogo.demo.DemoDataLoaderTest",
+                           "testes":  2,
+                           "falhas":  0,
+                           "erros":  0,
+                           "ignorados":  0,
+                           "sha256":  "A5E318551DE039F39B274D06C40AF7E39C129801FD4FFCD4BCA00BFF152E4686",
+                           "casos":  [
+                                         "shouldNotSeedWhenRepositoryAlreadyHasProducts",
+                                         "shouldSeedDemoProductsWhenRepositoryIsEmpty"
+                                     ]
+                       },
+                       {
+                           "classe":  "br.com.pit.cupcakes.catalogo.PostgresTestDatabaseGuardTest",
+                           "testes":  4,
+                           "falhas":  0,
+                           "erros":  0,
+                           "ignorados":  0,
+                           "sha256":  "06751870C7E65B53144426333CA7B59A99F130809F023450EAC50E9BEE76A919",
+                           "casos":  [
+                                         "shouldRejectMissingCredentialsAndUnsafeOverrides",
+                                         "shouldAcceptOnlyAuthorizedConfiguration",
+                                         "shouldAcceptEffectiveTestDatabase",
+                                         "shouldRejectEffectiveDevelopmentDatabaseBeforeAnyCleanup"
+                                     ]
+                       }
+                   ],
+    "verificacoesAdicionais":  [
+                                   "Compilação principal e de testes aprovada",
+                                   "Sintaxe dos quatro módulos JavaScript aprovada com Node",
+                                   "py_compile do roteiro de autenticação aprovado; importação Playwright aprovada",
+                                   "Snapshots fornecidos: quatro produtos e histórico V1 idênticos; teste de persistência do catálogo não repetido",
+                                   "V1 preservada e git diff --check aprovado"
+                               ]
+}

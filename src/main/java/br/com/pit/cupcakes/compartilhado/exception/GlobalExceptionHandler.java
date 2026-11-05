@@ -7,9 +7,47 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import br.com.pit.cupcakes.identidade.service.EmailAlreadyRegisteredException;
+import jakarta.validation.ValidationException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.security.access.AccessDeniedException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(EmailAlreadyRegisteredException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateEmail(EmailAlreadyRegisteredException ex) {
+        return ResponseEntity.status(409).body(new ErrorResponse("EMAIL_JA_CADASTRADO", "E-mail já cadastrado."));
+    }
+
+    @ExceptionHandler({ValidationException.class, MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
+    public ResponseEntity<ErrorResponse> handleInvalidData(Exception ex) {
+        return ResponseEntity.badRequest().body(new ErrorResponse("DADOS_INVALIDOS", "Confira os campos informados e os limites permitidos."));
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleUnsupportedFormat(HttpMediaTypeNotSupportedException ex) {
+        return ResponseEntity.status(415).body(new ErrorResponse("FORMATO_NAO_SUPORTADO", "Formato de requisição não suportado."));
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleMissingResource(NoResourceFoundException ex) {
+        return ResponseEntity.status(404).body(new ErrorResponse("RECURSO_NAO_ENCONTRADO", "Recurso não encontrado."));
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleUnsupportedMethod(HttpRequestMethodNotSupportedException ex) {
+        return ResponseEntity.status(405).body(new ErrorResponse("METODO_NAO_PERMITIDO", "Método de requisição não permitido."));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex) {
+        return ResponseEntity.status(403).body(new ErrorResponse("ACESSO_NEGADO", "Acesso não permitido."));
+    }
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 

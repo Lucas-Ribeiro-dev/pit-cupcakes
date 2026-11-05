@@ -45,14 +45,17 @@ Resultado final registrado: **11 cenários aprovados, zero falhos**. A primeira 
 
 ## Desenvolvimento: migração e persistência
 
-**Ainda não comprovado nesta tarefa.** O processo do agente não possui credenciais DB_* e a consulta de processos não encontrou a aplicação em execução. Não foram usados dados de desenvolvimento como alternativa aos testes, nem processos encerrados.
+**Aprovado pelo responsável e incorporado na segunda etapa, sem repetição do teste.** As coletas [antes](persistencia-antes.json) e [depois](persistencia-depois.json) conferem o banco `cupcakes`, V1 bem-sucedida com checksum 39887744 e quatro produtos. A comparação dos JSON confirmou histórico e todos os campos dos produtos idênticos, IDs preservados e nenhuma duplicação.
 
-Foi preparado o [roteiro de coleta somente de leitura](../casos/verificar_persistencia.ps1), com execução Antes/Depois no terminal já configurado, e solicitado reinício controlado com `local,demo`. O roteiro confere o banco efetivo `cupcakes`, histórico Flyway e todos os campos dos produtos; não migra, limpa ou modifica dados. O README contém os comandos. Até receber e conferir os snapshots e a confirmação do reinício, migração e persistência de desenvolvimento permanecem pendentes.
+O [roteiro de coleta somente de leitura](../casos/verificar_persistencia.ps1) fica disponível para referência. A [captura do reinício](../evidencias/TC08_persistencia-apos-reinicio.png) e a confirmação do responsável completam TC08. Isso não comprova V2 nem autenticação, verificadas separadamente no [registro da segunda etapa](verificacao-segunda-etapa.md).
 
 ## Pendências reais
 
-- Histórico Flyway em `cupcakes`, produtos antes/depois do reinício com `local,demo` e ausência de duplicação: coleta solicitada, não comprovados.
 - TC02 no navegador: mensagem de catálogo vazio em ambiente isolado ainda não executada. O contrato HTTP vazio já passou no PostgreSQL de teste; isso não comprova a tela vazia.
 - Correspondência direta entre o catálogo visual e uma leitura SQL de `cupcakes`: pendente da coleta.
 
 Não há falhas nos relatórios automatizados atuais ou nos resultados finais do navegador registrado. A falta de evidência das pendências não deve ser registrada como reprovação funcional.
+
+## Índice da segunda etapa
+
+O marco posterior de cadastro e autenticação está consolidado no [registro da segunda etapa](verificacao-segunda-etapa.md). Ele relaciona os relatórios atuais de **7 testes PostgreSQL aprovados**, o resultado automatizado de navegador em [autenticacao-navegador.json](autenticacao-navegador.json), a verificação manual de e-mail duplicado e as capturas de evidência. Os cinco testes PostgreSQL de catálogo descritos acima permanecem como histórico da primeira etapa; os dois testes de autenticação PostgreSQL são acrescentados no registro posterior.

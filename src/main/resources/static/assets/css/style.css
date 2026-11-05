@@ -299,3 +299,14 @@ footer {
   display: none !important;
 }
 
+#accountNavigation { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+.header-container { flex-wrap: wrap; }
+.account-page { max-width: 36rem; width: 100%; overflow-wrap: anywhere; }
+.account-page h1 { margin: 1rem 0; }
+#accountForm { display: flex; flex-direction: column; gap: .75rem; }
+#accountForm input { width: 100%; padding: .75rem; border: 1px solid #777; border-radius: .25rem; font: inherit; }
+#accountForm button { margin-top: .5rem; }
+#formMessage { margin: 1rem 0; }
+.account-page dd { margin: .5rem 0 1rem; }
+button:disabled { opacity: .65; cursor: wait; }
+

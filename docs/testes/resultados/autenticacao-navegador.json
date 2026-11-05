@@ -1,0 +1,77 @@
+[
+  {
+    "cenario": "AUTH12 confirmação divergente impede POST",
+    "resultado": "aprovado",
+    "evidencia": null
+  },
+  {
+    "cenario": "AUTH01 cadastro real sem login automático",
+    "resultado": "aprovado",
+    "evidencia": "docs/testes/evidencias/HU03_AUTH01_cadastro-sucesso.png"
+  },
+  {
+    "cenario": "AUTH05 mensagem genérica",
+    "resultado": "aprovado",
+    "evidencia": "docs/testes/evidencias/HU04_AUTH05_login-invalido.png"
+  },
+  {
+    "cenario": "AUTH04 sessão após recarga",
+    "resultado": "aprovado",
+    "evidencia": "docs/testes/evidencias/HU04_AUTH04_sessao-recarga.png"
+  },
+  {
+    "cenario": "AUTH07/09 CSRF e autorização no servidor",
+    "resultado": "aprovado",
+    "evidencia": null
+  },
+  {
+    "cenario": "AUTH12 minha conta 360px",
+    "resultado": "aprovado",
+    "evidencia": "docs/testes/evidencias/HU04_AUTH12_minha-conta-360.png"
+  },
+  {
+    "cenario": "AUTH12 minha conta 1280px",
+    "resultado": "aprovado",
+    "evidencia": "docs/testes/evidencias/HU04_AUTH12_minha-conta-1280.png"
+  },
+  {
+    "cenario": "AUTH08 saída real",
+    "resultado": "aprovado",
+    "evidencia": "docs/testes/evidencias/HU05_AUTH08_logout.png"
+  },
+  {
+    "cenario": "AUTH08 conta privada após sair redireciona",
+    "resultado": "aprovado",
+    "evidencia": null
+  },
+  {
+    "cenario": "AUTH12 cadastro teclado 360px",
+    "resultado": "aprovado",
+    "evidencia": "docs/testes/evidencias/HU03_AUTH12_cadastro-360-teclado.png"
+  },
+  {
+    "cenario": "AUTH12 login teclado 360px",
+    "resultado": "aprovado",
+    "evidencia": "docs/testes/evidencias/HU03_AUTH12_login-360-teclado.png"
+  },
+  {
+    "cenario": "AUTH12 cadastro teclado 1280px",
+    "resultado": "aprovado",
+    "evidencia": "docs/testes/evidencias/HU03_AUTH12_cadastro-1280-teclado.png"
+  },
+  {
+    "cenario": "AUTH12 login teclado 1280px",
+    "resultado": "aprovado",
+    "evidencia": "docs/testes/evidencias/HU03_AUTH12_login-1280-teclado.png"
+  },
+  {
+    "cenario": "AUTH12 falha de rede recuperável",
+    "resultado": "aprovado",
+    "evidencia": "docs/testes/evidencias/HU04_AUTH12_falha-rede.png"
+  },
+  {
+    "cenario": "AUTH11 catálogo e detalhes públicos",
+    "resultado": "aprovado",
+    "evidencia": "docs/testes/evidencias/HU02_AUTH11_detalhes-publicos.png"
+  }
+]
