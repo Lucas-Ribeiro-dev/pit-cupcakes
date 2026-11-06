@@ -1,0 +1,114 @@
+{
+  "execucao": "concluída",
+  "modo": "PostgreSQL real; CEP simulado",
+  "cenarios": [
+    {
+      "cenario": "ADR09 lista vazia",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR09_lista-vazia-reexecucao1.png"
+    },
+    {
+      "cenario": "ADR05 cadastro/login reais, sessão privada, cookie, visitante e CSRF",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR05_sessao-autenticada.png"
+    },
+    {
+      "cenario": "ADR07 preserva campo editado durante consulta",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR07_campo-preservado-reexecucao1.png"
+    },
+    {
+      "cenario": "ADR07 resposta de CEP anterior ignorada",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR07_cep-atual-reexecucao1.png"
+    },
+    {
+      "cenario": "ADR06 erro recuperável 70000004",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR06_cep-70000004-reexecucao1.png"
+    },
+    {
+      "cenario": "ADR06 erro recuperável 70000005",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR06_cep-70000005-reexecucao1.png"
+    },
+    {
+      "cenario": "ADR06 erro recuperável 70000006",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR06_cep-70000006-reexecucao1.png"
+    },
+    {
+      "cenario": "ADR01 salvar manualmente após falha do CEP; texto seguro",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR01_endereco-salvo-reexecucao1.png"
+    },
+    {
+      "cenario": "ADR09 recarga e teclado 360px",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR09_enderecos-360-teclado-reexecucao1.png"
+    },
+    {
+      "cenario": "ADR09 recarga e teclado 1280px",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR09_enderecos-1280-teclado-reexecucao1.png"
+    },
+    {
+      "cenario": "FRT04 retirada gratuita",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/FRT04_retirada-reexecucao1.png"
+    },
+    {
+      "cenario": "FRT04 entrega sem configuração",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/FRT04_sem-configuracao-reexecucao1.png"
+    },
+    {
+      "cenario": "ADR04 editar endereço",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR04_endereco-editado-reexecucao1.png"
+    },
+    {
+      "cenario": "ADR04 conflito não perde texto digitado",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR04_conflito-preserva-texto.png"
+    },
+    {
+      "cenario": "ADR04 DELETE com versão antiga retorna 409 e preserva endereço",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": null
+    },
+    {
+      "cenario": "ADR04 remoção exige confirmação",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR04_endereco-removido.png"
+    },
+    {
+      "cenario": "ADR05 logout e tela privada direcionam ao login",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR05_logout-rota-privada.png"
+    },
+    {
+      "cenario": "ADR09 sem erros JavaScript",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": null
+    }
+  ]
+}

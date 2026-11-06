@@ -37,7 +37,8 @@ form.addEventListener('submit', async event => {
       });
       form.reset();
       await refreshCsrf();
-      location.replace('/paginas/conta/minha-conta.html');
+      location.replace(new URLSearchParams(location.search).get('destino') === 'enderecos'
+        ? '/paginas/conta/enderecos.html' : '/paginas/conta/minha-conta.html');
     }
   } catch (error) {
     message.textContent = error.message;

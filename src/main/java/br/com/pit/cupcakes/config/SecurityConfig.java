@@ -35,7 +35,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(access -> access
                 .requestMatchers(org.springframework.http.HttpMethod.GET,
                         "/", "/index.html", "/produto.html", "/assets/**", "/paginas/conta/cadastro.html",
-                        "/paginas/conta/login.html", "/paginas/conta/minha-conta.html",
+                        "/paginas/conta/login.html", "/paginas/conta/minha-conta.html", "/paginas/conta/enderecos.html",
                         "/api/produtos", "/api/produtos/*", "/api/autenticacao/csrf").permitAll()
                 .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/usuarios", "/api/autenticacao/login").permitAll()
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")

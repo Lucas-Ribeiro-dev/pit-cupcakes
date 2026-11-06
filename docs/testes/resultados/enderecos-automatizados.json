@@ -1,0 +1,284 @@
+{
+  "sem_postgresql_externo": {
+    "total": {
+      "testes": 48,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0
+    },
+    "classes": [
+      {
+        "classe": "AddressValidationTest",
+        "testes": 3,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "instante_relatorio": null,
+        "arquivo_modificado_em_utc": "2026-11-05T20:06:45.150192+00:00",
+        "arquivo": "target/surefire-reports/TEST-br.com.pit.cupcakes.endereco.AddressValidationTest.xml",
+        "sha256": "58c66a601bba88144572977331cf7ea6b7d001ba864ca63164481ded16ba55ee",
+        "casos": [
+          "normalizesWithoutLosingAccentsOrLeadingZero",
+          "rejectsInvalidPostalCodes",
+          "enforcesRequiredTextLimitsStateAndVersion"
+        ]
+      },
+      {
+        "classe": "AddressApiTest",
+        "testes": 7,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "instante_relatorio": null,
+        "arquivo_modificado_em_utc": "2026-11-05T20:06:45.134399+00:00",
+        "arquivo": "target/surefire-reports/TEST-br.com.pit.cupcakes.endereco.AddressApiTest.xml",
+        "sha256": "d38ed90288b93db550691abca4a74306ff9a55de929ea3e144ec4829bef18395",
+        "casos": [
+          "mapsSimulatedPostalResponsesToPrivateApiErrors",
+          "hidesForeignAddressesFromAllOperationsAndQuotes",
+          "rejectsUnknownFieldsInvalidInputAndMissingSecurity",
+          "createsListsDetailsUpdatesAndDeletesWithOwnershipAndVersions",
+          "pickupIsFreeAndDeliveryWithoutRangesIsNotConfigured",
+          "quotesFictitiousInclusiveRangesInH2WithoutClaimingPostgresConstraints",
+          "enforcesEveryTextLimitAndExactVersionNumbers"
+        ]
+      },
+      {
+        "classe": "PostalCodeClientTest",
+        "testes": 5,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "instante_relatorio": null,
+        "arquivo_modificado_em_utc": "2026-11-05T20:06:49.391869+00:00",
+        "arquivo": "target/surefire-reports/TEST-br.com.pit.cupcakes.endereco.integration.PostalCodeClientTest.xml",
+        "sha256": "d3a4da84b09871a1dd1159d1080bdd7914cb3d59efd5e5d504e3e1c17cc8eec1",
+        "casos": [
+          "handlesConnectionFailureAndTimeoutWithoutRetry",
+          "invalidPostalCodeDoesNotCallExternalService",
+          "distinguishesMissingFromInvalidAndUpstreamFailures",
+          "mapsOnlyPostalFieldsAndAllowsEmptyStreet",
+          "limitsTotalWaitIncludingBodyAndCancels"
+        ]
+      },
+      {
+        "classe": "AuthenticationSecurityTest",
+        "testes": 8,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "instante_relatorio": null,
+        "arquivo_modificado_em_utc": "2026-11-05T20:06:52.664320+00:00",
+        "arquivo": "target/surefire-reports/TEST-br.com.pit.cupcakes.identidade.AuthenticationSecurityTest.xml",
+        "sha256": "94d0c191c7c3b0103594caf484559ab8313fffe64fbc830341ddfd8e8f39c2ba",
+        "casos": [
+          "shouldRefreshTokenLogoutAndAllowNewLogin",
+          "shouldUseGenericCredentialErrors",
+          "shouldAuthorizeRolesBeforeMissingBusinessRoutes",
+          "shouldReturnCreatedCustomerWithoutAuthenticationAndConflictForNormalizedEmail",
+          "shouldNormalizeLoginRotateSessionAndPersistAuthentication",
+          "shouldRejectInvalidRegistrationFieldsWithoutSavingOrEchoingPassword",
+          "shouldRejectMissingAndInvalidCsrfOnEveryPost",
+          "shouldRejectMalformedUnknownAndUnsupportedRegistration"
+        ]
+      },
+      {
+        "classe": "RegistrationServiceTest",
+        "testes": 5,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "instante_relatorio": null,
+        "arquivo_modificado_em_utc": "2026-11-05T20:06:53.381738+00:00",
+        "arquivo": "target/surefire-reports/TEST-br.com.pit.cupcakes.identidade.RegistrationServiceTest.xml",
+        "sha256": "7e143a47eeaa5c6f16bb72889f6bf56d77870c5de2a37a205ebd99809e0d8ede",
+        "casos": [
+          "shouldTranslateDuplicatePrecheckAndConcurrentUniqueViolation",
+          "shouldRejectInvalidFieldsBeforeSaving",
+          "shouldValidateUnicodeCodePointsAndUtf8BytesWithoutTruncation",
+          "shouldNormalizeCreateOnlyCustomerAndHashLiteralPassword",
+          "shouldNotTranslateUnrelatedPersistenceErrorsAsDuplicateEmail"
+        ]
+      },
+      {
+        "classe": "ProductControllerTest",
+        "testes": 7,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "instante_relatorio": null,
+        "arquivo_modificado_em_utc": "2026-11-05T20:06:32.854892+00:00",
+        "arquivo": "target/surefire-reports/TEST-br.com.pit.cupcakes.catalogo.controller.ProductControllerTest.xml",
+        "sha256": "6ccf52c19c2b72e8e3ff2035062f427ae32e15a7507026578fe5e0b564b1ee52",
+        "casos": [
+          "shouldReturnEmptyCatalog",
+          "shouldReturn400WhenIdIsNotNumeric",
+          "shouldReturn500OnInternalError",
+          "shouldReturnProductWhenIdExists",
+          "shouldReturn400WhenIdIsZeroOrNegative",
+          "shouldReturn404WhenProductNotFound",
+          "shouldReturnPopulatedCatalog"
+        ]
+      },
+      {
+        "classe": "ProductServiceTest",
+        "testes": 5,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "instante_relatorio": null,
+        "arquivo_modificado_em_utc": "2026-11-05T20:06:41.004931+00:00",
+        "arquivo": "target/surefire-reports/TEST-br.com.pit.cupcakes.catalogo.service.ProductServiceTest.xml",
+        "sha256": "e25975ec532fa349045d25fd898b0b2d5a358c96dcf6fe70a69dabceff9ea043",
+        "casos": [
+          "shouldThrowProductNotFoundException",
+          "shouldReturnAllProductsOrderedById",
+          "shouldReturnEmptyListWhenNoProductsExist",
+          "shouldReturnProductById",
+          "shouldThrowInvalidIdException"
+        ]
+      },
+      {
+        "classe": "ProductRepositoryTest",
+        "testes": 2,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "instante_relatorio": null,
+        "arquivo_modificado_em_utc": "2026-11-05T20:06:40.901757+00:00",
+        "arquivo": "target/surefire-reports/TEST-br.com.pit.cupcakes.catalogo.repository.ProductRepositoryTest.xml",
+        "sha256": "c691c2748c30cf40cf6f886559086c1308d8fa9efcac439d70efe0d6fe6ae0b1",
+        "casos": [
+          "shouldFindAllOrderedByIdAsc",
+          "shouldPersistAndFindById"
+        ]
+      },
+      {
+        "classe": "DemoDataLoaderTest",
+        "testes": 2,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "instante_relatorio": null,
+        "arquivo_modificado_em_utc": "2026-11-05T20:06:33.225271+00:00",
+        "arquivo": "target/surefire-reports/TEST-br.com.pit.cupcakes.catalogo.demo.DemoDataLoaderTest.xml",
+        "sha256": "7a18de3d3d905298922685a3c67b23ceeb0ccda6614c6225573724a0b011abc9",
+        "casos": [
+          "shouldNotSeedWhenRepositoryAlreadyHasProducts",
+          "shouldSeedDemoProductsWhenRepositoryIsEmpty"
+        ]
+      },
+      {
+        "classe": "PostgresTestDatabaseGuardTest",
+        "testes": 4,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "instante_relatorio": null,
+        "arquivo_modificado_em_utc": "2026-11-05T20:06:34.071423+00:00",
+        "arquivo": "target/surefire-reports/TEST-br.com.pit.cupcakes.catalogo.PostgresTestDatabaseGuardTest.xml",
+        "sha256": "b06d88d3ec960fe093df5162d4d6dda0949545bbb32766cf43841ed7e58d33f6",
+        "casos": [
+          "shouldRejectMissingCredentialsAndUnsafeOverrides",
+          "shouldAcceptOnlyAuthorizedConfiguration",
+          "shouldAcceptEffectiveTestDatabase",
+          "shouldRejectEffectiveDevelopmentDatabaseBeforeAnyCleanup"
+        ]
+      }
+    ]
+  },
+  "postgresql": {
+    "total": {
+      "testes": 13,
+      "falhas": 0,
+      "erros": 0,
+      "ignorados": 0
+    },
+    "classes": [
+      {
+        "classe": "AddressShippingPostgresTest",
+        "testes": 5,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "instante_relatorio": null,
+        "arquivo_modificado_em_utc": "2026-11-05T20:45:27.953575+00:00",
+        "arquivo": "target/surefire-reports/TEST-br.com.pit.cupcakes.endereco.AddressShippingPostgresTest.xml",
+        "sha256": "3fa84fe14a8849ebc4b83328a7b29b3709f813bf5997feacabae59d08fae989f",
+        "casos": [
+          "quotesInclusiveBoundsWithExactDecimalsAndRefusesInactiveOutsideAndWrongState",
+          "exclusionConstraintSerializesConcurrentOverlaps",
+          "persistsNormalizedAddressAndVersionAndDeletesOnlyCurrentVersion",
+          "databaseRejectsMalformedRangesOverlapsAndInvalidAddresses",
+          "refusesUnconfiguredAndForeignAddressAndReturnsFreePickup"
+        ]
+      },
+      {
+        "classe": "AddressRestartPostgresTest",
+        "testes": 1,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "instante_relatorio": null,
+        "arquivo_modificado_em_utc": "2026-11-05T20:45:22.589767+00:00",
+        "arquivo": "target/surefire-reports/TEST-br.com.pit.cupcakes.endereco.AddressRestartPostgresTest.xml",
+        "sha256": "cea71470540a4a8c36ad7ae11c37b4fd686ad05e61be4fb152e3942eb634234a",
+        "casos": [
+          "preservesAddressAcrossTwoApplicationContexts"
+        ]
+      },
+      {
+        "classe": "AuthenticationPostgresIntegrationTest",
+        "testes": 1,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "instante_relatorio": null,
+        "arquivo_modificado_em_utc": "2026-11-05T20:45:33.242214+00:00",
+        "arquivo": "target/surefire-reports/TEST-br.com.pit.cupcakes.identidade.AuthenticationPostgresIntegrationTest.xml",
+        "sha256": "6e52899fe23139e343a1a6217e3f8cf2afc929c20934cb02622ae1101061840d",
+        "casos": [
+          "shouldMigrateRegisterEnforceUniqueEmailAndAuthenticatePersistedCustomer"
+        ]
+      },
+      {
+        "classe": "AuthenticationRestartPostgresTest",
+        "testes": 1,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "instante_relatorio": null,
+        "arquivo_modificado_em_utc": "2026-11-05T20:45:43.107101+00:00",
+        "arquivo": "target/surefire-reports/TEST-br.com.pit.cupcakes.identidade.AuthenticationRestartPostgresTest.xml",
+        "sha256": "61c139b789c7d3cbd903e2b58b6d5844cab77ad721062151713b2bb3469650ca",
+        "casos": [
+          "shouldPersistAccountAcrossRestartAndCompleteCookieLogoutFlow"
+        ]
+      },
+      {
+        "classe": "ProductPostgresIntegrationTest",
+        "testes": 5,
+        "falhas": 0,
+        "erros": 0,
+        "ignorados": 0,
+        "instante_relatorio": null,
+        "arquivo_modificado_em_utc": "2026-11-05T20:45:13.500017+00:00",
+        "arquivo": "target/surefire-reports/TEST-br.com.pit.cupcakes.catalogo.ProductPostgresIntegrationTest.xml",
+        "sha256": "796a230f12f669209d79f1df07778a255d5b6a3d8d3c9b361c0b5f33d290f8f2",
+        "casos": [
+          "shouldReturnEmptyListWhenDatabaseIsEmpty",
+          "shouldReturnPopulatedCatalogFromPostgres",
+          "shouldReturn400WhenIdIsInvalid",
+          "shouldReturn404WhenIdDoesNotExist",
+          "shouldReturnProductByIdWhenExists"
+        ]
+      }
+    ]
+  },
+  "limites": [
+    "H2 não comprova migrações ou restrições PostgreSQL.",
+    "Relatórios PostgreSQL atuais conferidos sem reexecutar os testes: todos aprovados.",
+    "ViaCEP usa respostas/futuros simulados; não foi realizada consulta real de fumaça.",
+    "Navegador com servidor real concluído; apenas GET /api/conta/cep/* interceptado para controlar o ViaCEP. Resultado e capturas separados da interface integralmente simulada anterior."
+  ]
+}

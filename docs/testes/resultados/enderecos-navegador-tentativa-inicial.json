@@ -1,0 +1,78 @@
+{
+  "execucao": "interrompida por falha",
+  "modo": "PostgreSQL real; CEP simulado",
+  "cenarios": [
+    {
+      "cenario": "ADR09 lista vazia",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR09_lista-vazia.png"
+    },
+    {
+      "cenario": "ADR07 preserva campo editado durante consulta",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR07_campo-preservado.png"
+    },
+    {
+      "cenario": "ADR07 resposta de CEP anterior ignorada",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR07_cep-atual.png"
+    },
+    {
+      "cenario": "ADR06 erro recuperável 70000004",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR06_cep-70000004.png"
+    },
+    {
+      "cenario": "ADR06 erro recuperável 70000005",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR06_cep-70000005.png"
+    },
+    {
+      "cenario": "ADR06 erro recuperável 70000006",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR06_cep-70000006.png"
+    },
+    {
+      "cenario": "ADR01 salvar manualmente após falha do CEP; texto seguro",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR01_endereco-salvo.png"
+    },
+    {
+      "cenario": "ADR09 recarga e teclado 360px",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR09_enderecos-360-teclado.png"
+    },
+    {
+      "cenario": "ADR09 recarga e teclado 1280px",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR09_enderecos-1280-teclado.png"
+    },
+    {
+      "cenario": "FRT04 retirada gratuita",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/FRT04_retirada.png"
+    },
+    {
+      "cenario": "FRT04 entrega sem configuração",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/FRT04_sem-configuracao.png"
+    },
+    {
+      "cenario": "ADR04 editar endereço",
+      "resultado": "aprovado",
+      "modo": "servidor PostgreSQL; CEP simulado",
+      "evidencia": "docs/testes/evidencias/ADR04_endereco-editado.png"
+    }
+  ]
+}

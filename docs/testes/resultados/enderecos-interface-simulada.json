@@ -1,0 +1,96 @@
+{
+  "execucao": "concluída",
+  "modo": "API integralmente simulada",
+  "cenarios": [
+    {
+      "cenario": "ADR09 lista vazia",
+      "resultado": "aprovado",
+      "modo": "API simulada",
+      "evidencia": "docs/testes/evidencias/ADR09_lista-vazia-api-simulada-reexecucao1.png"
+    },
+    {
+      "cenario": "ADR07 preserva campo editado durante consulta",
+      "resultado": "aprovado",
+      "modo": "API simulada",
+      "evidencia": "docs/testes/evidencias/ADR07_campo-preservado-api-simulada.png"
+    },
+    {
+      "cenario": "ADR07 resposta de CEP anterior ignorada",
+      "resultado": "aprovado",
+      "modo": "API simulada",
+      "evidencia": "docs/testes/evidencias/ADR07_cep-atual-api-simulada.png"
+    },
+    {
+      "cenario": "ADR06 erro recuperável 70000004",
+      "resultado": "aprovado",
+      "modo": "API simulada",
+      "evidencia": "docs/testes/evidencias/ADR06_cep-70000004-api-simulada.png"
+    },
+    {
+      "cenario": "ADR06 erro recuperável 70000005",
+      "resultado": "aprovado",
+      "modo": "API simulada",
+      "evidencia": "docs/testes/evidencias/ADR06_cep-70000005-api-simulada.png"
+    },
+    {
+      "cenario": "ADR06 erro recuperável 70000006",
+      "resultado": "aprovado",
+      "modo": "API simulada",
+      "evidencia": "docs/testes/evidencias/ADR06_cep-70000006-api-simulada.png"
+    },
+    {
+      "cenario": "ADR01 salvar manualmente após falha do CEP; texto seguro",
+      "resultado": "aprovado",
+      "modo": "API simulada",
+      "evidencia": "docs/testes/evidencias/ADR01_endereco-salvo-api-simulada.png"
+    },
+    {
+      "cenario": "ADR09 recarga e teclado 360px",
+      "resultado": "aprovado",
+      "modo": "API simulada",
+      "evidencia": "docs/testes/evidencias/ADR09_enderecos-360-teclado-api-simulada.png"
+    },
+    {
+      "cenario": "ADR09 recarga e teclado 1280px",
+      "resultado": "aprovado",
+      "modo": "API simulada",
+      "evidencia": "docs/testes/evidencias/ADR09_enderecos-1280-teclado-api-simulada.png"
+    },
+    {
+      "cenario": "FRT04 retirada gratuita",
+      "resultado": "aprovado",
+      "modo": "API simulada",
+      "evidencia": "docs/testes/evidencias/FRT04_retirada-api-simulada.png"
+    },
+    {
+      "cenario": "FRT04 entrega sem configuração",
+      "resultado": "aprovado",
+      "modo": "API simulada",
+      "evidencia": "docs/testes/evidencias/FRT04_sem-configuracao-api-simulada.png"
+    },
+    {
+      "cenario": "ADR04 editar endereço",
+      "resultado": "aprovado",
+      "modo": "API simulada",
+      "evidencia": "docs/testes/evidencias/ADR04_endereco-editado-api-simulada.png"
+    },
+    {
+      "cenario": "ADR04 conflito não perde texto digitado",
+      "resultado": "aprovado",
+      "modo": "API simulada",
+      "evidencia": "docs/testes/evidencias/ADR04_conflito-preserva-texto-api-simulada.png"
+    },
+    {
+      "cenario": "ADR04 remoção exige confirmação",
+      "resultado": "aprovado",
+      "modo": "API simulada",
+      "evidencia": "docs/testes/evidencias/ADR04_endereco-removido-api-simulada.png"
+    },
+    {
+      "cenario": "ADR09 sem erros JavaScript",
+      "resultado": "aprovado",
+      "modo": "API simulada",
+      "evidencia": null
+    }
+  ]
+}

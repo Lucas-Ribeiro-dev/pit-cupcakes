@@ -1,6 +1,6 @@
-# PIT Cupcakes — catálogo e autenticação
+# PIT Cupcakes — catálogo, autenticação e endereços
 
-Loja virtual acadêmica com catálogo público, detalhes e segunda etapa de cadastro, login, sessão e logout. A implementação de autenticação segue a [SPEC](specs/09-SPEC-AUTENTICACAO.md); os relatórios atuais registram sete testes PostgreSQL aprovados e a verificação real no navegador está documentada no [registro da segunda etapa](docs/testes/resultados/verificacao-segunda-etapa.md). Carrinho, checkout, endereços e administração ficam para etapas futuras. O sistema completo não está concluído.
+Loja virtual acadêmica com catálogo público, detalhes e segunda etapa de cadastro, login, sessão e logout. A implementação de autenticação segue a [SPEC](specs/09-SPEC-AUTENTICACAO.md); os relatórios atuais registram sete testes PostgreSQL aprovados e a verificação real no navegador está documentada no [registro da segunda etapa](docs/testes/resultados/verificacao-segunda-etapa.md). A terceira etapa implementa endereços e cotação conforme a [SPEC de endereços e frete](specs/10-SPEC-ENDERECOS-FRETE.md), com resultados no [registro da terceira etapa](docs/testes/resultados/verificacao-terceira-etapa.md). Carrinho, checkout e administração ficam para etapas futuras. O sistema completo não está concluído.
 
 Java 21, Spring Boot 3.4.2, Maven 3.9.9 pelo Wrapper, Spring Data JPA, Bean Validation, PostgreSQL, Flyway e HTML/CSS/JavaScript vanilla. A integração conferida usou PostgreSQL 18.6. Dependências e versões estão fixadas no [pom.xml](pom.xml) e nas [propriedades do Wrapper](.mvn/wrapper/maven-wrapper.properties).
 
@@ -139,4 +139,55 @@ Busque o token antes do primeiro POST e envie o cabeçalho informado. Busque out
 
 `/api/admin/**` exige ADMIN e `/api/conta/**` exige autenticação. Não há operações administrativas nem credencial padrão. Visitante recebe 401; cliente sem permissão recebe 403; ADMIN pode ultrapassar a regra e receber 404 em rota ainda inexistente.
 
-Antes de disponibilização pública, continuam pendentes proteção contra abuso, calibração do custo de senha no ambiente final e validação HTTPS. Carrinho será retomado em outra etapa. Não há checkout, endereços, ViaCEP ou alteração de perfil nesta entrega.
+Antes de disponibilização pública, continuam pendentes proteção contra abuso, calibração do custo de senha no ambiente final e validação HTTPS. Carrinho será retomado em outra etapa. Não há checkout nem alteração de perfil nesta entrega.
+
+## Endereços e consulta de frete
+
+[Meus endereços](http://localhost:8080/paginas/conta/enderecos.html) fica ligado à Minha conta. Permite vários endereços, sem padrão automático, revisão manual, edição e remoção confirmada. Entrada pela tela privada retorna ao endereço após login por destino interno fixo. Conflito de versão mantém o texto digitado para revisão.
+
+ViaCEP é auxílio de preenchimento, com limite de espera e tratamento de falha. Não comprova o imóvel nem a disponibilidade de entrega; a [decisão DT01](docs/decisoes/DT01-viacep.md) descreve os limites. O frete é calculado no servidor pelo endereço salvo da conta. Brasília–DF é a referência, sem comparação literal do nome da cidade. Retirada é gratuita e não é escolhida automaticamente.
+
+A [V3](src/main/resources/db/migration/V3__criar_endereco_faixa_frete.sql) cria endereços e faixas; V1/V2 permanecem intactas. Não insere cobertura ou taxas comerciais. **Faixas e valores finais estão pendentes**: sem configuração ativa, entrega responde 422 ENTREGA_NAO_CONFIGURADA. O [dicionário](docs/banco-de-dados/dicionario-dados.md) documenta restrições e configuração controlada. Nenhuma migração desta tarefa foi aplicada a cupcakes.
+
+Todos os contratos abaixo exigem sessão; POST/PUT/DELETE exigem CSRF. Respostas privadas usam no-store. Campos e erros detalhados estão na [SPEC](specs/10-SPEC-ENDERECOS-FRETE.md).
+
+| Endpoint | Entrada | Sucesso |
+| --- | --- | --- |
+| GET `/api/conta/enderecos` | — | Array ordenado por ID |
+| GET `/api/conta/enderecos/{id}` | ID positivo | Endereço próprio |
+| POST `/api/conta/enderecos` | destinatario, cep, logradouro, numero, complemento opcional, bairro, cidade, uf | 201; endereço e versao |
+| PUT `/api/conta/enderecos/{id}` | Campos e versao atual | 200; endereço atualizado |
+| DELETE `/api/conta/enderecos/{id}?versao=N` | Versão não negativa | 204 |
+| GET `/api/conta/cep/{cep}` | Oito dígitos ou XXXXX-XXX | Campos disponíveis |
+| POST `/api/conta/frete/cotacao` | modalidade ENTREGA com enderecoId, ou RETIRADA sem endereço | modalidade, valor decimal como string; enderecoId/versaoEndereco para entrega |
+
+Endereço alheio e inexistente retornam o mesmo 404. Versão divergente retorna 409 ENDERECO_DESATUALIZADO. A API rejeita proprietário, ID, versão na criação e taxa enviados pelo cliente. GET de CEP distingue 404, 502 e 504; consulta indisponível não bloqueia salvamento manual válido.
+
+Testes sem PostgreSQL externo, incluindo regressão:
+
+```powershell
+.\mvnw.cmd '-Dtest=AddressValidationTest,AddressApiTest,PostalCodeClientTest,AuthenticationSecurityTest,RegistrationServiceTest,ProductControllerTest,ProductServiceTest,ProductRepositoryTest,DemoDataLoaderTest,PostgresTestDatabaseGuardTest' test
+```
+
+Com DB_TEST_* configuradas localmente para cupcakes_test:
+
+```powershell
+.\mvnw.cmd '-Dtest=AddressShippingPostgresTest,AddressRestartPostgresTest,AuthenticationPostgresIntegrationTest,AuthenticationRestartPostgresTest,ProductPostgresIntegrationTest' test
+```
+
+As faixas 70000001–70000009 a 12.34 e demais valores dos testes são **fixtures fictícias**, sem significado comercial. Testes H2 verificam o motor e contratos; somente PostgreSQL pode comprovar a V3 e a exclusão GiST concorrente. O guard continua obrigatório e bloqueia falta de credenciais antes de Flyway.
+
+Servidor de navegador isolado, com classe explícita e mecanismo spring-boot:test-run (porta 8092, preservando o servidor anterior):
+
+```powershell
+.\mvnw.cmd '-Dspring-boot.run.main-class=br.com.pit.cupcakes.endereco.AddressBrowserServer' spring-boot:test-run
+python docs/testes/casos/verificar_enderecos.py
+```
+
+Esse servidor exige DB_TEST_* e ativa somente test-pg, com proteção de conexão efetiva e sem carga demo. A verificação utilizou o servidor já iniciado pelo responsável em 8092, sem reiniciá-lo. Os relatórios PostgreSQL atuais confirmam **13 testes aprovados**, conferidos sem repetição. O navegador real concluiu **18 cenários e 16 capturas**, com APIs reais de autenticação, endereços e frete; somente GET /api/conta/cep/* foi interceptado para controlar o ViaCEP. O roteiro cria conta fictícia exclusiva, remove seu endereço ao concluir e verifica logout. Detalhes no [registro da terceira etapa](docs/testes/resultados/verificacao-terceira-etapa.md) e no [resultado do navegador real](docs/testes/resultados/enderecos-navegador.json). Não use cupcakes para reproduzir.
+
+Para verificar apenas comportamento da interface sem conexão de banco, o modo abaixo usa arquivos estáticos e APIs inteiramente simuladas. Relatório e capturas identificam a simulação, que não comprova persistência, autenticação real ou migrações:
+
+```powershell
+python docs/testes/casos/verificar_enderecos.py --simulate-api
+```

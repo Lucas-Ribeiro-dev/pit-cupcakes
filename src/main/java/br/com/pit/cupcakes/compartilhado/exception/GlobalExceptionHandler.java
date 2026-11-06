@@ -19,6 +19,21 @@ import org.springframework.security.access.AccessDeniedException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(br.com.pit.cupcakes.endereco.service.AccountOperationException.class)
+    public ResponseEntity<ErrorResponse> handleAccountOperation(br.com.pit.cupcakes.endereco.service.AccountOperationException ex) {
+        return ResponseEntity.status(ex.getStatus()).body(new ErrorResponse(ex.getCode(), ex.getMessage()));
+    }
+
+    @ExceptionHandler(org.springframework.orm.ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<ErrorResponse> handleConcurrentAddress(Exception ex) {
+        return ResponseEntity.status(409).body(new ErrorResponse("ENDERECO_DESATUALIZADO", "Endereço alterado em outra sessão. Revise os dados antes de tentar novamente."));
+    }
+
+    @ExceptionHandler(org.springframework.web.bind.MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> handleMissingParameter(Exception ex) {
+        return ResponseEntity.badRequest().body(new ErrorResponse("DADOS_INVALIDOS", "Informe os parâmetros obrigatórios."));
+    }
+
     @ExceptionHandler(EmailAlreadyRegisteredException.class)
     public ResponseEntity<ErrorResponse> handleDuplicateEmail(EmailAlreadyRegisteredException ex) {
         return ResponseEntity.status(409).body(new ErrorResponse("EMAIL_JA_CADASTRADO", "E-mail já cadastrado."));
