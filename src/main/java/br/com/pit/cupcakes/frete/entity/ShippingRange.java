@@ -12,5 +12,15 @@ public class ShippingRange {
     @Column(name = "valor", nullable = false, precision = 12, scale = 2) private BigDecimal amount;
     @Column(name = "ativa", nullable = false) private boolean active;
     protected ShippingRange() {}
+    public ShippingRange(String startPostalCode, String endPostalCode, BigDecimal amount, boolean active) {
+        this.startPostalCode = startPostalCode;
+        this.endPostalCode = endPostalCode;
+        this.amount = amount;
+        this.active = active;
+    }
+    public Long getId() { return id; }
+    public String getStartPostalCode() { return startPostalCode; }
+    public String getEndPostalCode() { return endPostalCode; }
     public BigDecimal getAmount() { return amount; }
+    public boolean isActive() { return active; }
 }

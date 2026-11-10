@@ -313,4 +313,9 @@ button:disabled { opacity: .65; cursor: wait; }
 #addressForm input { width: 100%; padding: .75rem; border: 1px solid #777; border-radius: .25rem; font: inherit; }
 #addressList article { margin: 1rem 0; }
 #addressList button { margin: .25rem; }
+#revisionForm, #confirmForm, #adminProductForm, #adminStatusForm { display: flex; flex-direction: column; gap: .75rem; margin: 1rem 0; }
+#adminProductForm input, #adminProductForm textarea, #adminProductForm select, #adminStatusForm select { width: 100%; padding: .65rem; border: 1px solid #777; border-radius: .25rem; font: inherit; }
+#revisionForm fieldset, #confirmForm fieldset, #checkoutAddressList fieldset { display: flex; flex-direction: column; gap: .5rem; padding: .75rem; border: 1px solid #ccc; border-radius: .25rem; }
+#ordersList article, #detailItemsList article, #adminProductList article, #adminOrdersList article, #revisionItemsList article { margin: .75rem 0; padding: .75rem; background: #fff; border: 1px solid #e5ded7; border-radius: .35rem; }
+
 

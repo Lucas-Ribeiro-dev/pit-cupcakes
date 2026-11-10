@@ -19,14 +19,31 @@ import org.springframework.security.access.AccessDeniedException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(br.com.pit.cupcakes.carrinho.service.CartOperationException.class)
+    public ResponseEntity<ErrorResponse> handleCartOperation(br.com.pit.cupcakes.carrinho.service.CartOperationException ex) {
+        return ResponseEntity.status(ex.getStatus()).header("Cache-Control", "no-store")
+                .body(new ErrorResponse(ex.getCode(), ex.getMessage()));
+    }
+
     @ExceptionHandler(br.com.pit.cupcakes.endereco.service.AccountOperationException.class)
     public ResponseEntity<ErrorResponse> handleAccountOperation(br.com.pit.cupcakes.endereco.service.AccountOperationException ex) {
-        return ResponseEntity.status(ex.getStatus()).body(new ErrorResponse(ex.getCode(), ex.getMessage()));
+        return ResponseEntity.status(ex.getStatus()).header("Cache-Control", "no-store")
+                .body(new ErrorResponse(ex.getCode(), ex.getMessage()));
     }
 
     @ExceptionHandler(org.springframework.orm.ObjectOptimisticLockingFailureException.class)
-    public ResponseEntity<ErrorResponse> handleConcurrentAddress(Exception ex) {
-        return ResponseEntity.status(409).body(new ErrorResponse("ENDERECO_DESATUALIZADO", "Endereço alterado em outra sessão. Revise os dados antes de tentar novamente."));
+    public ResponseEntity<ErrorResponse> handleConcurrentEntity(org.springframework.orm.ObjectOptimisticLockingFailureException ex) {
+        String className = ex.getPersistentClassName();
+        if (className != null && className.endsWith(".Product")) {
+            return ResponseEntity.status(409).header("Cache-Control", "no-store")
+                    .body(new ErrorResponse("PRODUTO_DESATUALIZADO", "Produto alterado em outra sessão. Revise os dados atuais antes de tentar novamente."));
+        }
+        if (className != null && className.endsWith(".Order")) {
+            return ResponseEntity.status(409).header("Cache-Control", "no-store")
+                    .body(new ErrorResponse("PEDIDO_DESATUALIZADO", "Pedido alterado em outra sessão. Atualize os dados antes de tentar novamente."));
+        }
+        return ResponseEntity.status(409).header("Cache-Control", "no-store")
+                .body(new ErrorResponse("ENDERECO_DESATUALIZADO", "Endereço alterado em outra sessão. Revise os dados antes de tentar novamente."));
     }
 
     @ExceptionHandler(org.springframework.web.bind.MissingServletRequestParameterException.class)

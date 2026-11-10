@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meus Pedidos - PIT Cupcakes</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+  <header><div class="header-container">
+    <a class="brand-title" href="/index.html">PIT Cupcakes</a>
+    <nav id="accountNavigation" aria-label="Conta"></nav>
+    <p id="navigationMessage" role="status"></p>
+  </div></header>
+  <main class="account-page">
+    <p><a href="/paginas/conta/minha-conta.html">Minha conta</a> | <a href="/index.html">Catálogo</a></p>
+    <h1>Meus pedidos</h1>
+    <p id="ordersMessage" role="status" aria-live="polite"></p>
+    <section id="ordersLoading" aria-live="polite">Carregando seus pedidos...</section>
+    <section id="ordersEmpty" hidden>
+      <p>Você ainda não realizou pedidos.</p>
+      <p><a href="/index.html">Ver catálogo de cupcakes</a></p>
+    </section>
+    <section id="ordersListSection" hidden aria-label="Lista de pedidos">
+      <div id="ordersList"></div>
+    </section>
+  </main>
+  <script type="module" src="/assets/js/cliente/navegacao.js"></script>
+  <script type="module" src="/assets/js/cliente/pedidos.js"></script>
+</body>
+</html>
+

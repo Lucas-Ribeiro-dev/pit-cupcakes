@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atendimento de Pedidos - PIT Cupcakes</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+  <header><div class="header-container">
+    <a class="brand-title" href="/index.html">PIT Cupcakes</a>
+    <nav id="accountNavigation" aria-label="Conta"></nav>
+    <p id="navigationMessage" role="status"></p>
+  </div></header>
+  <main class="account-page">
+    <p><a href="/index.html">Catálogo público</a> | <a href="/admin/produtos.html">Administração de produtos</a></p>
+    <h1>Atendimento de pedidos</h1>
+    <p id="adminOrdersMessage" role="status" aria-live="polite"></p>
+
+    <section id="adminOrdersUnauthenticated" hidden>
+      <p>É necessário entrar com uma conta administrativa para acessar o atendimento de pedidos.</p>
+      <p><a class="btn btn-primary" href="/paginas/conta/login.html?destino=admin-pedidos">Ir para o login</a></p>
+    </section>
+
+    <section id="adminOrdersForbidden" hidden>
+      <p>Acesso negado. Sua conta não possui o perfil de administrador (ADMIN) exigido para atender pedidos.</p>
+      <p><a href="/index.html">Voltar ao catálogo</a></p>
+    </section>
+
+    <div id="adminOrdersContent" hidden>
+      <p>Cancelamentos registram apenas o encerramento do pedido acadêmico, sem simulação de estorno financeiro real.</p>
+      <section id="adminSelectedOrderSection" hidden aria-labelledby="selectedOrderHeading">
+        <h2 id="selectedOrderHeading">Detalhes do pedido selecionado</h2>
+        <div id="adminSelectedOrderBody"></div>
+        <form id="adminStatusForm" hidden>
+          <label for="nextStatusSelect">Atualizar status de atendimento</label>
+          <select id="nextStatusSelect" name="statusAtendimento"></select>
+          <button id="updateStatusButton" class="btn btn-primary" type="submit">Aplicar status</button>
+        </form>
+        <p id="adminSelectedOrderNotice" role="status" aria-live="polite"></p>
+      </section>
+
+      <section aria-labelledby="allOrdersHeading">
+        <h2 id="allOrdersHeading">Pedidos registrados</h2>
+        <div id="adminOrdersList"></div>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="/assets/js/cliente/navegacao.js"></script>
+  <script type="module" src="/assets/js/admin/pedidos.js"></script>
+</body>
+</html>
+

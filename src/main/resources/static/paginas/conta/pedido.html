@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do Pedido - PIT Cupcakes</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+  <header><div class="header-container">
+    <a class="brand-title" href="/index.html">PIT Cupcakes</a>
+    <nav id="accountNavigation" aria-label="Conta"></nav>
+    <p id="navigationMessage" role="status"></p>
+  </div></header>
+  <main class="account-page">
+    <p><a href="/paginas/conta/pedidos.html">Voltar para Meus pedidos</a> | <a href="/index.html">Catálogo</a></p>
+    <h1 id="orderDetailTitle">Detalhes do pedido</h1>
+    <p id="orderDetailMessage" role="status" aria-live="polite"></p>
+    <section id="orderDetailLoading" aria-live="polite">Carregando detalhes do pedido...</section>
+    <div id="orderDetailContent" hidden>
+      <section aria-labelledby="generalHeading">
+        <h2 id="generalHeading">Resumo e acompanhamento</h2>
+        <p>Número do pedido: <strong id="detailId"></strong></p>
+        <p>Realizado em: <strong id="detailDate"></strong></p>
+        <p>Modalidade: <strong id="detailMode"></strong></p>
+        <p>Status de atendimento: <strong id="detailStatus"></strong></p>
+        <p>Pagamento simulado (acadêmico): <strong id="detailPayment"></strong></p>
+      </section>
+
+      <section id="detailAddressSection" hidden aria-labelledby="addressHeading">
+        <h2 id="addressHeading">Endereço histórico da entrega</h2>
+        <p id="detailAddressText"></p>
+      </section>
+
+      <section id="detailPickupSection" hidden aria-labelledby="pickupHeading">
+        <h2 id="pickupHeading">Retirada na loja</h2>
+        <p>Ponto de retirada acadêmico (endereço fictício de demonstração): Quadra Central Fictícia, Bloco A, Loja 01, Brasília/DF, CEP 70000-000.</p>
+      </section>
+
+      <section aria-labelledby="itemsHeading">
+        <h2 id="itemsHeading">Itens históricos comprados</h2>
+        <div id="detailItemsList"></div>
+      </section>
+
+      <section aria-labelledby="totalsHeading">
+        <h2 id="totalsHeading">Valores registrados</h2>
+        <p>Subtotal: <strong id="detailSubtotal"></strong></p>
+        <p>Frete: <strong id="detailShipping"></strong></p>
+        <p>Total: <strong id="detailTotal"></strong></p>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="/assets/js/cliente/navegacao.js"></script>
+  <script type="module" src="/assets/js/cliente/pedido.js"></script>
+</body>
+</html>
+

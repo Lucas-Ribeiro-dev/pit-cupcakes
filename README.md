@@ -1,193 +1,102 @@
-# PIT Cupcakes — catálogo, autenticação e endereços
+# PIT Cupcakes — Loja Virtual Completa (Catálogo, Conta, Endereços, Frete, Carrinho, Checkout, Pedidos e Administração)
 
-Loja virtual acadêmica com catálogo público, detalhes e segunda etapa de cadastro, login, sessão e logout. A implementação de autenticação segue a [SPEC](specs/09-SPEC-AUTENTICACAO.md); os relatórios atuais registram sete testes PostgreSQL aprovados e a verificação real no navegador está documentada no [registro da segunda etapa](docs/testes/resultados/verificacao-segunda-etapa.md). A terceira etapa implementa endereços e cotação conforme a [SPEC de endereços e frete](specs/10-SPEC-ENDERECOS-FRETE.md), com resultados no [registro da terceira etapa](docs/testes/resultados/verificacao-terceira-etapa.md). Carrinho, checkout e administração ficam para etapas futuras. O sistema completo não está concluído.
+Loja virtual acadêmica desenvolvida em Java 21, Spring Boot 3.4.2, Maven Wrapper 3.9.9, Spring Data JPA, Spring Security, Bean Validation, PostgreSQL, Flyway (`V1` a `V4`) e HTML/CSS/JavaScript vanilla.
 
-Java 21, Spring Boot 3.4.2, Maven 3.9.9 pelo Wrapper, Spring Data JPA, Bean Validation, PostgreSQL, Flyway e HTML/CSS/JavaScript vanilla. A integração conferida usou PostgreSQL 18.6. Dependências e versões estão fixadas no [pom.xml](pom.xml) e nas [propriedades do Wrapper](.mvn/wrapper/maven-wrapper.properties).
+## Estado funcional do projeto
 
-## Preparação local
+Todos os módulos previstos nas especificações ([07-SPEC-CATALOGO](specs/07-SPEC-CATALOGO.md), [09-SPEC-AUTENTICACAO](specs/09-SPEC-AUTENTICACAO.md), [10-SPEC-ENDERECOS-FRETE](specs/10-SPEC-ENDERECOS-FRETE.md), [11-SPEC-CARRINHO](specs/11-SPEC-CARRINHO.md) e [12-SPEC-CONCLUSAO-FUNCIONAL](specs/12-SPEC-CONCLUSAO-FUNCIONAL.md)) estão implementados:
 
-São necessários JDK 21 e PostgreSQL acessível em localhost:5432. Configure `JAVA_HOME` para o JDK instalado e inclua sua pasta `bin` no `PATH` deste terminal; não há caminho de uma máquina específica no projeto.
+1. **Catálogo público e detalhes** (`/index.html`, `/produto.html?id=N`, `GET /api/produtos`, `GET /api/produtos/{id}`).
+2. **Cadastro de cliente, autenticação, sessão, CSRF e proteção contra abuso de login** (`/paginas/conta/cadastro.html`, `/paginas/conta/login.html`, `/paginas/conta/minha-conta.html`, `/api/usuarios`, `/api/autenticacao/**`).
+3. **Endereços do cliente, consulta opcional ViaCEP e cotação de frete por faixa ativa em Brasília–DF** (`/paginas/conta/enderecos.html`, `/api/conta/enderecos/**`, `/api/conta/cep/{cep}`, `POST /api/conta/frete/cotacao`).
+4. **Carrinho de compras em sessão (`HttpSession`)** (`/paginas/compra/carrinho.html`, `/api/carrinho/**`), preservado no login e limpo no logout ou após confirmação de pedido aprovado.
+5. **Checkout integrado, pagamento acadêmico simulado (`APROVADO` / `RECUSADO`), gravação transacional com idempotência e histórico de pedidos do cliente** (`/paginas/compra/checkout.html`, `/paginas/conta/pedidos.html`, `/paginas/conta/pedido.html`, `POST /api/conta/checkout/revisao`, `POST /api/conta/pedidos`, `GET /api/conta/pedidos`, `GET /api/conta/pedidos/{id}`).
+6. **Administração de produtos e atendimento de pedidos com controle de permissão (`ROLE_ADMIN`) e concorrência otimista (`versao`)** (`/admin/index.html`, `/admin/produtos.html`, `/admin/pedidos.html`, `/api/admin/produtos/**`, `/api/admin/pedidos/**`).
 
-```powershell
-java -version
-.\mvnw.cmd -version
-```
+## Preparação e execução local (`cupcakes`)
 
-Os bancos `cupcakes` e `cupcakes_test` já existem no ambiente verificado. Em outro ambiente, crie-os uma única vez, com uma conta local autorizada:
+São necessários JDK 21 e PostgreSQL acessível em `localhost:5432` com os bancos `cupcakes` (desenvolvimento) e `cupcakes_test` (exclusivo para testes automatizados e verificação).
 
-```sql
-CREATE DATABASE cupcakes;
-CREATE DATABASE cupcakes_test;
-```
-
-A conexão de desenvolvimento usa somente `cupcakes`; a integração deve usar somente `cupcakes_test`. Não apague bancos, não execute Flyway clean e não altere migrações já aplicadas.
-
-O Spring Boot lê variáveis do processo. Arquivos `.env` não são carregados automaticamente; [.env.example](.env.example) contém apenas valores fictícios. As variáveis de um terminal podem não estar disponíveis em outro.
-
-No PowerShell, configure credenciais por entrada protegida, sem gravá-las no histórico:
+No PowerShell, configure `JAVA_HOME`, as credenciais locais do banco `cupcakes` e, opcionalmente, o provisionamento controlado de um administrador para testar o painel `/admin`:
 
 ```powershell
-$databaseCredential = Get-Credential -Message 'Credenciais locais do banco cupcakes'
-$env:DB_USERNAME = $databaseCredential.UserName
-$env:DB_PASSWORD = $databaseCredential.GetNetworkCredential().Password
+$env:JAVA_HOME = 'C:\Program Files\Android\Android Studio\jbr'
+$env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+
+$dbCred = Get-Credential -Message 'Credenciais locais do banco cupcakes'
 $env:DB_URL = 'jdbc:postgresql://localhost:5432/cupcakes'
-```
+$env:DB_USERNAME = $dbCred.UserName
+$env:DB_PASSWORD = $dbCred.GetNetworkCredential().Password
 
-## Executar catálogo e detalhes
+# Opcional: provisionar conta administrativa na inicializacao (informe os tres ou nenhum)
+$adminCred = Get-Credential -Message 'Credenciais do administrador local (UserName = e-mail)'
+$env:ADMIN_EMAIL = $adminCred.UserName
+$env:ADMIN_NAME = 'Administrador PIT Cupcakes'
+$env:ADMIN_PASSWORD = $adminCred.GetNetworkCredential().Password
 
-Sem carga de demonstração:
-
-```powershell
-$env:SPRING_PROFILES_ACTIVE = 'local'
-.\mvnw.cmd spring-boot:run
-```
-
-Com carga explícita dos quatro produtos fictícios:
-
-```powershell
+# Perfil local,demo carrega de forma idempotente os 4 cupcakes iniciais e 2 faixas de frete em Brasilia-DF (70000000-70999999 e 71000000-71999999)
 $env:SPRING_PROFILES_ACTIVE = 'local,demo'
 .\mvnw.cmd spring-boot:run
 ```
 
-O perfil `local` habilita Flyway e Hibernate com `ddl-auto: validate`. A [migração V1](src/main/resources/db/migration/V1__criar_tabela_produto.sql) cria a tabela `produto` e seu índice. O perfil `demo` insere quatro cupcakes somente se não houver produtos: três disponíveis, um indisponível e pelo menos um sem imagem. A prevenção de duplicação tem teste unitário aprovado; a verificação do reinício real no banco de desenvolvimento deve seguir o registro de evidências, sem presumir sua conclusão.
+Na inicialização, o Flyway aplica as migrações pendentes até a [V4__criar_pedidos_e_pagamento.sql](src/main/resources/db/migration/V4__criar_pedidos_e_pagamento.sql) sem alterar `V1`, `V2` ou `V3`.
 
-- [Catálogo](http://localhost:8080/index.html)
-- [Detalhes de exemplo](http://localhost:8080/produto.html?id=1), se o ID existir na base.
-- [API do catálogo](http://localhost:8080/api/produtos)
+### Principais páginas da aplicação
 
-Para parar, use Ctrl+C somente no terminal dessa execução. Não encerre todos os processos Java.
+- **Vitrine e compra**: [Catálogo](http://localhost:8080/index.html) | [Carrinho](http://localhost:8080/paginas/compra/carrinho.html) | [Checkout](http://localhost:8080/paginas/compra/checkout.html)
+- **Conta do cliente**: [Entrar](http://localhost:8080/paginas/conta/login.html) | [Criar conta](http://localhost:8080/paginas/conta/cadastro.html) | [Minha conta](http://localhost:8080/paginas/conta/minha-conta.html) | [Meus endereços](http://localhost:8080/paginas/conta/enderecos.html) | [Meus pedidos](http://localhost:8080/paginas/conta/pedidos.html)
+- **Administração (`ROLE_ADMIN`)**: [Painel admin](http://localhost:8080/admin/index.html) | [Produtos admin](http://localhost:8080/admin/produtos.html) | [Pedidos admin](http://localhost:8080/admin/pedidos.html)
 
-## Testes automatizados
+## Contratos de Checkout, Pedidos e Administração (Etapa 5)
 
-Unitários, camada web, proteção da integração e repositório H2, sem PostgreSQL externo:
-
-```powershell
-.\mvnw.cmd '-Dtest=ProductControllerTest,ProductServiceTest,ProductRepositoryTest,DemoDataLoaderTest,PostgresTestDatabaseGuardTest' test
-```
-
-Integração PostgreSQL, no terminal com credenciais próprias do banco de teste:
-
-```powershell
-$testDatabaseCredential = Get-Credential -Message 'Credenciais locais do banco cupcakes_test'
-$env:DB_TEST_USERNAME = $testDatabaseCredential.UserName
-$env:DB_TEST_PASSWORD = $testDatabaseCredential.GetNetworkCredential().Password
-$env:DB_TEST_URL = 'jdbc:postgresql://localhost:5432/cupcakes_test'
-.\mvnw.cmd '-Dtest=ProductPostgresIntegrationTest' test
-```
-
-O relatório histórico da primeira etapa confirma cinco aprovações de catálogo, sem falhas, erros ou ignorados. Os relatórios atuais do marco de autenticação acrescentam `AuthenticationPostgresIntegrationTest` e `AuthenticationRestartPostgresTest`, totalizando sete testes PostgreSQL aprovados; o detalhamento está no [registro da segunda etapa](docs/testes/resultados/verificacao-segunda-etapa.md). O perfil `test-pg` mantém Flyway habilitado, Hibernate `validate` e proíbe substituição por H2. A proteção exige a configuração autorizada e consulta `current_database()` nas conexões antes de permitir migrações e limpezas. Conexão ou configuração inválida causa erro de execução; os testes não são ignorados silenciosamente.
-
-`./mvnw test` ou `.\mvnw.cmd test` inclui a integração e exige suas credenciais. Os testes H2 não comprovam comportamento PostgreSQL. Relatórios brutos ficam em `target/surefire-reports`, fora do Git; o [resumo sanitizado](docs/testes/resultados/testes-automatizados.json) registra contagens, casos e hashes dos relatórios conferidos, sem propriedades locais ou credenciais.
-
-## Verificação do navegador e persistência
-
-O [plano e resultados](docs/testes/resultados/plano-e-resultados.md) separa as execuções e relaciona capturas aos casos. O [registro da primeira etapa](docs/testes/resultados/verificacao-primeira-etapa.md) descreve ajustes e pendências. Há 11 cenários de navegador aprovados na execução já registrada; isso não representa uma nova execução nesta tarefa.
-
-Para repetir a automação visual, são necessários Python com Playwright e Microsoft Edge instalado. O script preserva capturas existentes e salva as novas com outro nome:
-
-```powershell
-python -m pip install playwright
-python docs/testes/casos/verificar_catalogo.py
-```
-
-O TC02 visual deve ser testado em ambiente isolado. Não esvazie `cupcakes` para simulá-lo.
-
-Para registrar migração e produtos no desenvolvimento, use a [coleta somente de leitura](docs/testes/casos/verificar_persistencia.ps1) no terminal com `DB_USERNAME` e `DB_PASSWORD` já configurados. O script usa `psql` do PATH ou da instalação PostgreSQL padrão e grava snapshots sem credenciais:
-
-```powershell
-.\docs\testes\casos\verificar_persistencia.ps1 -Stage Before
-$env:DB_URL = 'jdbc:postgresql://localhost:5432/cupcakes'
-$env:SPRING_PROFILES_ACTIVE = 'local,demo'
-.\mvnw.cmd spring-boot:run
-```
-
-Após iniciar, Ctrl+C apenas nessa execução e repita `.\mvnw.cmd spring-boot:run`. Após a segunda inicialização, Ctrl+C e execute:
-
-```powershell
-.\docs\testes\casos\verificar_persistencia.ps1 -Stage After
-```
-
-A comparação confere todos os campos dos produtos, IDs, quantidades e histórico Flyway. Não executa migrações ou limpeza; o banco é consultado em transação somente de leitura. A execução desse roteiro ainda deve ser comprovada pelos snapshots e pela confirmação do reinício; instruções não são evidências.
-
-## Contrato e organização
-
-`GET /api/produtos` retorna array ordenado por ID; o catálogo vazio retorna `[]`. `GET /api/produtos/{id}` retorna um produto, 400 para ID inválido, 404 para inexistente e 500 com mensagem genérica para falha inesperada. Campos públicos: `id`, `nome`, `descricao`, `preco` como string decimal com duas casas, `imagemUrl` e `disponivel`. Erros usam `codigo` e `mensagem`, sem detalhes internos.
-
-- [SPEC técnica](specs/07-SPEC-CATALOGO.md)
-- [Dicionário de dados](docs/banco-de-dados/dicionario-dados.md)
-- [Código principal](src/main/), [testes](src/test/) e [evidências](docs/testes/evidencias/)
-
-Builds, logs, segredos, configurações de IDE, contexto e prompts operacionais permanecem locais. Este marco não publica a aplicação nem cria repositório remoto.
-
-## Cadastro, login e minha conta
-
-- [Criar conta](http://localhost:8080/paginas/conta/cadastro.html): nome, e-mail, senha e confirmação somente na interface. O cadastro cria CLIENTE e não inicia sessão automaticamente.
-- [Entrar](http://localhost:8080/paginas/conta/login.html): usa e-mail normalizado e senha literal, incluindo espaços. Não há recuperação de senha ou confirmação por e-mail nesta etapa.
-- [Minha conta](http://localhost:8080/paginas/conta/minha-conta.html): nome/e-mail da sessão atual. Sair exige POST com CSRF; atualizar a conta após sair direciona ao login.
-
-Spring Security 6.4.2 é gerenciado pelo Boot 3.4.2. O encoder delegante grava `{bcrypt}` com custo padrão 10. Sessão usa cookie HttpOnly, SameSite=Lax e inatividade de 30 minutos. Ative `prod` junto da configuração do ambiente HTTPS para exigir cookie Secure. Não use `prod` no HTTP local para os testes de navegador.
+Todas as rotas `/api/conta/**` exigem sessão autenticada; todas as rotas `/api/admin/**` exigem perfil `ADMIN` (`401` para visitante, `403` para `CLIENTE`). Mutações (`POST`, `PUT`, `DELETE`) exigem cabeçalho CSRF.
 
 | Endpoint | Entrada | Sucesso |
 | --- | --- | --- |
-| GET `/api/autenticacao/csrf` | — | Token, nome do cabeçalho e parâmetro |
-| POST `/api/usuarios` | JSON `nome`, `email`, `senha`; CSRF | 201; `id`, `nome`, `email`, `perfil` |
-| POST `/api/autenticacao/login` | Form URL encoded `email`, `senha`; CSRF | 200; dados públicos e sessão |
-| GET `/api/autenticacao/sessao` | Cookie de sessão | 200; somente usuário atual; 401 visitante |
-| POST `/api/autenticacao/logout` | Cookie e CSRF | 204; invalida sessão e remove cookie |
+| `POST /api/conta/checkout/revisao` | `modalidade` (`ENTREGA` com `enderecoId` e `versaoEndereco`, ou `RETIRADA`) | `200 OK`; `revisaoId`, itens validados, `subtotalItens`, `valorFrete`, `total` |
+| `POST /api/conta/pedidos` | `revisaoId`, `resultadoSimulado` (`APROVADO` ou `RECUSADO`) | `201 Created` na criação; `200 OK` em repetição idempotente |
+| `GET /api/conta/pedidos` | — | `200 OK`; resumos dos pedidos do cliente autenticado |
+| `GET /api/conta/pedidos/{id}` | ID positivo do próprio cliente | `200 OK`; detalhes, itens históricos, endereço congelado e pagamento simulado |
+| `GET /api/admin/produtos` | — | `200 OK`; todos os produtos ordenados por ID com `versao` |
+| `POST /api/admin/produtos` | `nome`, `descricao`, `preco`, `imagemCaminho` opcional, `disponivel` | `201 Created`; produto criado |
+| `PUT /api/admin/produtos/{id}` | Dados do produto e `versao` atual | `200 OK`; produto atualizado (`409` se desatualizado) |
+| `GET /api/admin/pedidos` | — | `200 OK`; todos os pedidos ordenados do mais recente ao mais antigo |
+| `GET /api/admin/pedidos/{id}` | ID positivo | `200 OK`; detalhes completos para atendimento (sem hash de senha) |
+| `PUT /api/admin/pedidos/{id}/status` | `statusAtendimento` e `versao` atual | `200 OK`; transição validada por modalidade e estado (`409` em conflito) |
 
-Busque o token antes do primeiro POST e envie o cabeçalho informado. Busque outro após login/logout. O módulo [api.js](src/main/resources/static/assets/js/compartilhado/api.js) faz isso, recupera CSRF inválido sem repetir automaticamente o POST e usa apenas memória para o token. APIs retornam erros JSON com `codigo` e `mensagem`; não redirecionam fetch ao login. Conteúdo privado usa `Cache-Control: no-store`.
+## Testes automatizados e rodada consolidada (`cupcakes_test`)
 
-`/api/admin/**` exige ADMIN e `/api/conta/**` exige autenticação. Não há operações administrativas nem credencial padrão. Visitante recebe 401; cliente sem permissão recebe 403; ADMIN pode ultrapassar a regra e receber 404 em rota ainda inexistente.
-
-Antes de disponibilização pública, continuam pendentes proteção contra abuso, calibração do custo de senha no ambiente final e validação HTTPS. Carrinho será retomado em outra etapa. Não há checkout nem alteração de perfil nesta entrega.
-
-## Endereços e consulta de frete
-
-[Meus endereços](http://localhost:8080/paginas/conta/enderecos.html) fica ligado à Minha conta. Permite vários endereços, sem padrão automático, revisão manual, edição e remoção confirmada. Entrada pela tela privada retorna ao endereço após login por destino interno fixo. Conflito de versão mantém o texto digitado para revisão.
-
-ViaCEP é auxílio de preenchimento, com limite de espera e tratamento de falha. Não comprova o imóvel nem a disponibilidade de entrega; a [decisão DT01](docs/decisoes/DT01-viacep.md) descreve os limites. O frete é calculado no servidor pelo endereço salvo da conta. Brasília–DF é a referência, sem comparação literal do nome da cidade. Retirada é gratuita e não é escolhida automaticamente.
-
-A [V3](src/main/resources/db/migration/V3__criar_endereco_faixa_frete.sql) cria endereços e faixas; V1/V2 permanecem intactas. Não insere cobertura ou taxas comerciais. **Faixas e valores finais estão pendentes**: sem configuração ativa, entrega responde 422 ENTREGA_NAO_CONFIGURADA. O [dicionário](docs/banco-de-dados/dicionario-dados.md) documenta restrições e configuração controlada. Nenhuma migração desta tarefa foi aplicada a cupcakes.
-
-Todos os contratos abaixo exigem sessão; POST/PUT/DELETE exigem CSRF. Respostas privadas usam no-store. Campos e erros detalhados estão na [SPEC](specs/10-SPEC-ENDERECOS-FRETE.md).
-
-| Endpoint | Entrada | Sucesso |
-| --- | --- | --- |
-| GET `/api/conta/enderecos` | — | Array ordenado por ID |
-| GET `/api/conta/enderecos/{id}` | ID positivo | Endereço próprio |
-| POST `/api/conta/enderecos` | destinatario, cep, logradouro, numero, complemento opcional, bairro, cidade, uf | 201; endereço e versao |
-| PUT `/api/conta/enderecos/{id}` | Campos e versao atual | 200; endereço atualizado |
-| DELETE `/api/conta/enderecos/{id}?versao=N` | Versão não negativa | 204 |
-| GET `/api/conta/cep/{cep}` | Oito dígitos ou XXXXX-XXX | Campos disponíveis |
-| POST `/api/conta/frete/cotacao` | modalidade ENTREGA com enderecoId, ou RETIRADA sem endereço | modalidade, valor decimal como string; enderecoId/versaoEndereco para entrega |
-
-Endereço alheio e inexistente retornam o mesmo 404. Versão divergente retorna 409 ENDERECO_DESATUALIZADO. A API rejeita proprietário, ID, versão na criação e taxa enviados pelo cliente. GET de CEP distingue 404, 502 e 504; consulta indisponível não bloqueia salvamento manual válido.
-
-Testes sem PostgreSQL externo, incluindo regressão:
+### 1. Suíte rápida sem PostgreSQL externo (H2 + MockMvc)
 
 ```powershell
-.\mvnw.cmd '-Dtest=AddressValidationTest,AddressApiTest,PostalCodeClientTest,AuthenticationSecurityTest,RegistrationServiceTest,ProductControllerTest,ProductServiceTest,ProductRepositoryTest,DemoDataLoaderTest,PostgresTestDatabaseGuardTest' test
+$env:JAVA_HOME = 'C:\Program Files\Android\Android Studio\jbr'
+$env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+.\mvnw.cmd '-Dtest=CheckoutOrderAdminApiTest,CartApiTest,AddressValidationTest,AddressApiTest,PostalCodeClientTest,AuthenticationSecurityTest,RegistrationServiceTest,ProductControllerTest,ProductServiceTest,ProductRepositoryTest,DemoDataLoaderTest,PostgresTestDatabaseGuardTest' test
 ```
 
-Com DB_TEST_* configuradas localmente para cupcakes_test:
+Essa suíte executa **64 testes automatizados** (incluindo os 9 cenários integrados de `CheckoutOrderAdminApiTest`) com **0 falhas, 0 erros e 0 ignorados**.
+
+### 2. Rodada única consolidada de PostgreSQL (`cupcakes_test`) e navegador real
+
+A rodada consolidada contra PostgreSQL 18.6 (`cupcakes_test`) e navegador real (`Microsoft Edge` na porta `8094`) foi executada e aprovada com **15 testes PostgreSQL (`0` falhas)** e **21 cenários em navegador real (`0` erros JavaScript)**, totalizando **79 testes automatizados aprovados** no projeto (detalhes em [verificacao-quinta-etapa.md](docs/testes/resultados/verificacao-quinta-etapa.md) e [fluxo-completo-navegador.json](docs/testes/resultados/fluxo-completo-navegador.json)).
+
+Para repetir a rodada consolidada localmente (sem parâmetros obrigatórios; `-ServerTarget StoreFlow` é o padrão, e `-SkipTests` ou `-StartBrowserServerOnly` podem ser usados para iniciar apenas o servidor em `8094`):
 
 ```powershell
-.\mvnw.cmd '-Dtest=AddressShippingPostgresTest,AddressRestartPostgresTest,AuthenticationPostgresIntegrationTest,AuthenticationRestartPostgresTest,ProductPostgresIntegrationTest' test
+.\docs\testes\casos\executar_rodada_consolidada.ps1
 ```
 
-As faixas 70000001–70000009 a 12.34 e demais valores dos testes são **fixtures fictícias**, sem significado comercial. Testes H2 verificam o motor e contratos; somente PostgreSQL pode comprovar a V3 e a exclusão GiST concorrente. O guard continua obrigatório e bloqueia falta de credenciais antes de Flyway.
-
-Servidor de navegador isolado, com classe explícita e mecanismo spring-boot:test-run (porta 8092, preservando o servidor anterior):
+Com o servidor isolado em execução na porta `8094`, execute em outro terminal o roteiro Playwright do fluxo completo:
 
 ```powershell
-.\mvnw.cmd '-Dspring-boot.run.main-class=br.com.pit.cupcakes.endereco.AddressBrowserServer' spring-boot:test-run
-python docs/testes/casos/verificar_enderecos.py
+python docs/testes/casos/verificar_fluxo_completo.py --base-url http://localhost:8094
 ```
 
-Esse servidor exige DB_TEST_* e ativa somente test-pg, com proteção de conexão efetiva e sem carga demo. A verificação utilizou o servidor já iniciado pelo responsável em 8092, sem reiniciá-lo. Os relatórios PostgreSQL atuais confirmam **13 testes aprovados**, conferidos sem repetição. O navegador real concluiu **18 cenários e 16 capturas**, com APIs reais de autenticação, endereços e frete; somente GET /api/conta/cep/* foi interceptado para controlar o ViaCEP. O roteiro cria conta fictícia exclusiva, remove seu endereço ao concluir e verifica logout. Detalhes no [registro da terceira etapa](docs/testes/resultados/verificacao-terceira-etapa.md) e no [resultado do navegador real](docs/testes/resultados/enderecos-navegador.json). Não use cupcakes para reproduzir.
+## Documentação do projeto
 
-Para verificar apenas comportamento da interface sem conexão de banco, o modo abaixo usa arquivos estáticos e APIs inteiramente simuladas. Relatório e capturas identificam a simulação, que não comprova persistência, autenticação real ou migrações:
-
-```powershell
-python docs/testes/casos/verificar_enderecos.py --simulate-api
-```
+- [Arquitetura e limites transacionais](docs/arquitetura/visao-geral.md) e [modelo de carrinho em sessão](docs/arquitetura/carrinho-em-sessao.md)
+- [Dicionário de dados (V1 a V4)](docs/banco-de-dados/dicionario-dados.md) e [decisão técnica ViaCEP](docs/decisoes/DT01-viacep.md)
+- [Histórias de usuário e casos de uso](docs/requisitos/historias-e-casos-de-uso.md) e [diagramas UML (classes, casos de uso, sequência e atividade)](docs/modelagem/diagramas-uml.md)
+- [Manual de uso, operação e publicação](docs/manual/manual-usuario-e-publicacao.md)
+- [Formulário de avaliação para 5 participantes e modelo de laudo](docs/entrega/avaliacao-participantes-e-laudo.md)
+- Registros de verificação por etapa: [1ª etapa](docs/testes/resultados/verificacao-primeira-etapa.md), [2ª etapa](docs/testes/resultados/verificacao-segunda-etapa.md), [3ª etapa](docs/testes/resultados/verificacao-terceira-etapa.md), [4ª etapa](docs/testes/resultados/verificacao-quarta-etapa.md) e [5ª etapa](docs/testes/resultados/verificacao-quinta-etapa.md)

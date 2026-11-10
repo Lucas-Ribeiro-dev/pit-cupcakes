@@ -1,9 +1,26 @@
 import { api, refreshCsrf } from '../compartilhado/api.js';
 
+const ALLOWED_DESTINATIONS = {
+  carrinho: '/paginas/compra/carrinho.html',
+  checkout: '/paginas/compra/checkout.html',
+  enderecos: '/paginas/conta/enderecos.html',
+  pedidos: '/paginas/conta/pedidos.html',
+  'admin-produtos': '/admin/produtos.html',
+  'admin-pedidos': '/admin/pedidos.html'
+};
+
 const form = document.querySelector('#accountForm');
 const message = document.querySelector('#formMessage');
 const registration = document.body.dataset.page === 'cadastro';
-if (new URLSearchParams(location.search).get('saida') === '1') message.textContent = 'Sessão encerrada.';
+const params = new URLSearchParams(location.search);
+const destination = params.get('destino');
+if (params.get('saida') === '1') message.textContent = 'Sessão encerrada.';
+
+const switchLink = document.querySelector('#loginLink');
+if (switchLink && destination && ALLOWED_DESTINATIONS[destination]) {
+  const baseHref = switchLink.getAttribute('href').split('?')[0];
+  switchLink.href = `${baseHref}?destino=${encodeURIComponent(destination)}`;
+}
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
@@ -37,8 +54,7 @@ form.addEventListener('submit', async event => {
       });
       form.reset();
       await refreshCsrf();
-      location.replace(new URLSearchParams(location.search).get('destino') === 'enderecos'
-        ? '/paginas/conta/enderecos.html' : '/paginas/conta/minha-conta.html');
+      location.replace(ALLOWED_DESTINATIONS[destination] || '/paginas/conta/minha-conta.html');
     }
   } catch (error) {
     message.textContent = error.message;

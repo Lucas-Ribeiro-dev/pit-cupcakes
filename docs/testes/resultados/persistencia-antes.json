@@ -1,0 +1,55 @@
+﻿{
+    "database":  "cupcakes",
+    "readOnly":  "on",
+    "serverPort":  5432,
+    "capturedAt":  "2026-11-03T15:39:20.584924-03:00",
+    "migrations":  [
+                       {
+                           "installed_rank":  1,
+                           "version":  "1",
+                           "description":  "criar tabela produto",
+                           "type":  "SQL",
+                           "script":  "V1__criar_tabela_produto.sql",
+                           "checksum":  39887744,
+                           "success":  true
+                       }
+                   ],
+    "products":  [
+                     {
+                         "id":  1,
+                         "nome":  "Cupcake de Baunilha Tradicional (Demonstração)",
+                         "descricao":  "Cupcake fofinho de baunilha natural de Madagascar com cobertura cremosa de buttercream artesanal.",
+                         "preco":  12.50,
+                         "imagem_caminho":  "/assets/img/cupcake-baunilha.svg",
+                         "disponivel":  true,
+                         "versao":  0
+                     },
+                     {
+                         "id":  2,
+                         "nome":  "Cupcake de Chocolate Belga (Demonstração)",
+                         "descricao":  "Massa intensa de cacau 70% recheada com ganache trufada e confeitos de chocolate belga.",
+                         "preco":  14.00,
+                         "imagem_caminho":  "/assets/img/cupcake-chocolate.svg",
+                         "disponivel":  true,
+                         "versao":  0
+                     },
+                     {
+                         "id":  3,
+                         "nome":  "Cupcake de Frutas Vermelhas (Demonstração)",
+                         "descricao":  "Bolo leve aromatizado com raspas de limão e recheio artesanal de morango, amora e framboesa fresca.",
+                         "preco":  15.50,
+                         "imagem_caminho":  null,
+                         "disponivel":  true,
+                         "versao":  0
+                     },
+                     {
+                         "id":  4,
+                         "nome":  "Cupcake de Caramelo Salgado (Indisponível - Demonstração)",
+                         "descricao":  "Massa amanteigada com recheio cremoso de doce de leite suave e toque especial de flor de sal.",
+                         "preco":  13.00,
+                         "imagem_caminho":  "/assets/img/cupcake-caramelo.svg",
+                         "disponivel":  false,
+                         "versao":  0
+                     }
+                 ]
+}

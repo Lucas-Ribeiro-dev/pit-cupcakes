@@ -20,9 +20,9 @@ A tentativa anterior do agente foi bloqueada por falta de credenciais, com cinco
 
 ## Migração e persistência de desenvolvimento
 
-Permanecem pendentes de comprovação. Este processo não recebeu credenciais e não foi usada conexão alternativa. O [script de coleta](../casos/verificar_persistencia.ps1) usa `psql` em transação somente de leitura para registrar o histórico Flyway e todos os campos dos produtos antes/depois. A execução foi solicitada ao responsável no terminal já configurado, com reinício `local,demo` somente da aplicação.
+Persistência aprovada pelo responsável, conforme confirmação incorporada na segunda etapa. As coletas [antes](persistencia-antes.json) e [depois](persistencia-depois.json) registram banco efetivo `cupcakes`, transações somente de leitura, V1 aplicada com checksum 39887744 e quatro produtos de IDs 1 a 4. A comparação local dos JSON confirmou igualdade de todos os campos dos produtos e do histórico Flyway, sem duplicação. A captura local de reinício fornecida pelo responsável complementa o registro.
 
-A sintaxe PowerShell foi validada; a coleta autenticada ainda não foi executada pelo agente. Nenhum produto foi removido, banco apagado ou Flyway clean executado. TC02 visual em ambiente isolado também permanece pendente; o caso HTTP vazio já está aprovado na integração PostgreSQL.
+Essa conclusão usa a execução e aprovação do responsável; o agente não repetiu o reinício nem a coleta autenticada nesta etapa. Nenhum produto foi removido, banco apagado ou Flyway clean executado. TC02 visual em ambiente isolado permanece pendente; o caso HTTP vazio já está aprovado na integração PostgreSQL.
 
 ## Preparação do marco no Git
 

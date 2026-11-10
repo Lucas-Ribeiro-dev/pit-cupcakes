@@ -24,10 +24,14 @@ public class User {
     protected User() {}
 
     public User(String name, String normalizedEmail, String passwordHash) {
+        this(name, normalizedEmail, passwordHash, Role.CLIENTE);
+    }
+
+    public User(String name, String normalizedEmail, String passwordHash, Role role) {
         this.name = name;
         this.normalizedEmail = normalizedEmail;
         this.passwordHash = passwordHash;
-        this.role = Role.CLIENTE;
+        this.role = role != null ? role : Role.CLIENTE;
         this.createdAt = Instant.now();
     }
 

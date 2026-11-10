@@ -35,8 +35,18 @@ __pycache__/
 /.agents/
 /skills-lock.json
 
-# Captura de terminal contem caminho pessoal da maquina
+# Captura de terminal contem caminho pessoal da maquina e capturas legadas de tentativas
 /docs/testes/evidencias/PG_integracao-catalogo_5-testes-aprovados.png
+/docs/testes/evidencias/TC08_persistencia-apos-reinicio.png
+/docs/testes/evidencias/HU01_TC01_catalogo-desktop.png
+/docs/testes/evidencias/HU01_TC09_catalogo-1280-teclado-verificacao.png
+/docs/testes/evidencias/HU01_TC09_catalogo-360-teclado-verificacao.png
+/docs/testes/evidencias/HU02_TC03_detalhes-produto-desktop.png
+
+# Anexo local com nomes pessoais dos avaliadores (fora do repositorio publico)
+*.local.md
+/docs/entrega/anexo-nominal-participantes.local.md
+/docs/manual/complemento-manual-publicacao.md
 
 ### OS ###
 .DS_Store

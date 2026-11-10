@@ -1,4 +1,5 @@
 import { formatCurrencyBRL, FALLBACK_IMAGE_PATH } from "../compartilhado/formatters.js";
+import { addToCart } from "./acoes-carrinho.js";
 
 const loadingElement = document.getElementById("loadingState");
 const emptyElement = document.getElementById("emptyState");
@@ -67,6 +68,16 @@ function createProductCard(product) {
   detailsLink.href = `produto.html?id=${encodeURIComponent(product.id)}`;
   detailsLink.textContent = "Ver detalhes";
   actions.appendChild(detailsLink);
+
+  const addButton = document.createElement('button');
+  addButton.type = 'button';
+  addButton.className = 'btn btn-card';
+  addButton.textContent = product.disponivel ? 'Adicionar ao carrinho' : 'Indisponível';
+  addButton.disabled = !product.disponivel;
+  const addMessage = document.createElement('p');
+  addMessage.setAttribute('role', 'status');
+  addButton.addEventListener('click', () => addToCart(product.id, 1, addButton, addMessage));
+  actions.append(addButton, addMessage);
 
   body.appendChild(title);
   body.appendChild(price);

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revisão e Pagamento Simulado - PIT Cupcakes</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+  <header><div class="header-container">
+    <a class="brand-title" href="/index.html">PIT Cupcakes</a>
+    <nav id="accountNavigation" aria-label="Conta"></nav>
+    <p id="navigationMessage" role="status"></p>
+  </div></header>
+  <main class="account-page">
+    <p><a href="/paginas/compra/carrinho.html">Voltar ao carrinho</a> | <a href="/index.html">Catálogo</a></p>
+    <h1>Revisão e confirmação do pedido</h1>
+    <p id="checkoutMessage" role="status" aria-live="polite"></p>
+    <section id="checkoutLoading" aria-live="polite">Carregando dados para revisão do pedido...</section>
+    <section id="checkoutEmpty" hidden>
+      <p>Seu carrinho está vazio. Adicione cupcakes antes de revisar o pedido.</p>
+      <p><a href="/index.html">Ver catálogo</a></p>
+    </section>
+    <section id="checkoutBlocked" hidden>
+      <p>Existem itens indisponíveis ou removidos no seu carrinho. Remova os itens bloqueados no carrinho antes de revisar o pedido.</p>
+      <p><a href="/paginas/compra/carrinho.html">Voltar ao carrinho para ajustar itens</a></p>
+    </section>
+    <div id="checkoutMain" hidden>
+      <section aria-labelledby="modalityTitle">
+        <h2 id="modalityTitle">1. Escolha a modalidade de recebimento</h2>
+        <form id="revisionForm">
+          <fieldset>
+            <legend>Modalidade</legend>
+            <label><input type="radio" name="modalidade" value="RETIRADA" checked> Retirada na loja (gratuita — R$ 0,00)</label>
+            <label><input type="radio" name="modalidade" value="ENTREGA"> Entrega em endereço cadastrado (Brasília–DF)</label>
+          </fieldset>
+          <div id="pickupInfo">
+            <p><strong>Ponto de retirada acadêmico (endereço fictício de demonstração):</strong> Quadra Central Fictícia, Bloco A, Loja 01, Brasília/DF, CEP 70000-000. Frete: R$ 0,00.</p>
+          </div>
+          <div id="deliverySelection" hidden>
+            <p><a href="/paginas/conta/enderecos.html">Gerenciar ou cadastrar endereços</a></p>
+            <div id="checkoutAddressList"></div>
+          </div>
+          <button id="reviewButton" class="btn btn-primary" type="submit">Gerar revisão do pedido</button>
+        </form>
+      </section>
+
+      <section id="revisionSummarySection" hidden aria-labelledby="summaryTitle">
+        <h2 id="summaryTitle">2. Resumo da revisão calculada no servidor</h2>
+        <p>Chave da revisão: <code id="revisionIdDisplay"></code> (válida até <span id="revisionExpiresDisplay"></span>)</p>
+        <p>Modalidade: <strong id="revisionModeDisplay"></strong></p>
+        <p id="revisionAddressDisplay" hidden></p>
+        <div id="revisionItemsList"></div>
+        <p>Subtotal dos itens: <strong id="revisionSubtotalDisplay"></strong></p>
+        <p>Frete: <strong id="revisionShippingDisplay"></strong></p>
+        <p>Total do pedido: <strong id="revisionTotalDisplay"></strong></p>
+
+        <section aria-labelledby="paymentTitle">
+          <h3 id="paymentTitle">3. Pagamento simulado (ambiente acadêmico)</h3>
+          <p><strong>Aviso de simulação:</strong> Este pagamento é estritamente simulado para avaliação acadêmica. Nenhuma cobrança financeira real é efetuada e nenhum dado de cartão ou documento é coletado.</p>
+          <form id="confirmForm">
+            <fieldset>
+              <legend>Resultado do pagamento simulado</legend>
+              <label><input type="radio" name="resultadoSimulado" value="APROVADO" checked> Simular pagamento aprovado (APROVADO)</label>
+              <label><input type="radio" name="resultadoSimulado" value="RECUSADO"> Simular pagamento recusado (RECUSADO)</label>
+            </fieldset>
+            <button id="confirmButton" class="btn btn-primary" type="submit">Confirmar pedido</button>
+          </form>
+        </section>
+      </section>
+    </div>
+
+    <section id="orderResultSection" hidden aria-labelledby="resultTitle">
+      <h2 id="resultTitle">Resultado do pedido</h2>
+      <p id="orderResultSummary"></p>
+      <p id="orderResultDetails"></p>
+      <p id="orderResultActions"></p>
+    </section>
+  </main>
+  <script type="module" src="/assets/js/cliente/navegacao.js"></script>
+  <script type="module" src="/assets/js/cliente/checkout.js"></script>
+</body>
+</html>
+

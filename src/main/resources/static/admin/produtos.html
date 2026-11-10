@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administração de Produtos - PIT Cupcakes</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+  <header><div class="header-container">
+    <a class="brand-title" href="/index.html">PIT Cupcakes</a>
+    <nav id="accountNavigation" aria-label="Conta"></nav>
+    <p id="navigationMessage" role="status"></p>
+  </div></header>
+  <main class="account-page">
+    <p><a href="/index.html">Catálogo público</a> | <a href="/admin/pedidos.html">Atendimento de pedidos</a></p>
+    <h1>Administração de produtos</h1>
+    <p id="adminPageMessage" role="status" aria-live="polite"></p>
+
+    <section id="adminUnauthenticated" hidden>
+      <p>É necessário entrar com uma conta administrativa para acessar esta página.</p>
+      <p><a class="btn btn-primary" href="/paginas/conta/login.html?destino=admin-produtos">Ir para o login</a></p>
+    </section>
+
+    <section id="adminForbidden" hidden>
+      <p>Acesso negado. Sua conta não possui o perfil de administrador (ADMIN) exigido para gerenciar produtos.</p>
+      <p><a href="/index.html">Voltar ao catálogo</a></p>
+    </section>
+
+    <div id="adminContent" hidden>
+      <section aria-labelledby="productFormTitle">
+        <h2 id="productFormTitle">Novo produto</h2>
+        <form id="adminProductForm">
+          <label for="productName">Nome do produto (1 a 150 caracteres)</label>
+          <input id="productName" name="nome" required maxlength="150">
+
+          <label for="productDescription">Descrição (1 a 2000 caracteres)</label>
+          <textarea id="productDescription" name="descricao" required maxlength="2000" rows="3"></textarea>
+
+          <label for="productPrice">Preço em R$ (0.01 a 99999999.99, até duas casas decimais)</label>
+          <input id="productPrice" name="preco" required inputmode="decimal" placeholder="14.50">
+
+          <label for="productImage">Imagem local permitida (opcional)</label>
+          <select id="productImage" name="imagemCaminho">
+            <option value="">Sem imagem específica (usar imagem substituta padrão)</option>
+            <option value="/assets/img/cupcake-baunilha.svg">Cupcake de Baunilha (/assets/img/cupcake-baunilha.svg)</option>
+            <option value="/assets/img/cupcake-chocolate.svg">Cupcake de Chocolate (/assets/img/cupcake-chocolate.svg)</option>
+            <option value="/assets/img/cupcake-caramelo.svg">Cupcake de Caramelo (/assets/img/cupcake-caramelo.svg)</option>
+            <option value="/assets/img/cupcake-placeholder.svg">Substituta explícita (/assets/img/cupcake-placeholder.svg)</option>
+          </select>
+
+          <label for="productAvailable">Disponibilidade para venda</label>
+          <select id="productAvailable" name="disponivel">
+            <option value="true">Disponível</option>
+            <option value="false">Indisponível</option>
+          </select>
+
+          <button id="saveProductButton" class="btn btn-primary" type="submit">Salvar produto</button>
+          <button id="cancelProductButton" type="button">Cancelar edição / limpar</button>
+          <p id="productFormMessage" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section aria-labelledby="productListTitle">
+        <h2 id="productListTitle">Produtos cadastrados</h2>
+        <div id="adminProductList"></div>
+      </section>
+    </div>
+  </main>
+  <script type="module" src="/assets/js/cliente/navegacao.js"></script>
+  <script type="module" src="/assets/js/admin/produtos.js"></script>
+</body>
+</html>
+

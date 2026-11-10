@@ -1,6 +1,6 @@
-# Dicionário de dados — catálogo, identidade, endereços e frete
+# Dicionário de dados — catálogo, identidade, endereços, frete e pedidos
 
-Especificação da camada de persistência para a primeira fatia do catálogo de cupcakes.
+Especificação da camada de persistência para a loja virtual PIT Cupcakes (migrações Flyway V1 a V4). Nenhuma migração anterior foi alterada.
 
 ## 1. Tabela: `produto`
 
@@ -81,5 +81,78 @@ CHECK exige início <= fim. Restrição EXCLUDE GiST sobre `int8range(cep_inicio
 
 A migração não insere faixas. Todas as faixas valem somente para endereços com UF DF; não há filtro pelo nome da cidade. RETIRADA retorna 0.00 sem endereço. ENTREGA exige endereço próprio e uma única faixa ativa; sem faixas retorna ENTREGA_NAO_CONFIGURADA, sem correspondência retorna FORA_DA_AREA_DE_ENTREGA. Valores são strings com duas casas na API. Cotação futura deve ser recalculada.
 
-Configuração comercial de Brasília–DF: **pendente de aprovação de faixas e valores**. O [script controlado](configurar-frete.sql) aceita variáveis psql `startPostalCode`, `endPostalCode` e `amount`; deve ser usado apenas após definição comercial, com conexão local autorizada e sem segredos em arquivos. Cada execução insere uma faixa ativa em transação e é validada pelas restrições do banco. Para ajustes, usar novo script transacional revisado com ID explícito; nunca editar migrações aplicadas. Não há API administrativa. Fixtures dos testes são fictícias e exclusivas de cupcakes_test; não definem cobertura real.
+Configuração de demonstração e comercial de Brasília–DF: no perfil `demo`, `DemoShippingRangeLoader` registra de forma idempotente duas faixas acadêmicas de demonstração quando não há faixas ativas (`70000000`–`70999999` a `8.00` e `71000000`–`71999999` a `12.00`). Para configuração manual fora do perfil `demo`, o [script controlado](configurar-frete.sql) aceita variáveis psql `startPostalCode`, `endPostalCode` e `amount` em transação validada pelas restrições do banco. Fixtures dos testes automatizados são exclusivas de `cupcakes_test`.
+
+## 7. Tabelas de Pedidos e Pagamento Simulado (`V4`)
+
+Definidas na migração [V4__criar_pedidos_e_pagamento.sql](../../src/main/resources/db/migration/V4__criar_pedidos_e_pagamento.sql), preservando integralmente V1, V2 e V3. O carrinho permanece em sessão (`HttpSession`) até a confirmação transacional do pedido.
+
+### 7.1 Tabela `pedido`
+
+Armazena o cabeçalho do pedido, valores consolidados no servidor, estado do pagamento simulado, estado do atendimento e chave de idempotência da revisão.
+
+| Coluna | Tipo SQL | Nulo? | Padrão | Descrição |
+| --- | --- | --- | --- | --- |
+| `id` | `BIGINT GENERATED ALWAYS AS IDENTITY` | Não | Identidade | Chave primária do pedido |
+| `usuario_id` | `BIGINT` | Não | — | FK `usuario(id)` com `ON DELETE RESTRICT` |
+| `revisao_id` | `VARCHAR(64)` | Não | — | Identificador da revisão confirmada para idempotência por cliente |
+| `modalidade` | `VARCHAR(20)` | Não | — | `ENTREGA` ou `RETIRADA` (`chk_pedido_modalidade`) |
+| `subtotal_itens` | `NUMERIC(12, 2)` | Não | — | Soma dos subtotais dos itens (`> 0`) |
+| `valor_frete` | `NUMERIC(12, 2)` | Não | — | Valor de entrega (`>= 0`; obrigatoriamente `0.00` em `RETIRADA`) |
+| `valor_total` | `NUMERIC(12, 2)` | Não | — | Soma exata `subtotal_itens + valor_frete` (`chk_pedido_valores`) |
+| `status_pagamento` | `VARCHAR(20)` | Não | — | `APROVADO` ou `RECUSADO` (`chk_pedido_status_pagamento`) |
+| `status_atendimento` | `VARCHAR(30)` | Não | — | `RECEBIDO`, `EM_PREPARACAO`, `SAIU_PARA_ENTREGA`, `PRONTO_PARA_RETIRADA`, `CONCLUIDO`, `CANCELADO` ou `NAO_AUTORIZADO` |
+| `criado_em` | `TIMESTAMPTZ` | Não | `CURRENT_TIMESTAMP` | Instante de criação do pedido |
+| `atualizado_em` | `TIMESTAMPTZ` | Não | `CURRENT_TIMESTAMP` | Instante da última transição de atendimento |
+| `versao` | `BIGINT` | Não | `0` | Controle de concorrência otimista (`@Version`) |
+
+- **Idempotência**: `CONSTRAINT uk_pedido_usuario_revisao UNIQUE (usuario_id, revisao_id)` impede pedidos duplicados para a mesma revisão em cliques repetidos, requisições concorrentes ou reenvio após perda de resposta.
+- **Coerência pagamento × atendimento**: `CONSTRAINT chk_pedido_coerencia_pagamento_atendimento` garante que `RECUSADO` tenha exclusivamente `status_atendimento = 'NAO_AUTORIZADO'` e que `APROVADO` nunca tenha `NAO_AUTORIZADO`.
+- **Coerência modalidade × atendimento**: `CONSTRAINT chk_pedido_coerencia_modalidade_atendimento` impede `PRONTO_PARA_RETIRADA` em pedidos de `ENTREGA` e impede `SAIU_PARA_ENTREGA` em pedidos de `RETIRADA`.
+- **Índices**: `idx_pedido_usuario_criado_em (usuario_id, criado_em DESC, id DESC)` e `idx_pedido_criado_em (criado_em DESC, id DESC)`.
+
+### 7.2 Tabela `item_pedido`
+
+Preserva a fotografia histórica dos produtos comprados no momento da confirmação, independente de edições posteriores no catálogo.
+
+| Coluna | Tipo SQL | Nulo? | Descrição |
+| --- | --- | --- | --- |
+| `id` | `BIGINT GENERATED ALWAYS AS IDENTITY` | Não | Chave primária |
+| `pedido_id` | `BIGINT` | Não | FK `pedido(id)` com `ON DELETE RESTRICT` |
+| `produto_id` | `BIGINT` | Não | FK `produto(id)` com `ON DELETE RESTRICT` |
+| `nome_produto` | `VARCHAR(150)` | Não | Nome do produto congelado no momento da compra |
+| `preco_unitario` | `NUMERIC(10, 2)` | Não | Preço unitário congelado no momento da compra (`> 0`) |
+| `quantidade` | `INTEGER` | Não | Quantidade adquirida (`1` a `99`) |
+| `subtotal` | `NUMERIC(12, 2)` | Não | Valor da linha (`preco_unitario * quantidade`) |
+
+- **Índices**: `idx_item_pedido_pedido_id (pedido_id, id)` e `idx_item_pedido_produto_id (produto_id)`.
+
+### 7.3 Tabela `endereco_pedido`
+
+Preserva a fotografia histórica do endereço de entrega vinculado ao pedido (relação 1:1 opcional apenas para modalidade `ENTREGA`). Edições ou remoções posteriores em `endereco` não alteram pedidos já gravados.
+
+| Coluna | Tipo SQL | Nulo? | Descrição |
+| --- | --- | --- | --- |
+| `pedido_id` | `BIGINT` | Não | PK e FK `pedido(id)` com `ON DELETE RESTRICT` |
+| `destinatario` | `VARCHAR(120)` | Não | Nome do destinatário no momento do pedido |
+| `cep` | `VARCHAR(8)` | Não | Oito dígitos numéricos (`chk_endereco_pedido_cep`) |
+| `logradouro` | `VARCHAR(160)` | Não | Logradouro congelado |
+| `numero` | `VARCHAR(20)` | Não | Número ou `S/N` congelado |
+| `complemento` | `VARCHAR(120)` | Sim | Complemento opcional congelado |
+| `bairro` | `VARCHAR(100)` | Não | Bairro congelado |
+| `cidade` | `VARCHAR(100)` | Não | Cidade congelada |
+| `uf` | `VARCHAR(2)` | Não | UF congelada (`chk_endereco_pedido_uf`) |
+
+### 7.4 Tabela `pagamento_simulado`
+
+Registra a transação acadêmica de pagamento simulado (relação 1:1 com `pedido`), sem armazenar dados de cartão, PIX ou documento real.
+
+| Coluna | Tipo SQL | Nulo? | Descrição |
+| --- | --- | --- | --- |
+| `pedido_id` | `BIGINT` | Não | PK e FK `pedido(id)` com `ON DELETE RESTRICT` |
+| `resultado` | `VARCHAR(20)` | Não | `APROVADO` ou `RECUSADO` (`chk_pagamento_simulado_resultado`) |
+| `codigo_referencia` | `VARCHAR(64)` | Não | Código de referência gerado pelo servidor (`SIM-APROVADO-...` / `SIM-RECUSADO-...`) |
+| `mensagem` | `VARCHAR(255)` | Não | Aviso explícito de simulação acadêmica sem cobrança financeira real |
+| `processado_em` | `TIMESTAMPTZ` | Não | Instante do processamento simulado |
+
 

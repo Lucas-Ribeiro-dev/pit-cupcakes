@@ -4,11 +4,25 @@ const navigation = document.querySelector('#accountNavigation');
 export async function updateNavigation() {
   if (!navigation) return;
   navigation.replaceChildren();
+  const cart = document.createElement('a');
+  cart.href = '/paginas/compra/carrinho.html';
+  cart.textContent = 'Carrinho';
+  navigation.append(cart);
   try {
-    await api('/api/autenticacao/sessao');
+    const user = await api('/api/autenticacao/sessao');
+    const orders = document.createElement('a');
+    orders.href = '/paginas/conta/pedidos.html';
+    orders.textContent = 'Meus pedidos';
     const account = document.createElement('a');
     account.href = '/paginas/conta/minha-conta.html';
     account.textContent = 'Minha conta';
+    navigation.append(orders, account);
+    if (user.perfil === 'ADMIN') {
+      const admin = document.createElement('a');
+      admin.href = '/admin/produtos.html';
+      admin.textContent = 'Administração';
+      navigation.append(admin);
+    }
     const exit = document.createElement('button');
     exit.type = 'button';
     exit.textContent = 'Sair';
@@ -22,7 +36,7 @@ export async function updateNavigation() {
         exit.disabled = false;
       }
     });
-    navigation.append(account, exit);
+    navigation.append(exit);
   } catch (error) {
     if (error.status !== 401) {
       document.querySelector('#navigationMessage').textContent = error.message;

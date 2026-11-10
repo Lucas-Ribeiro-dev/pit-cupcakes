@@ -1,4 +1,5 @@
 import { formatCurrencyBRL, FALLBACK_IMAGE_PATH } from "../compartilhado/formatters.js";
+import { addToCart } from "./acoes-carrinho.js";
 
 const loadingElement = document.getElementById("loadingState");
 const errorElement = document.getElementById("errorState");
@@ -12,6 +13,18 @@ const detailTitle = document.getElementById("detailTitle");
 const detailDescription = document.getElementById("detailDescription");
 const detailPrice = document.getElementById("detailPrice");
 const detailBadge = document.getElementById("detailBadge");
+const addButton = document.getElementById('addToCart');
+const quantityInput = document.getElementById('cartQuantity');
+const cartMessage = document.getElementById('cartMessage');
+let currentProductId;
+addButton.addEventListener('click', () => {
+  const quantity = Number(quantityInput.value);
+  if (!Number.isInteger(quantity) || quantity < 1 || quantity > 99) {
+    cartMessage.textContent = 'Informe uma quantidade inteira de 1 a 99.';
+    return;
+  }
+  addToCart(currentProductId, quantity, addButton, cartMessage);
+});
 
 function showState(activeElement) {
   [loadingElement, errorElement, notFoundElement, detailCard].forEach((el) => {
@@ -93,6 +106,9 @@ export async function loadProductDetail() {
 }
 
 function renderProductDetail(product) {
+  currentProductId = product.id;
+  addButton.disabled = !product.disponivel;
+  addButton.textContent = product.disponivel ? 'Adicionar ao carrinho' : 'Indisponível';
   if (detailTitle) {
     detailTitle.textContent = product.nome;
     document.title = `${product.nome} - PIT Cupcakes`;
