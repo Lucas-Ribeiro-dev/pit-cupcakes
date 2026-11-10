@@ -76,6 +76,7 @@ function createProductCard(product) {
   addButton.disabled = !product.disponivel;
   const addMessage = document.createElement('p');
   addMessage.setAttribute('role', 'status');
+  addMessage.setAttribute('aria-live', 'polite');
   addButton.addEventListener('click', () => addToCart(product.id, 1, addButton, addMessage));
   actions.append(addButton, addMessage);
 

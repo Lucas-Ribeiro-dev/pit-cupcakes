@@ -20,8 +20,8 @@ São necessários JDK 21 e PostgreSQL acessível em `localhost:5432` com os banc
 No PowerShell, configure `JAVA_HOME`, as credenciais locais do banco `cupcakes` e, opcionalmente, o provisionamento controlado de um administrador para testar o painel `/admin`:
 
 ```powershell
-$env:JAVA_HOME = 'C:\Program Files\Android\Android Studio\jbr'
-$env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+# Caso necessario, defina JAVA_HOME apontando para sua instalacao do JDK 21:
+# $env:JAVA_HOME = '<CAMINHO_DO_JDK_21>'; $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
 
 $dbCred = Get-Credential -Message 'Credenciais locais do banco cupcakes'
 $env:DB_URL = 'jdbc:postgresql://localhost:5432/cupcakes'
@@ -69,8 +69,8 @@ Todas as rotas `/api/conta/**` exigem sessão autenticada; todas as rotas `/api/
 ### 1. Suíte rápida sem PostgreSQL externo (H2 + MockMvc)
 
 ```powershell
-$env:JAVA_HOME = 'C:\Program Files\Android\Android Studio\jbr'
-$env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+# Caso necessario, defina JAVA_HOME apontando para sua instalacao do JDK 21:
+# $env:JAVA_HOME = '<CAMINHO_DO_JDK_21>'; $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
 .\mvnw.cmd '-Dtest=CheckoutOrderAdminApiTest,CartApiTest,AddressValidationTest,AddressApiTest,PostalCodeClientTest,AuthenticationSecurityTest,RegistrationServiceTest,ProductControllerTest,ProductServiceTest,ProductRepositoryTest,DemoDataLoaderTest,PostgresTestDatabaseGuardTest' test
 ```
 

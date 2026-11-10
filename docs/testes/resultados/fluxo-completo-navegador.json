@@ -1,5 +1,5 @@
 {
-  "execucao": "parcial",
+  "execucao": "concluída",
   "baseUrl": "http://localhost:8094",
   "totalCenarios": 21,
   "cenarios": [

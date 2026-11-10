@@ -15,6 +15,7 @@
   <main class="account-page">
     <p><a href="/paginas/compra/carrinho.html">Voltar ao carrinho</a> | <a href="/index.html">Catálogo</a></p>
     <h1>Revisão e confirmação do pedido</h1>
+    <p class="checkout-steps-guide"><strong>Como concluir ou simular o pagamento:</strong> 1) Escolha a modalidade e clique em <em>Gerar revisão do pedido</em>; 2) Na etapa 3 exibida abaixo da revisão, escolha entre <strong>Simular pagamento aprovado (APROVADO)</strong> ou <strong>Simular pagamento recusado (RECUSADO)</strong> antes de confirmar.</p>
     <p id="checkoutMessage" role="status" aria-live="polite"></p>
     <section id="checkoutLoading" aria-live="polite">Carregando dados para revisão do pedido...</section>
     <section id="checkoutEmpty" hidden>
@@ -59,10 +60,10 @@
           <h3 id="paymentTitle">3. Pagamento simulado (ambiente acadêmico)</h3>
           <p><strong>Aviso de simulação:</strong> Este pagamento é estritamente simulado para avaliação acadêmica. Nenhuma cobrança financeira real é efetuada e nenhum dado de cartão ou documento é coletado.</p>
           <form id="confirmForm">
-            <fieldset>
-              <legend>Resultado do pagamento simulado</legend>
-              <label><input type="radio" name="resultadoSimulado" value="APROVADO" checked> Simular pagamento aprovado (APROVADO)</label>
-              <label><input type="radio" name="resultadoSimulado" value="RECUSADO"> Simular pagamento recusado (RECUSADO)</label>
+            <fieldset class="payment-simulation-fieldset">
+              <legend>Escolha o resultado do pagamento simulado</legend>
+              <label class="payment-option payment-option-approved"><input type="radio" name="resultadoSimulado" value="APROVADO" checked> <strong>Simular pagamento aprovado (APROVADO)</strong> — aprova o pedido (RECEBIDO) e limpa o carrinho</label>
+              <label class="payment-option payment-option-refused"><input type="radio" name="resultadoSimulado" value="RECUSADO"> <strong>Simular pagamento recusado (RECUSADO)</strong> — provoca recusa (NAO_AUTORIZADO) e preserva os itens no carrinho</label>
             </fieldset>
             <button id="confirmButton" class="btn btn-primary" type="submit">Confirmar pedido</button>
           </form>

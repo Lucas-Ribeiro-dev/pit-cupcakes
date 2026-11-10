@@ -317,5 +317,18 @@ button:disabled { opacity: .65; cursor: wait; }
 #adminProductForm input, #adminProductForm textarea, #adminProductForm select, #adminStatusForm select { width: 100%; padding: .65rem; border: 1px solid #777; border-radius: .25rem; font: inherit; }
 #revisionForm fieldset, #confirmForm fieldset, #checkoutAddressList fieldset { display: flex; flex-direction: column; gap: .5rem; padding: .75rem; border: 1px solid #ccc; border-radius: .25rem; }
 #ordersList article, #detailItemsList article, #adminProductList article, #adminOrdersList article, #revisionItemsList article { margin: .75rem 0; padding: .75rem; background: #fff; border: 1px solid #e5ded7; border-radius: .35rem; }
+.cart-feedback { margin-top: .5rem; padding: .5rem .75rem; border-radius: .35rem; font-size: .95rem; font-weight: 600; }
+.cart-feedback-success { background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
+.cart-feedback-error { background-color: #fbebee; color: #842029; border: 1px solid #f5c2c7; }
+.cart-feedback-link { color: #0a3622; font-weight: 700; text-decoration: underline; margin-left: .25rem; }
+.checkout-steps-guide { margin: .75rem 0 1rem; padding: .75rem; background-color: #eef2f7; border-left: 4px solid #7b4b35; border-radius: .25rem; color: #1f3d60; }
+.payment-simulation-fieldset { background-color: #ffffff; border: 2px solid #7b4b35 !important; }
+.payment-option { padding: .5rem; border-radius: .25rem; cursor: pointer; }
+.payment-option-approved { background-color: #f4fbf7; border: 1px solid #badbcc; }
+.payment-option-refused { background-color: #fff8f8; border: 1px solid #f5c2c7; }
+.order-result-box { margin: 1rem 0; padding: 1rem; border-radius: .35rem; }
+.result-box-approved { background-color: #d1e7dd; color: #0f5132; border: 2px solid #0f5132; }
+.result-box-refused { background-color: #fbebee; color: #842029; border: 2px solid #842029; }
+
 
 

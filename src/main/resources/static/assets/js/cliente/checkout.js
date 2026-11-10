@@ -236,11 +236,13 @@ confirmForm.addEventListener('submit', async event => {
 
     if (order.resultadoSimulado === 'APROVADO') {
       mainSection.hidden = true;
+      resultSection.className = 'order-result-box result-box-approved';
       summaryEl.textContent = `Pedido #${order.id} confirmado com pagamento simulado aprovado!`;
       detailsEl.textContent = `Status de atendimento: ${formatOrderStatus(order.statusAtendimento)} | Modalidade: ${formatOrderMode(order.modalidade)} | Total: ${formatCurrencyBRL(order.total)}. Seu carrinho foi limpo.`;
       actionsEl.append(detailLink, document.createTextNode(' | '), ordersLink);
       message.textContent = `Pedido #${order.id} registrado com sucesso.`;
     } else {
+      resultSection.className = 'order-result-box result-box-refused';
       summaryEl.textContent = `Pedido #${order.id} registrado com pagamento simulado recusado (${formatSimulatedPayment(order.resultadoSimulado)}).`;
       detailsEl.textContent = `Status do pedido: ${formatOrderStatus(order.statusAtendimento)}. Seu carrinho foi mantido para que você possa gerar uma nova revisão e tentar novamente.`;
       actionsEl.append(detailLink, document.createTextNode(' | '), ordersLink);

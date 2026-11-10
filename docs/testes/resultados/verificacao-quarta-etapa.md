@@ -51,7 +51,7 @@ Para executar localmente a parte pendente, forneça `DB_TEST_USERNAME` e `DB_TES
 ```powershell
 .\mvnw.cmd '-Dtest=CartPostgresIntegrationTest' test
 .\mvnw.cmd test-compile '-Dspring-boot.run.main-class=br.com.pit.cupcakes.carrinho.CartBrowserServer' spring-boot:test-run
-C:/Python313/python.exe docs/testes/casos/verificar_carrinho.py --mode postgresql
+python docs/testes/casos/verificar_carrinho.py --mode postgresql
 ```
 
 Inicie o servidor em um terminal e rode o roteiro em outro. Inspecione as capturas CRT e registre os resultados executados. Não use `cupcakes`, não execute `Flyway clean` e não copie credenciais para arquivos ou evidências. Falta também observar CRT12 em navegador com a resposta perdida após processamento, distinguindo qualquer controle de rede dos endpoints reais.

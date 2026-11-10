@@ -27,11 +27,11 @@ Implementação conforme a [SPEC de conclusão funcional](../../../specs/12-SPEC
 
 ## 2. Testes automatizados sem PostgreSQL externo (H2 + MockMvc)
 
-Comando executado com `JAVA_HOME` apontando para o JDK 21.0.7 (`C:\Program Files\Android\Android Studio\jbr`):
+Comando executado com `JAVA_HOME` apontando para o JDK 21:
 
 ```powershell
-$env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
-$env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+# Caso necessario, defina JAVA_HOME apontando para sua instalacao do JDK 21:
+# $env:JAVA_HOME = '<CAMINHO_DO_JDK_21>'; $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
 .\mvnw.cmd -q '-Dtest=CheckoutOrderAdminApiTest,CartApiTest,AddressValidationTest,AddressApiTest,PostalCodeClientTest,AuthenticationSecurityTest,RegistrationServiceTest,ProductControllerTest,ProductServiceTest,ProductRepositoryTest,DemoDataLoaderTest,PostgresTestDatabaseGuardTest' test
 ```
 
@@ -77,7 +77,9 @@ Com o `StoreFlowBrowserServer` em execução na porta `8094`, foi executado:
 python docs/testes/casos/verificar_fluxo_completo.py --base-url http://localhost:8094
 ```
 
-Resultado registrado em [fluxo-completo-navegador.json](fluxo-completo-navegador.json): **21 cenários aprovados, 20 capturas de tela inspecionadas visualmente sem sobreposição ou rolagem horizontal indevida (`360px` e `1280px`) e 0 erros JavaScript**.
+Resultado registrado em [fluxo-completo-navegador.json](fluxo-completo-navegador.json): **`"execucao": "concluída"`, 21 cenários aprovados, 20 capturas de tela do fluxo principal inspecionadas visualmente sem sobreposição ou rolagem horizontal indevida (`360px` e `1280px`) e 0 erros JavaScript**.
+
+> **Nota sobre a coerência de `fluxo-completo-navegador.json`**: na primeira versão de `verificar_fluxo_completo.py`, o campo `execucao` era calculado por `"concluída" if len(cases) == 19 else "parcial"`, enquanto o roteiro registrava **21 cenários** (pois `CRT13` adiciona 2 registros ao validar `360px` e `1280px`). O script foi corrigido para definir `completed = True` ao concluir todos os cenários do bloco `try`, e a reexecução completa atualizou `fluxo-completo-navegador.json` para `"execucao": "concluída"`, além de gerar as evidências de antes/depois dos apontamentos de usabilidade (`AV01`, `AV02`, `AV04`, `AV05`) descritas em [avaliacao-participantes-e-laudo.md](../../entrega/avaliacao-participantes-e-laudo.md).
 
 | Caso | Descrição verificada em navegador real | Evidência inspecionada |
 | --- | --- | --- |

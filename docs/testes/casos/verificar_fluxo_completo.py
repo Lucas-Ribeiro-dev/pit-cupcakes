@@ -30,6 +30,7 @@ async def main():
 
     cases = []
     js_errors = []
+    completed = False
     customer_email = f"fluxo-{uuid.uuid4().hex[:10]}@example.com"
     customer_password = "SenhaCliente#2026"
 
@@ -54,6 +55,8 @@ async def main():
             await expect(add_btn).to_be_visible()
             await add_btn.click()
             await expect(page.get_by_text("Produto adicionado ao carrinho.").first).to_be_visible()
+            await expect(page.locator(".cart-feedback-success .cart-feedback-link").first).to_be_visible()
+            await page.screenshot(path=str(evidence / "AV01_depois_confirmacao-carrinho.png"), full_page=True)
             await record("CRT01 inclusão pelo catálogo", "HU06_CRT01_adicionar-produto.png")
 
             await page.get_by_role("link", name="Carrinho").click()
@@ -147,12 +150,14 @@ async def main():
             await page.click("#reviewButton")
             await expect(page.locator("#revisionSummarySection")).to_be_visible()
             await expect(page.locator("#revisionShippingDisplay")).to_contain_text("8,00")
+            await page.screenshot(path=str(evidence / "AV04_depois_checkout-escolha-pagamento.png"), full_page=True)
             await record("CHK02 revisão de entrega com frete calculado no servidor", "CHK02_revisao-entrega.png")
 
             await page.locator("input[name=resultadoSimulado][value=RECUSADO]").check()
             await page.click("#confirmButton")
             await expect(page.locator("#orderResultSection")).to_be_visible()
             await expect(page.locator("#orderResultSummary")).to_contain_text("recusado")
+            await page.screenshot(path=str(evidence / "AV04_depois_resultado-recusa.png"), full_page=True)
             await record("CHK03 pagamento simulado recusado e carrinho preservado", "CHK03_pagamento-recusado.png")
 
             # Nova revisao e confirmacao aprovada
@@ -238,11 +243,12 @@ async def main():
             await record("PED03 acompanhamento pelo cliente após conclusão do pedido", "PED03_acompanhamento-concluido.png")
 
             assert not js_errors, js_errors
+            completed = True
         finally:
             results.joinpath("fluxo-completo-navegador.json").write_text(
                 json.dumps(
                     {
-                        "execucao": "concluída" if not js_errors and len(cases) == 19 else "parcial",
+                        "execucao": "concluída" if completed and not js_errors else "parcial",
                         "baseUrl": args.base_url,
                         "totalCenarios": len(cases),
                         "cenarios": cases,
