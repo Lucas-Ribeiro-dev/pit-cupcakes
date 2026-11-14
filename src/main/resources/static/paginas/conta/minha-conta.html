@@ -12,9 +12,15 @@
     <nav id="accountNavigation" aria-label="Conta"></nav>
     <p id="navigationMessage" role="status"></p>
   </div></header>
-  <main class="account-page">
-    <a href="/index.html">Voltar ao catálogo</a>
+  <main class="account-page account-home-page">
+    <a class="catalog-back-link" href="/index.html"><img class="back-arrow" src="/assets/img/arrow-raspberry.webp" alt="" aria-hidden="true">Voltar ao catálogo</a>
     <h1>Minha conta</h1>
+    <p class="account-home-intro">Acesse seus pedidos, gerencie endereços e continue suas compras.</p>
+    <section class="account-shortcuts" aria-label="Acessos da conta">
+      <article class="account-shortcut-card"><h2>Meus endereços</h2><p>Cadastre endereços e consulte as opções de entrega.</p><a class="secondary-action" href="/paginas/conta/enderecos.html">Gerenciar endereços</a></article>
+      <article class="account-shortcut-card"><h2>Meus pedidos</h2><p>Consulte seu histórico e os detalhes de cada pedido.</p><a class="secondary-action" href="/paginas/conta/pedidos.html">Ver pedidos</a></article>
+      <article class="account-shortcut-card"><h2>Meu carrinho</h2><p>Confira os produtos antes de revisar o pedido.</p><a class="secondary-action" href="/paginas/compra/carrinho.html">Ver carrinho</a></article>
+    </section>
     <p><a href="/paginas/conta/enderecos.html">Meus endereços e consulta de frete</a></p>
     <p><a href="/paginas/conta/pedidos.html">Meus pedidos</a></p>
     <p><a href="/paginas/compra/carrinho.html">Meu carrinho</a></p>
@@ -22,6 +28,7 @@
     <p id="formMessage" role="status" aria-live="polite"></p>
     <section id="accountDetails" hidden><h2>Seus dados</h2><dl><dt>Nome</dt><dd id="accountName"></dd><dt>E-mail</dt><dd id="accountEmail"></dd></dl></section>
   </main>
+  <footer><div class="footer-container"><p class="footer-brand">PIT Cupcakes</p><p>Projeto Integrador Transdisciplinar em Engenharia de Software</p></div></footer>
   <script type="module" src="/assets/js/cliente/navegacao.js"></script>
   <script type="module" src="/assets/js/cliente/minha-conta.js"></script>
 </body>

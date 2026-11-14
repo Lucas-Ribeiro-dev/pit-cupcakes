@@ -44,16 +44,16 @@ class DemoDataLoaderTest {
 
         long availableCount = savedProducts.stream().filter(Product::getAvailable).count();
         long unavailableCount = savedProducts.stream().filter(p -> !p.getAvailable()).count();
-        long withoutImageCount = savedProducts.stream().filter(p -> p.getImagePath() == null).count();
 
         assertThat(availableCount).isEqualTo(3);
         assertThat(unavailableCount).isEqualTo(1);
-        assertThat(withoutImageCount).isGreaterThanOrEqualTo(1);
 
         savedProducts.forEach(product -> {
             assertThat(product.getPrice()).isGreaterThan(BigDecimal.ZERO);
-            assertThat(product.getName()).contains("Demonstração");
+            assertThat(product.getName()).isNotBlank().doesNotContain("Demonstração");
             assertThat(product.getDescription()).isNotBlank();
+            assertThat(product.getImagePath()).startsWith("/assets/img/").endsWith(".webp");
+            assertThat(getClass().getResource("/static" + product.getImagePath())).isNotNull();
         });
     }
 

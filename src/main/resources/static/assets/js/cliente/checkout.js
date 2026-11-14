@@ -17,6 +17,7 @@ const pickupInfo = document.getElementById('pickupInfo');
 const deliverySelection = document.getElementById('deliverySelection');
 const addressListContainer = document.getElementById('checkoutAddressList');
 const revisionSummarySection = document.getElementById('revisionSummarySection');
+const orderSummary = document.getElementById('checkoutOrderSummary');
 const confirmForm = document.getElementById('confirmForm');
 const resultSection = document.getElementById('orderResultSection');
 
@@ -39,6 +40,7 @@ function invalidateActiveRevision(reason) {
   if (pendingNetworkConfirmation) return;
   activeRevision = null;
   revisionSummarySection.hidden = true;
+  orderSummary.hidden = true;
   if (reason) message.textContent = reason;
 }
 
@@ -56,18 +58,20 @@ function renderAddressChoices() {
   fieldset.append(legend);
   addresses.forEach((addr, idx) => {
     const label = document.createElement('label');
+    label.className = 'checkout-choice checkout-address-choice';
     const radio = document.createElement('input');
     radio.type = 'radio';
     radio.name = 'enderecoId';
     radio.value = String(addr.id);
     if (idx === 0) radio.checked = true;
     radio.addEventListener('change', () => invalidateActiveRevision('Endereço alterado. Gere uma nova revisão do pedido.'));
-    label.append(
-      radio,
-      document.createTextNode(
-        ` ${addr.destinatario} — ${addr.logradouro}, ${addr.numero}${addr.complemento ? ' (' + addr.complemento + ')' : ''}, ${addr.bairro}, ${addr.cidade}/${addr.uf}, CEP ${addr.cep}`
-      )
-    );
+    const details = document.createElement('span');
+    const recipient = document.createElement('strong');
+    recipient.textContent = addr.destinatario;
+    const address = document.createElement('small');
+    address.textContent = `${addr.logradouro}, ${addr.numero}${addr.complemento ? ' (' + addr.complemento + ')' : ''}, ${addr.bairro}, ${addr.cidade}/${addr.uf}, CEP ${addr.cep}`;
+    details.append(recipient, address);
+    label.append(radio, details);
     fieldset.append(label);
   });
   addressListContainer.append(fieldset);
@@ -116,7 +120,11 @@ function renderRevision(revision) {
   document.getElementById('revisionSubtotalDisplay').textContent = formatCurrencyBRL(revision.subtotal);
   document.getElementById('revisionShippingDisplay').textContent = formatCurrencyBRL(revision.frete);
   document.getElementById('revisionTotalDisplay').textContent = formatCurrencyBRL(revision.total);
+  document.getElementById('checkoutSummarySubtotal').textContent = formatCurrencyBRL(revision.subtotal);
+  document.getElementById('checkoutSummaryShipping').textContent = formatCurrencyBRL(revision.frete);
+  document.getElementById('checkoutSummaryTotal').textContent = formatCurrencyBRL(revision.total);
   revisionSummarySection.hidden = false;
+  orderSummary.hidden = false;
   resultSection.hidden = true;
 }
 
@@ -220,6 +228,7 @@ confirmForm.addEventListener('submit', async event => {
     pendingNetworkConfirmation = false;
     activeRevision = null;
     revisionSummarySection.hidden = true;
+    orderSummary.hidden = true;
 
     const summaryEl = document.getElementById('orderResultSummary');
     const detailsEl = document.getElementById('orderResultDetails');
@@ -227,10 +236,12 @@ confirmForm.addEventListener('submit', async event => {
     actionsEl.replaceChildren();
 
     const detailLink = document.createElement('a');
+    detailLink.className = 'secondary-action';
     detailLink.href = `/paginas/conta/pedido.html?id=${encodeURIComponent(order.id)}`;
     detailLink.textContent = `Ver detalhes do pedido #${order.id}`;
 
     const ordersLink = document.createElement('a');
+    ordersLink.className = 'secondary-action';
     ordersLink.href = '/paginas/conta/pedidos.html';
     ordersLink.textContent = 'Ir para Meus pedidos';
 
@@ -239,13 +250,13 @@ confirmForm.addEventListener('submit', async event => {
       resultSection.className = 'order-result-box result-box-approved';
       summaryEl.textContent = `Pedido #${order.id} confirmado com pagamento simulado aprovado!`;
       detailsEl.textContent = `Status de atendimento: ${formatOrderStatus(order.statusAtendimento)} | Modalidade: ${formatOrderMode(order.modalidade)} | Total: ${formatCurrencyBRL(order.total)}. Seu carrinho foi limpo.`;
-      actionsEl.append(detailLink, document.createTextNode(' | '), ordersLink);
+      actionsEl.append(detailLink, ordersLink);
       message.textContent = `Pedido #${order.id} registrado com sucesso.`;
     } else {
       resultSection.className = 'order-result-box result-box-refused';
       summaryEl.textContent = `Pedido #${order.id} registrado com pagamento simulado recusado (${formatSimulatedPayment(order.resultadoSimulado)}).`;
       detailsEl.textContent = `Status do pedido: ${formatOrderStatus(order.statusAtendimento)}. Seu carrinho foi mantido para que você possa gerar uma nova revisão e tentar novamente.`;
-      actionsEl.append(detailLink, document.createTextNode(' | '), ordersLink);
+      actionsEl.append(detailLink, ordersLink);
       message.textContent = 'Pagamento simulado recusado. Gere uma nova revisão acima se desejar confirmar um novo pedido.';
     }
     resultSection.hidden = false;
@@ -277,6 +288,7 @@ async function initCheckout() {
   showOnly(loading);
   resultSection.hidden = true;
   revisionSummarySection.hidden = true;
+  orderSummary.hidden = true;
   message.textContent = '';
   try {
     await api('/api/autenticacao/sessao');

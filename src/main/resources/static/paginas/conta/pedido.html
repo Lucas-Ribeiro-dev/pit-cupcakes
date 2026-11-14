@@ -13,7 +13,10 @@
     <p id="navigationMessage" role="status"></p>
   </div></header>
   <main class="account-page">
-    <p><a href="/paginas/conta/pedidos.html">Voltar para Meus pedidos</a> | <a href="/index.html">Catálogo</a></p>
+    <nav class="account-page-nav" aria-label="Navegação do pedido">
+      <a class="account-nav-primary" href="/paginas/conta/pedidos.html">Voltar para Meus pedidos</a>
+      <a class="account-nav-secondary" href="/index.html">Catálogo</a>
+    </nav>
     <h1 id="orderDetailTitle">Detalhes do pedido</h1>
     <p id="orderDetailMessage" role="status" aria-live="polite"></p>
     <section id="orderDetailLoading" aria-live="polite">Carregando detalhes do pedido...</section>
@@ -24,7 +27,7 @@
         <p>Realizado em: <strong id="detailDate"></strong></p>
         <p>Modalidade: <strong id="detailMode"></strong></p>
         <p>Status de atendimento: <strong id="detailStatus"></strong></p>
-        <p>Pagamento simulado (acadêmico): <strong id="detailPayment"></strong></p>
+        <p>Pagamento simulado: <strong id="detailPayment"></strong></p>
       </section>
 
       <section id="detailAddressSection" hidden aria-labelledby="addressHeading">
@@ -34,7 +37,7 @@
 
       <section id="detailPickupSection" hidden aria-labelledby="pickupHeading">
         <h2 id="pickupHeading">Retirada na loja</h2>
-        <p>Ponto de retirada acadêmico (endereço fictício de demonstração): Quadra Central Fictícia, Bloco A, Loja 01, Brasília/DF, CEP 70000-000.</p>
+        <p>Ponto de retirada: Quadra Central, Bloco A, Loja 01, Brasília/DF, CEP 70000-000.</p>
       </section>
 
       <section aria-labelledby="itemsHeading">

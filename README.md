@@ -53,7 +53,7 @@ Todas as rotas `/api/conta/**` exigem sessão autenticada; todas as rotas `/api/
 
 | Endpoint | Entrada | Sucesso |
 | --- | --- | --- |
-| `POST /api/conta/checkout/revisao` | `modalidade` (`ENTREGA` com `enderecoId` e `versaoEndereco`, ou `RETIRADA`) | `200 OK`; `revisaoId`, itens validados, `subtotalItens`, `valorFrete`, `total` |
+| `POST /api/conta/checkout/revisao` | `modalidade` (`ENTREGA` com `enderecoId` e `versaoEndereco`, ou `RETIRADA`) | `200 OK`; `revisaoId`, `expiraEm` (10 min), itens validados, `subtotal`, `frete`, `total` |
 | `POST /api/conta/pedidos` | `revisaoId`, `resultadoSimulado` (`APROVADO` ou `RECUSADO`) | `201 Created` na criação; `200 OK` em repetição idempotente |
 | `GET /api/conta/pedidos` | — | `200 OK`; resumos dos pedidos do cliente autenticado |
 | `GET /api/conta/pedidos/{id}` | ID positivo do próprio cliente | `200 OK`; detalhes, itens históricos, endereço congelado e pagamento simulado |
@@ -94,9 +94,10 @@ python docs/testes/casos/verificar_fluxo_completo.py --base-url http://localhost
 
 ## Documentação do projeto
 
+- [Verificação final para entrega acadêmica (14/11/2026)](docs/testes/resultados/verificacao-final-publicacao.md): 64 testes H2/MockMvc, 15 testes PostgreSQL em `cupcakes_test` e 28 cenários no navegador real, com evidências novas e falhas corrigidas.
 - [Arquitetura e limites transacionais](docs/arquitetura/visao-geral.md) e [modelo de carrinho em sessão](docs/arquitetura/carrinho-em-sessao.md)
 - [Dicionário de dados (V1 a V4)](docs/banco-de-dados/dicionario-dados.md) e [decisão técnica ViaCEP](docs/decisoes/DT01-viacep.md)
 - [Histórias de usuário e casos de uso](docs/requisitos/historias-e-casos-de-uso.md) e [diagramas UML (classes, casos de uso, sequência e atividade)](docs/modelagem/diagramas-uml.md)
-- [Manual de uso, operação e publicação](docs/manual/manual-usuario-e-publicacao.md)
-- [Formulário de avaliação para 5 participantes e modelo de laudo](docs/entrega/avaliacao-participantes-e-laudo.md)
+- [Manual de uso, operação e publicação (incluindo Dockerfile multi-stage Java 21 e passo a passo Render + Neon)](docs/manual/manual-usuario-e-publicacao.md)
+- [Avaliações recebidas (AV01 a AV05), retestes de usabilidade e laudo de qualidade](docs/entrega/avaliacao-participantes-e-laudo.md)
 - Registros de verificação por etapa: [1ª etapa](docs/testes/resultados/verificacao-primeira-etapa.md), [2ª etapa](docs/testes/resultados/verificacao-segunda-etapa.md), [3ª etapa](docs/testes/resultados/verificacao-terceira-etapa.md), [4ª etapa](docs/testes/resultados/verificacao-quarta-etapa.md) e [5ª etapa](docs/testes/resultados/verificacao-quinta-etapa.md)

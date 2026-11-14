@@ -128,7 +128,7 @@ statusForm.addEventListener('submit', async event => {
     });
     renderSelectedOrder(updated);
     selectedNotice.textContent = updated.statusAtendimento === 'CANCELADO'
-      ? `Pedido #${updated.id} cancelado no fluxo acadêmico (sem estorno financeiro real).`
+      ? `Pedido #${updated.id} cancelado. Nenhuma cobrança foi feita.`
       : `Status do pedido #${updated.id} atualizado para ${formatOrderStatus(updated.statusAtendimento)}.`;
     await loadOrders();
   } catch (error) {

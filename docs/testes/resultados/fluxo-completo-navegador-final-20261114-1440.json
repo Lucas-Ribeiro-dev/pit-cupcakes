@@ -1,0 +1,122 @@
+{
+  "execucao": "parcial",
+  "baseUrl": "http://localhost:8094",
+  "totalCenarios": 23,
+  "cenarios": [
+    {
+      "cenario": "CAT01 catalogo em 1280px",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/CAT01_catalogo-1280.png"
+    },
+    {
+      "cenario": "CAT01 catalogo em 360px",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/CAT01_catalogo-360.png"
+    },
+    {
+      "cenario": "CRT01 inclusão pelo catálogo",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/HU06_CRT01_adicionar-produto.png"
+    },
+    {
+      "cenario": "CRT01 carrinho visitante",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/HU06_CRT01_carrinho-visitante.png"
+    },
+    {
+      "cenario": "CRT03 quantidade alterada",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/HU07_CRT03_quantidade.png"
+    },
+    {
+      "cenario": "CRT08 recarga da sessão do carrinho",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "CRT13 teclado e 360px no carrinho",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/HU06_CRT13_carrinho-360-teclado.png"
+    },
+    {
+      "cenario": "CRT13 teclado e 1280px no carrinho",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/HU06_CRT13_carrinho-1280-teclado.png"
+    },
+    {
+      "cenario": "CRT03 remoção e estado vazio",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/HU07_CRT03_removido.png"
+    },
+    {
+      "cenario": "AUTH01 cadastro em 360px",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/AUTH01_cadastro-360.png"
+    },
+    {
+      "cenario": "AUTH02 login em 360px",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/AUTH02_login-360.png"
+    },
+    {
+      "cenario": "CRT09 e CHK01 login preservando carrinho e retorno ao checkout",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/CHK01_checkout-apos-login-1280.png"
+    },
+    {
+      "cenario": "CHK01 checkout responsivo 360px",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/CHK01_checkout-360.png"
+    },
+    {
+      "cenario": "ADR01 endereco salvo em 1280px",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/ADR01_endereco-1280.png"
+    },
+    {
+      "cenario": "ADR01 endereco salvo em 360px",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/ADR01_endereco-360.png"
+    },
+    {
+      "cenario": "CHK02 revisao de entrega em 360px",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/CHK02_revisao-entrega-360.png"
+    },
+    {
+      "cenario": "CHK02 revisão de entrega com frete calculado no servidor",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/CHK02_revisao-entrega.png"
+    },
+    {
+      "cenario": "CHK03 pagamento simulado recusado e carrinho preservado",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/CHK03_pagamento-recusado.png"
+    },
+    {
+      "cenario": "CHK04 pagamento simulado aprovado e pedido criado",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/CHK04_pagamento-aprovado.png"
+    },
+    {
+      "cenario": "PED01 listagem de Meus pedidos em 1280px",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/PED01_meus-pedidos-1280.png"
+    },
+    {
+      "cenario": "PED01 listagem de Meus pedidos em 360px",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/PED01_meus-pedidos-360.png"
+    },
+    {
+      "cenario": "PED02 detalhes do pedido aprovado",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/PED02_detalhe-pedido.png"
+    },
+    {
+      "cenario": "ADM01 bloqueio de tela administrativa para perfil CLIENTE",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1440/ADM01_cliente-acesso-negado.png"
+    }
+  ],
+  "errosJavaScript": []
+}

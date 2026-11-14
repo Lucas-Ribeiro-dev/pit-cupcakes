@@ -26,39 +26,56 @@ public class DemoDataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (productRepository.count() > 0) {
-            logger.info("Base de dados ja contem produtos. Carga de demonstracao ignorada.");
+            List<Product> legacyProducts = productRepository.findAll().stream()
+                    .filter(product -> product.getName() != null && (
+                            product.getName().contains(" (Indisponível - Demonstração)")
+                            || product.getName().contains(" (Demonstração)")
+                    ))
+                    .peek(product -> product.setName(
+                            product.getName()
+                                    .replace(" (Indisponível - Demonstração)", "")
+                                    .replace(" (Demonstração)", "")
+                                    .trim()
+                    ))
+                    .toList();
+            if (!legacyProducts.isEmpty()) {
+                productRepository.saveAll(legacyProducts);
+                logger.info("Nomes de produtos atualizados sem sufixo de demonstracao: {}", legacyProducts.size());
+            } else {
+                logger.info("Base de dados ja contem produtos. Carga de demonstracao ignorada.");
+            }
             return;
         }
 
-        logger.info("Carregando 4 produtos de demonstracao (perfil demo ativo)...");
+        logger.info("Carregando 4 produtos iniciais (perfil demo ativo)...");
 
         List<Product> demoProducts = List.of(
                 new Product(
-                        "Cupcake de Baunilha Tradicional (Demonstração)",
+                        "Cupcake de Baunilha Tradicional",
                         "Cupcake fofinho de baunilha natural de Madagascar com cobertura cremosa de buttercream artesanal.",
                         new BigDecimal("12.50"),
-                        "/assets/img/cupcake-baunilha.svg",
+                        "/assets/img/cupcake-baunilha.webp",
                         true
                 ),
                 new Product(
-                        "Cupcake de Chocolate Belga (Demonstração)",
+                        "Cupcake de Chocolate Belga",
                         "Massa intensa de cacau 70% recheada com ganache trufada e confeitos de chocolate belga.",
                         new BigDecimal("14.00"),
-                        "/assets/img/cupcake-chocolate.svg",
+                        "/assets/img/cupcake-chocolate.webp",
                         true
                 ),
                 new Product(
-                        "Cupcake de Frutas Vermelhas (Demonstração)",
+                        "Cupcake de Frutas Vermelhas",
                         "Bolo leve aromatizado com raspas de limão e recheio artesanal de morango, amora e framboesa fresca.",
                         new BigDecimal("15.50"),
-                        null,
+                        "/assets/img/cupcake-frutas-vermelhas.webp",
                         true
                 ),
                 new Product(
-                        "Cupcake de Caramelo Salgado (Indisponível - Demonstração)",
+                        "Cupcake de Caramelo Salgado",
                         "Massa amanteigada com recheio cremoso de doce de leite suave e toque especial de flor de sal.",
                         new BigDecimal("13.00"),
-                        "/assets/img/cupcake-caramelo.svg",
+                        "/assets/img/cupcake-caramelo.webp",
                         false
                 )
         );

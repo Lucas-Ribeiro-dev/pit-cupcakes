@@ -1,4 +1,4 @@
-import { formatCurrencyBRL, FALLBACK_IMAGE_PATH } from "../compartilhado/formatters.js";
+import { formatCurrencyBRL, resolveProductImage, FALLBACK_IMAGE_PATH } from "../compartilhado/formatters.js";
 import { addToCart } from "./acoes-carrinho.js";
 
 const loadingElement = document.getElementById("loadingState");
@@ -15,12 +15,40 @@ const detailPrice = document.getElementById("detailPrice");
 const detailBadge = document.getElementById("detailBadge");
 const addButton = document.getElementById('addToCart');
 const quantityInput = document.getElementById('cartQuantity');
+const decreaseButton = document.getElementById('decreaseQuantity');
+const increaseButton = document.getElementById('increaseQuantity');
 const cartMessage = document.getElementById('cartMessage');
 let currentProductId;
+
+function syncQuantityControls() {
+  const quantity = Number(quantityInput.value);
+  const validQuantity = Number.isInteger(quantity);
+  decreaseButton.disabled = !validQuantity || quantity <= Number(quantityInput.min);
+  increaseButton.disabled = !validQuantity || quantity >= Number(quantityInput.max);
+}
+
+decreaseButton.addEventListener('click', () => {
+  const quantity = Number(quantityInput.value);
+  if (Number.isInteger(quantity) && quantity > Number(quantityInput.min)) {
+    quantityInput.value = quantity - 1;
+    syncQuantityControls();
+  }
+});
+
+increaseButton.addEventListener('click', () => {
+  const quantity = Number(quantityInput.value);
+  if (Number.isInteger(quantity) && quantity < Number(quantityInput.max)) {
+    quantityInput.value = quantity + 1;
+    syncQuantityControls();
+  }
+});
+
+quantityInput.addEventListener('input', syncQuantityControls);
 addButton.addEventListener('click', () => {
   const quantity = Number(quantityInput.value);
   if (!Number.isInteger(quantity) || quantity < 1 || quantity > 99) {
-    cartMessage.textContent = 'Informe uma quantidade inteira de 1 a 99.';
+    cartMessage.className = 'cart-feedback cart-feedback-error';
+    cartMessage.textContent = 'Informe uma quantidade inteira entre 1 e 99.';
     return;
   }
   addToCart(currentProductId, quantity, addButton, cartMessage);
@@ -108,6 +136,12 @@ export async function loadProductDetail() {
 function renderProductDetail(product) {
   currentProductId = product.id;
   addButton.disabled = !product.disponivel;
+  quantityInput.disabled = !product.disponivel;
+  decreaseButton.disabled = !product.disponivel;
+  increaseButton.disabled = !product.disponivel;
+  if (product.disponivel) {
+    syncQuantityControls();
+  }
   addButton.textContent = product.disponivel ? 'Adicionar ao carrinho' : 'Indisponível';
   if (detailTitle) {
     detailTitle.textContent = product.nome;
@@ -123,7 +157,7 @@ function renderProductDetail(product) {
   }
 
   if (detailImage) {
-    detailImage.src = product.imagemUrl ? product.imagemUrl : FALLBACK_IMAGE_PATH;
+    detailImage.src = resolveProductImage(product);
     detailImage.alt = product.nome ? product.nome : "Cupcake";
     detailImage.onerror = () => {
       detailImage.src = FALLBACK_IMAGE_PATH;
@@ -136,7 +170,7 @@ function renderProductDetail(product) {
       detailBadge.textContent = "Disponível";
     } else {
       detailBadge.className = "badge badge-indisponivel";
-      detailBadge.textContent = "Indisponível";
+      detailBadge.textContent = "Indisponível no momento";
     }
   }
 }

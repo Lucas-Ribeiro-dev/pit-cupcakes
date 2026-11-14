@@ -33,6 +33,7 @@ form.addEventListener('input', event => {
 function reset() {
   cancelLookup(); invalidateQuote(); editing = undefined; form.reset();
   document.querySelector('#formTitle').textContent = 'Novo endereço';
+  document.querySelector('#saveButton').textContent = 'Salvar endereço';
   message.textContent = '';
 }
 document.querySelector('#cancelButton').addEventListener('click', reset);
@@ -87,8 +88,9 @@ async function quote(address) {
   }
 }
 document.querySelector('#pickupButton').addEventListener('click', () => quote());
-function button(label, action) {
+function button(label, action, className = '') {
   const element = document.createElement('button'); element.type = 'button'; element.textContent = label;
+  if (className) element.className = className;
   element.addEventListener('click', action); return element;
 }
 async function loadList() {
@@ -97,16 +99,31 @@ async function loadList() {
   if (!addresses.length) list.textContent = 'Nenhum endereço cadastrado.';
   for (const address of addresses) {
     const article = document.createElement('article');
-    const description = document.createElement('p');
-    description.textContent = `${address.destinatario}: ${address.logradouro}, ${address.numero}${address.complemento ? ' — ' + address.complemento : ''}, ${address.bairro}, ${address.cidade}/${address.uf}, CEP ${address.cep}`;
-    article.append(description, button('Editar', async () => {
+    article.className = 'saved-address-card';
+    const recipient = document.createElement('strong');
+    recipient.className = 'saved-address-recipient';
+    recipient.textContent = address.destinatario;
+    const street = document.createElement('span');
+    street.textContent = `${address.logradouro}, ${address.numero}${address.complemento ? ' — ' + address.complemento : ''}`;
+    const neighborhood = document.createElement('span');
+    neighborhood.textContent = address.bairro;
+    const city = document.createElement('span');
+    city.textContent = `${address.cidade}/${address.uf} — CEP ${address.cep}`;
+    const details = document.createElement('div');
+    details.className = 'saved-address-details';
+    details.append(street, neighborhood, city);
+    const actions = document.createElement('div');
+    actions.className = 'saved-address-actions';
+    actions.append(button('Editar', async () => {
       try {
         const current = await api(`/api/conta/enderecos/${address.id}`);
         reset(); editing = current;
         fields.forEach(field => { form.elements[field].value = current[field] || ''; });
-        document.querySelector('#formTitle').textContent = 'Editar endereço'; form.elements.destinatario.focus();
+        document.querySelector('#formTitle').textContent = 'Editar endereço';
+        document.querySelector('#saveButton').textContent = 'Salvar alterações';
+        form.elements.destinatario.focus();
       } catch (error) { report(error); }
-    }), button('Remover', async () => {
+    }, 'secondary-action'), button('Remover', async () => {
       if (!confirm('Remover este endereço do cadastro?')) return;
       invalidateQuote();
       try {
@@ -114,7 +131,8 @@ async function loadList() {
         if (editing?.id === address.id) reset();
         message.textContent = 'Endereço removido.'; await loadList();
       } catch (error) { report(error); await loadList().catch(report); }
-    }), button('Consultar entrega', () => quote(address)));
+    }, 'tertiary-action'), button('Consultar entrega', () => quote(address), 'secondary-action'));
+    article.append(recipient, details, actions);
     list.append(article);
   }
 }

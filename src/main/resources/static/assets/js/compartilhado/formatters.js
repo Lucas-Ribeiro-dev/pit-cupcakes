@@ -20,6 +20,21 @@ export function formatCurrencyBRL(value) {
 
 export const FALLBACK_IMAGE_PATH = "/assets/img/cupcake-placeholder.svg";
 
+const PRODUCT_IMAGE_PATHS = [
+  ["baunilha", "/assets/img/cupcake-baunilha.webp"],
+  ["chocolate", "/assets/img/cupcake-chocolate.webp"],
+  ["frutas vermelhas", "/assets/img/cupcake-frutas-vermelhas.webp"],
+  ["frutas-vermelhas", "/assets/img/cupcake-frutas-vermelhas.webp"],
+  ["caramelo", "/assets/img/cupcake-caramelo.webp"]
+];
+
+export function resolveProductImage(product) {
+  const name = String(product?.nome || "").toLowerCase();
+  const imagePath = String(product?.imagemUrl || "").toLowerCase();
+  const match = PRODUCT_IMAGE_PATHS.find(([term]) => name.includes(term) || imagePath.includes(`cupcake-${term}`));
+  return match ? match[1] : (product?.imagemUrl || FALLBACK_IMAGE_PATH);
+}
+
 const STATUS_LABELS = {
   RECEBIDO: "Recebido (RECEBIDO)",
   EM_PREPARACAO: "Em preparação (EM_PREPARACAO)",

@@ -18,6 +18,7 @@ async def main():
         description="Verificação integrada em navegador real: catálogo, carrinho, login, checkout, pedidos e administração."
     )
     parser.add_argument("--base-url", default="http://localhost:8094")
+    parser.add_argument("--run-id", help="Identificador exclusivo para preservar capturas e resultados anteriores")
     parser.add_argument("--admin-email", default=os.environ.get("TEST_BROWSER_ADMIN_EMAIL", "admin.fluxo.isolado@example.com"))
     parser.add_argument("--admin-password", default=os.environ.get("TEST_BROWSER_ADMIN_PASSWORD", "AdminFluxo#2026"))
     args = parser.parse_args()
@@ -25,7 +26,15 @@ async def main():
     if args.base_url != "http://localhost:8094":
         raise ValueError("Use somente o servidor isolado do fluxo integrado em http://localhost:8094.")
 
-    evidence.mkdir(parents=True, exist_ok=True)
+    if args.run_id and (not args.run_id.isascii() or not all(char.isalnum() or char in "-_" for char in args.run_id)):
+        raise ValueError("O identificador da rodada deve conter apenas letras, numeros, hifen ou sublinhado.")
+
+    evidence_dir = evidence / args.run_id if args.run_id else evidence
+    result_path = results / (f"fluxo-completo-navegador-{args.run_id}.json" if args.run_id else "fluxo-completo-navegador.json")
+    if result_path.exists():
+        raise FileExistsError(f"O resultado desta rodada ja existe: {result_path}")
+
+    evidence_dir.mkdir(parents=True, exist_ok=True)
     results.mkdir(parents=True, exist_ok=True)
 
     cases = []
@@ -43,7 +52,7 @@ async def main():
         async def record(cenario, capture=None):
             entry = {"cenario": cenario, "resultado": "aprovado"}
             if capture:
-                path = evidence / capture
+                path = evidence_dir / capture
                 await page.screenshot(path=str(path), full_page=True)
                 entry["evidencia"] = str(path.relative_to(root)).replace("\\", "/")
             cases.append(entry)
@@ -53,10 +62,15 @@ async def main():
             await page.goto(args.base_url + "/index.html", wait_until="networkidle")
             add_btn = page.get_by_role("button", name="Adicionar ao carrinho").first
             await expect(add_btn).to_be_visible()
+            await record("CAT01 catalogo em 1280px", "CAT01_catalogo-1280.png")
+            await page.set_viewport_size({"width": 360, "height": 900})
+            assert await page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+            await record("CAT01 catalogo em 360px", "CAT01_catalogo-360.png")
+            await page.set_viewport_size({"width": 1280, "height": 900})
             await add_btn.click()
             await expect(page.get_by_text("Produto adicionado ao carrinho.").first).to_be_visible()
             await expect(page.locator(".cart-feedback-success .cart-feedback-link").first).to_be_visible()
-            await page.screenshot(path=str(evidence / "AV01_depois_confirmacao-carrinho.png"), full_page=True)
+            await page.screenshot(path=str(evidence_dir / "AV01_depois_confirmacao-carrinho.png"), full_page=True)
             await record("CRT01 inclusão pelo catálogo", "HU06_CRT01_adicionar-produto.png")
 
             await page.get_by_role("link", name="Carrinho").click()
@@ -64,7 +78,7 @@ async def main():
             await record("CRT01 carrinho visitante", "HU06_CRT01_carrinho-visitante.png")
 
             await page.locator("#cartItems input").fill("3")
-            await page.get_by_role("button", name="Alterar quantidade").click()
+            await page.get_by_role("button", name="Atualizar").click()
             await expect(page.locator("#cartItems input")).to_have_value("3")
             await record("CRT03 quantidade alterada", "HU07_CRT03_quantidade.png")
 
@@ -87,13 +101,17 @@ async def main():
             await page.get_by_role("button", name="Adicionar ao carrinho").first.click()
             await expect(page.get_by_text("Produto adicionado ao carrinho.").first).to_be_visible()
             await page.get_by_role("link", name="Carrinho").click()
-            await expect(page.locator("#checkoutLink")).to_be_visible()
+            await expect(page.locator("#visitorActions a[href*='login.html']")).to_be_visible()
 
             # 2. Visitante aciona checkout -> redirecionado para login -> cria conta -> entra -> volta ao checkout com carrinho
-            await page.locator("#checkoutLink").click()
+            await page.locator("#visitorActions a[href*='login.html']").click()
             await page.wait_for_url("**/paginas/conta/login.html?destino=checkout")
             await page.locator("#loginLink").click()
             await page.wait_for_url("**/paginas/conta/cadastro.html?destino=checkout")
+            await page.set_viewport_size({"width": 360, "height": 900})
+            assert await page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+            await record("AUTH01 cadastro em 360px", "AUTH01_cadastro-360.png")
+            await page.set_viewport_size({"width": 1280, "height": 900})
 
             await page.fill("#nome", "Cliente Fluxo Integrado")
             await page.fill("#email", customer_email)
@@ -104,6 +122,10 @@ async def main():
 
             await page.locator("#loginLink").click()
             await page.wait_for_url("**/paginas/conta/login.html?destino=checkout")
+            await page.set_viewport_size({"width": 360, "height": 900})
+            assert await page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+            await record("AUTH02 login em 360px", "AUTH02_login-360.png")
+            await page.set_viewport_size({"width": 1280, "height": 900})
             await page.fill("#email", customer_email)
             await page.fill("#senha", customer_password)
             await page.locator("button[type=submit]").click()
@@ -142,6 +164,11 @@ async def main():
             await page.locator("#addressForm button[type=submit]").click()
             await expect(page.locator("#addressList article")).to_have_count(1)
             await page.unroute("**/api/conta/cep/*")
+            await record("ADR01 endereco salvo em 1280px", "ADR01_endereco-1280.png")
+            await page.set_viewport_size({"width": 360, "height": 900})
+            assert await page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+            await record("ADR01 endereco salvo em 360px", "ADR01_endereco-360.png")
+            await page.set_viewport_size({"width": 1280, "height": 900})
 
             # 4. Checkout com ENTREGA, recusa simulada (mantendo carrinho) e aprovacao simulada
             await page.goto(args.base_url + "/paginas/compra/checkout.html", wait_until="networkidle")
@@ -150,14 +177,18 @@ async def main():
             await page.click("#reviewButton")
             await expect(page.locator("#revisionSummarySection")).to_be_visible()
             await expect(page.locator("#revisionShippingDisplay")).to_contain_text("8,00")
-            await page.screenshot(path=str(evidence / "AV04_depois_checkout-escolha-pagamento.png"), full_page=True)
+            await page.screenshot(path=str(evidence_dir / "AV04_depois_checkout-escolha-pagamento.png"), full_page=True)
+            await page.set_viewport_size({"width": 360, "height": 900})
+            assert await page.evaluate("document.documentElement.scrollWidth <= innerWidth")
+            await record("CHK02 revisao de entrega em 360px", "CHK02_revisao-entrega-360.png")
+            await page.set_viewport_size({"width": 1280, "height": 900})
             await record("CHK02 revisão de entrega com frete calculado no servidor", "CHK02_revisao-entrega.png")
 
             await page.locator("input[name=resultadoSimulado][value=RECUSADO]").check()
             await page.click("#confirmButton")
             await expect(page.locator("#orderResultSection")).to_be_visible()
             await expect(page.locator("#orderResultSummary")).to_contain_text("recusado")
-            await page.screenshot(path=str(evidence / "AV04_depois_resultado-recusa.png"), full_page=True)
+            await page.screenshot(path=str(evidence_dir / "AV04_depois_resultado-recusa.png"), full_page=True)
             await record("CHK03 pagamento simulado recusado e carrinho preservado", "CHK03_pagamento-recusado.png")
 
             # Nova revisao e confirmacao aprovada
@@ -203,7 +234,7 @@ async def main():
             await page.fill("#productName", "Cupcake Admin Fluxo Teste")
             await page.fill("#productDescription", "Criado pelo administrador durante verificação de navegador.")
             await page.fill("#productPrice", "16.50")
-            await page.select_option("#productImage", "/assets/img/cupcake-chocolate.svg")
+            await page.select_option("#productImage", "/assets/img/cupcake-chocolate.webp")
             await page.click("#saveProductButton")
             await expect(page.locator("#productFormMessage")).to_contain_text("Produto cadastrado com sucesso.")
             await record("ADM02 cadastro de produto pelo ADMIN em 1280px", "ADM02_admin-produtos-1280.png")
@@ -245,7 +276,7 @@ async def main():
             assert not js_errors, js_errors
             completed = True
         finally:
-            results.joinpath("fluxo-completo-navegador.json").write_text(
+            result_path.write_text(
                 json.dumps(
                     {
                         "execucao": "concluída" if completed and not js_errors else "parcial",

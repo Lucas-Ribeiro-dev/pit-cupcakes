@@ -12,42 +12,46 @@
     <nav id="accountNavigation" aria-label="Conta"></nav>
     <p id="navigationMessage" role="status"></p>
   </div></header>
-  <main class="account-page">
-    <p><a href="/paginas/compra/carrinho.html">Voltar ao carrinho</a> | <a href="/index.html">Catálogo</a></p>
+  <main class="account-page checkout-page">
+    <nav class="checkout-back-nav" aria-label="Navegação do checkout">
+      <a class="catalog-back-link" href="/paginas/compra/carrinho.html"><img class="back-arrow" src="/assets/img/arrow-raspberry.webp" alt="" aria-hidden="true">Voltar ao carrinho</a>
+      <a class="checkout-catalog-link" href="/index.html">Catálogo</a>
+    </nav>
     <h1>Revisão e confirmação do pedido</h1>
-    <p class="checkout-steps-guide"><strong>Como concluir ou simular o pagamento:</strong> 1) Escolha a modalidade e clique em <em>Gerar revisão do pedido</em>; 2) Na etapa 3 exibida abaixo da revisão, escolha entre <strong>Simular pagamento aprovado (APROVADO)</strong> ou <strong>Simular pagamento recusado (RECUSADO)</strong> antes de confirmar.</p>
+    <p class="checkout-steps-guide">Pagamento simulado. Nenhum valor será cobrado.</p>
     <p id="checkoutMessage" role="status" aria-live="polite"></p>
     <section id="checkoutLoading" aria-live="polite">Carregando dados para revisão do pedido...</section>
     <section id="checkoutEmpty" hidden>
       <p>Seu carrinho está vazio. Adicione cupcakes antes de revisar o pedido.</p>
-      <p><a href="/index.html">Ver catálogo</a></p>
+      <p><a class="checkout-secondary-action" href="/index.html">Ver catálogo</a></p>
     </section>
     <section id="checkoutBlocked" hidden>
       <p>Existem itens indisponíveis ou removidos no seu carrinho. Remova os itens bloqueados no carrinho antes de revisar o pedido.</p>
-      <p><a href="/paginas/compra/carrinho.html">Voltar ao carrinho para ajustar itens</a></p>
+      <p><a class="checkout-secondary-action" href="/paginas/compra/carrinho.html">Voltar ao carrinho para ajustar itens</a></p>
     </section>
-    <div id="checkoutMain" hidden>
-      <section aria-labelledby="modalityTitle">
+    <div id="checkoutMain" class="checkout-layout" hidden>
+      <div class="checkout-primary">
+      <section class="checkout-panel checkout-receiving" aria-labelledby="modalityTitle">
         <h2 id="modalityTitle">1. Escolha a modalidade de recebimento</h2>
         <form id="revisionForm">
           <fieldset>
             <legend>Modalidade</legend>
-            <label><input type="radio" name="modalidade" value="RETIRADA" checked> Retirada na loja (gratuita — R$ 0,00)</label>
-            <label><input type="radio" name="modalidade" value="ENTREGA"> Entrega em endereço cadastrado (Brasília–DF)</label>
+            <label class="checkout-choice"><input type="radio" name="modalidade" value="RETIRADA" checked><span><strong>Retirada na loja</strong><small>Gratuita</small></span></label>
+            <label class="checkout-choice"><input type="radio" name="modalidade" value="ENTREGA"><span><strong>Entrega</strong><small>Em endereço cadastrado; sujeita à área atendida</small></span></label>
           </fieldset>
           <div id="pickupInfo">
-            <p><strong>Ponto de retirada acadêmico (endereço fictício de demonstração):</strong> Quadra Central Fictícia, Bloco A, Loja 01, Brasília/DF, CEP 70000-000. Frete: R$ 0,00.</p>
+            <p><strong>Ponto de retirada:</strong> Quadra Central, Bloco A, Loja 01, Brasília/DF, CEP 70000-000. Frete: R$ 0,00.</p>
           </div>
           <div id="deliverySelection" hidden>
-            <p><a href="/paginas/conta/enderecos.html">Gerenciar ou cadastrar endereços</a></p>
+            <p><a class="checkout-secondary-action checkout-address-action" href="/paginas/conta/enderecos.html">Gerenciar ou cadastrar endereços<img class="checkout-secondary-arrow" src="/assets/img/arrow-raspberry.webp" alt="" aria-hidden="true"></a></p>
             <div id="checkoutAddressList"></div>
           </div>
           <button id="reviewButton" class="btn btn-primary" type="submit">Gerar revisão do pedido</button>
         </form>
       </section>
 
-      <section id="revisionSummarySection" hidden aria-labelledby="summaryTitle">
-        <h2 id="summaryTitle">2. Resumo da revisão calculada no servidor</h2>
+      <section id="revisionSummarySection" class="checkout-panel checkout-revision" hidden aria-labelledby="summaryTitle">
+        <h2 id="summaryTitle">2. Confira o pedido</h2>
         <p>Chave da revisão: <code id="revisionIdDisplay"></code> (válida até <span id="revisionExpiresDisplay"></span>)</p>
         <p>Modalidade: <strong id="revisionModeDisplay"></strong></p>
         <p id="revisionAddressDisplay" hidden></p>
@@ -56,19 +60,29 @@
         <p>Frete: <strong id="revisionShippingDisplay"></strong></p>
         <p>Total do pedido: <strong id="revisionTotalDisplay"></strong></p>
 
-        <section aria-labelledby="paymentTitle">
-          <h3 id="paymentTitle">3. Pagamento simulado (ambiente acadêmico)</h3>
-          <p><strong>Aviso de simulação:</strong> Este pagamento é estritamente simulado para avaliação acadêmica. Nenhuma cobrança financeira real é efetuada e nenhum dado de cartão ou documento é coletado.</p>
+        <section class="checkout-payment" aria-labelledby="paymentTitle">
+          <h3 id="paymentTitle">3. Pagamento simulado</h3>
+          <p>Você pode escolher o resultado do pagamento para concluir o pedido. Nenhuma cobrança é feita e não solicitamos dados de cartão ou documento.</p>
           <form id="confirmForm">
             <fieldset class="payment-simulation-fieldset">
               <legend>Escolha o resultado do pagamento simulado</legend>
-              <label class="payment-option payment-option-approved"><input type="radio" name="resultadoSimulado" value="APROVADO" checked> <strong>Simular pagamento aprovado (APROVADO)</strong> — aprova o pedido (RECEBIDO) e limpa o carrinho</label>
-              <label class="payment-option payment-option-refused"><input type="radio" name="resultadoSimulado" value="RECUSADO"> <strong>Simular pagamento recusado (RECUSADO)</strong> — provoca recusa (NAO_AUTORIZADO) e preserva os itens no carrinho</label>
+              <label class="payment-option payment-option-approved"><input type="radio" name="resultadoSimulado" value="APROVADO" checked> <span><strong>Simular pagamento aprovado (APROVADO)</strong> — aprova o pedido (RECEBIDO) e limpa o carrinho</span></label>
+              <label class="payment-option payment-option-refused"><input type="radio" name="resultadoSimulado" value="RECUSADO"> <span><strong>Simular pagamento recusado (RECUSADO)</strong> — provoca recusa (NAO_AUTORIZADO) e preserva os itens no carrinho</span></label>
             </fieldset>
             <button id="confirmButton" class="btn btn-primary" type="submit">Confirmar pedido</button>
           </form>
         </section>
       </section>
+      </div>
+      <aside id="checkoutOrderSummary" class="checkout-order-summary" hidden aria-labelledby="checkoutOrderSummaryTitle">
+        <h2 id="checkoutOrderSummaryTitle">Resumo do pedido</h2>
+        <dl>
+          <div><dt>Subtotal dos produtos</dt><dd id="checkoutSummarySubtotal"></dd></div>
+          <div><dt>Frete</dt><dd id="checkoutSummaryShipping"></dd></div>
+        </dl>
+        <div class="checkout-total"><span>Total</span><strong id="checkoutSummaryTotal"></strong></div>
+        <p class="checkout-summary-note">Valores da revisão gerada.</p>
+      </aside>
     </div>
 
     <section id="orderResultSection" hidden aria-labelledby="resultTitle">

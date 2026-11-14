@@ -31,7 +31,8 @@ __pycache__/
 .venv/
 
 # Contexto e ferramentas locais fora do marco do catalogo
-/operacional/
+/operacional/*
+!/operacional/design-system/
 /.agents/
 /skills-lock.json
 

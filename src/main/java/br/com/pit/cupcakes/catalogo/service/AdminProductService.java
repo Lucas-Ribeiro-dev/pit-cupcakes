@@ -26,6 +26,10 @@ public class AdminProductService {
             "/assets/img/cupcake-baunilha.svg",
             "/assets/img/cupcake-chocolate.svg",
             "/assets/img/cupcake-caramelo.svg",
+            "/assets/img/cupcake-baunilha.webp",
+            "/assets/img/cupcake-chocolate.webp",
+            "/assets/img/cupcake-frutas-vermelhas.webp",
+            "/assets/img/cupcake-caramelo.webp",
             "/assets/img/cupcake-placeholder.svg"
     );
 

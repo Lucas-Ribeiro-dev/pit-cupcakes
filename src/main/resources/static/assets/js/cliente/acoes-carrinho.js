@@ -13,10 +13,11 @@ export async function addToCart(productId, quantity, button, message) {
   message.className = '';
   message.replaceChildren();
   try {
-    await api('/api/carrinho/itens', {
+    const cart = await api('/api/carrinho/itens', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ produtoId: productId, quantidade: quantity })
     });
+    window.dispatchEvent(new CustomEvent('cart:updated', { detail: cart }));
     message.className = 'cart-feedback cart-feedback-success';
     message.setAttribute('aria-live', 'polite');
     const textSpan = document.createElement('span');

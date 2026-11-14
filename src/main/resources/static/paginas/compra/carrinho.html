@@ -12,21 +12,35 @@
     <nav id="accountNavigation" aria-label="Conta"></nav>
     <p id="navigationMessage" role="status"></p>
   </div></header>
-  <main class="account-page">
-    <a href="/index.html">Voltar ao catálogo</a>
+  <main class="account-page cart-page">
+    <a class="catalog-back-link" href="/index.html"><img class="back-arrow" src="/assets/img/arrow-raspberry.webp" alt="" aria-hidden="true">Voltar ao catálogo</a>
     <h1>Carrinho</h1>
     <p id="cartMessage" role="status" aria-live="polite"></p>
-    <section id="cartLoading" aria-live="polite">Carregando carrinho...</section>
-    <section id="cartError" hidden><p>Não foi possível consultar o carrinho.</p><button id="retryCart" type="button">Tentar novamente</button></section>
-    <section id="cartEmpty" hidden><p>Seu carrinho está vazio.</p><a href="/index.html">Ver catálogo</a></section>
-    <section id="cartContent" hidden aria-label="Itens do carrinho">
-      <div id="cartItems"></div>
-      <p id="blockedNotice" hidden>Itens indisponíveis não entram no subtotal. Remova-os para continuar.</p>
-      <p>Subtotal: <strong id="cartSubtotal"></strong></p>
-      <p>Valores sujeitos à confirmação na revisão do pedido.</p>
-      <p id="checkoutActionWrapper"><a id="checkoutLink" class="btn btn-primary" href="/paginas/compra/checkout.html">Revisar e finalizar pedido</a></p>
+    <section id="cartLoading" class="cart-state cart-loading" aria-live="polite">Carregando carrinho...</section>
+    <section id="cartError" class="cart-state cart-error" hidden><p>Não foi possível consultar o carrinho.</p><button id="retryCart" class="btn btn-retry" type="button">Tentar novamente</button></section>
+    <section id="cartEmpty" class="cart-state cart-empty" hidden><p>Seu carrinho está vazio.</p><a class="btn" href="/index.html">Escolher cupcakes</a></section>
+    <section id="cartContent" class="cart-layout" hidden aria-label="Itens do carrinho">
+      <div class="cart-items-column">
+        <div id="cartItems"></div>
+        <p id="blockedNotice" class="cart-blocked-notice" hidden>Itens indisponíveis não entram no subtotal. Remova-os para continuar.</p>
+      </div>
+      <aside id="cartSummary" class="cart-summary" aria-labelledby="cartSummaryTitle">
+        <h2 id="cartSummaryTitle">Resumo</h2>
+        <div class="cart-subtotal">
+          <span>Subtotal dos produtos</span>
+          <strong id="cartSubtotal"></strong>
+        </div>
+        <p class="cart-summary-note">Valores sujeitos à confirmação na revisão do pedido.</p>
+        <div id="checkoutActionWrapper">
+          <a id="checkoutLink" class="btn btn-primary cart-main-action" href="/paginas/compra/checkout.html">Revisar e finalizar pedido</a>
+        </div>
+        <div id="visitorActions" class="cart-visitor-actions" hidden>
+          <p>Entre na sua conta para continuar com o pedido.</p>
+          <a class="btn btn-primary cart-main-action" href="/paginas/conta/login.html?destino=checkout">Entrar e revisar pedido</a>
+          <a class="cart-secondary-link" href="/paginas/conta/cadastro.html?destino=checkout">Criar conta</a>
+        </div>
+      </aside>
     </section>
-    <p><a href="/paginas/conta/login.html?destino=carrinho">Entrar na conta</a> | <a href="/paginas/conta/login.html?destino=checkout">Entrar e ir para revisão do pedido</a></p>
   </main>
   <script type="module" src="/assets/js/cliente/navegacao.js"></script>
   <script type="module" src="/assets/js/cliente/carrinho.js"></script>

@@ -12,13 +12,13 @@ flowchart LR
 
     subgraph Loja["PIT Cupcakes"]
         UC1["Consultar catálogo e detalhes (HU01, HU02)"]
-        UC2["Gerenciar carrinho em sessão (HU08)"]
+        UC2["Gerenciar carrinho em sessão (HU06, HU07)"]
         UC3["Cadastrar conta e autenticar (HU03, HU04, HU05)"]
-        UC4["Gerenciar endereços e cotar frete (HU06, HU07)"]
-        UC5["Revisar checkout e simular pagamento (HU09, HU10)"]
-        UC6["Consultar próprios pedidos (HU11)"]
-        UC7["Cadastrar e editar produtos (HU12)"]
-        UC8["Atender pedidos e atualizar status (HU13)"]
+        UC4["Gerenciar endereços e cotar frete (HU17, HU18, HU08)"]
+        UC5["Revisar checkout e simular pagamento (HU08, CHK01..CHK04)"]
+        UC6["Consultar próprios pedidos (PED01..PED03)"]
+        UC7["Cadastrar e editar produtos (ADM01, ADM02)"]
+        UC8["Atender pedidos e atualizar status (ADM03)"]
     end
 
     V --> UC1
@@ -56,13 +56,13 @@ classDiagram
         +String description
         +BigDecimal price
         +String imagePath
-        +boolean available
+        +Boolean available
         +Long version
     }
 
     class Address {
         +Long id
-        +Long ownerId
+        +User owner
         +String recipient
         +String postalCode
         +String street
@@ -84,30 +84,29 @@ classDiagram
 
     class Order {
         +Long id
-        +Long userId
+        +User user
         +String revisionId
         +OrderMode mode
-        +BigDecimal itemsSubtotal
-        +BigDecimal shippingAmount
-        +BigDecimal totalAmount
-        +SimulatedPaymentResult paymentStatus
-        +OrderStatus attendanceStatus
+        +OrderStatus status
+        +BigDecimal subtotal
+        +BigDecimal shippingFee
+        +BigDecimal total
         +Instant createdAt
-        +Instant updatedAt
         +Long version
     }
 
     class OrderItem {
         +Long id
-        +Long productId
+        +Order order
+        +Product product
         +String productName
         +BigDecimal unitPrice
-        +int quantity
-        +BigDecimal subtotal
+        +Integer quantity
     }
 
     class OrderAddress {
-        +Long id
+        +Long orderId
+        +Order order
         +String recipient
         +String postalCode
         +String street
@@ -120,18 +119,17 @@ classDiagram
 
     class SimulatedPayment {
         +Long id
+        +Order order
         +SimulatedPaymentResult result
-        +String referenceCode
-        +String message
-        +Instant processedAt
+        +Instant createdAt
     }
 
-    User "1" --> "0..*" Address : possui
-    User "1" --> "0..*" Order : realiza
-    Order "1" *-- "1..*" OrderItem : fotografa itens
-    Order "1" *-- "0..1" OrderAddress : fotografa endereço
-    Order "1" *-- "1" SimulatedPayment : registra simulação
-    Product "1" <-- "0..*" OrderItem : referencia produtoId
+    User "1" --> "0..*" Address : possui (owner)
+    User "1" --> "0..*" Order : realiza (user)
+    Order "1" *-- "1..*" OrderItem : fotografa itens (order)
+    Order "1" *-- "0..1" OrderAddress : fotografa endereço (@MapsId)
+    Order "1" *-- "1" SimulatedPayment : registra simulação (order)
+    Product "1" <-- "0..*" OrderItem : referencia (product)
 ```
 
 ## 3. Diagrama de Sequência — Checkout, Confirmação Transacional e Atendimento

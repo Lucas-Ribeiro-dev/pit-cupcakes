@@ -17,8 +17,8 @@
   </header>
 
   <main>
-    <nav aria-label="Navegação estrutural">
-      <a href="index.html" class="btn-voltar">&larr; Voltar ao Catálogo</a>
+    <nav class="product-back-nav" aria-label="Navegação estrutural">
+      <a href="index.html" class="btn-voltar catalog-back-link"><img class="back-arrow" src="/assets/img/arrow-raspberry.webp" alt="" aria-hidden="true">Voltar ao catálogo</a>
     </nav>
 
     <!-- Estado de carregamento -->
@@ -43,16 +43,27 @@
         <img id="detailImage" class="detail-image" src="" alt="Cupcake">
       </div>
       <div class="detail-info">
-        <h1 id="detailTitle" class="detail-title">Nome do Cupcake</h1>
-        <p id="detailDescription" class="detail-description">Descrição detalhada do cupcake.</p>
-        <p id="detailPrice" class="detail-price">R$ 0,00</p>
-        <div>
+        <div class="detail-availability">
           <span id="detailBadge" class="badge">Disponibilidade</span>
         </div>
-        <label for="cartQuantity">Quantidade</label>
-        <input id="cartQuantity" type="number" min="1" max="99" step="1" value="1">
-        <button id="addToCart" class="btn" type="button">Adicionar ao carrinho</button>
-        <p id="cartMessage" role="status" aria-live="polite"></p>
+        <h1 id="detailTitle" class="detail-title">Nome do Cupcake</h1>
+        <p id="detailDescription" class="detail-description">Descrição detalhada do cupcake.</p>
+        <div class="detail-price-row">
+          <p id="detailPrice" class="detail-price">R$ 0,00</p>
+          <span class="detail-unit-price">por unidade</span>
+        </div>
+        <div class="purchase-area">
+          <label class="quantity-label" for="cartQuantity">Quantidade</label>
+          <div class="purchase-row">
+            <div class="quantity-control" role="group" aria-label="Selecionar quantidade">
+              <button id="decreaseQuantity" class="quantity-button" type="button" aria-label="Diminuir quantidade">−</button>
+              <input id="cartQuantity" type="number" min="1" max="99" step="1" value="1" inputmode="numeric" aria-label="Quantidade">
+              <button id="increaseQuantity" class="quantity-button" type="button" aria-label="Aumentar quantidade">+</button>
+            </div>
+            <button id="addToCart" class="btn purchase-button" type="button">Adicionar ao carrinho</button>
+          </div>
+          <p id="cartMessage" role="status" aria-live="polite"></p>
+        </div>
       </div>
     </article>
   </main>

@@ -41,6 +41,7 @@ async function loadOrders() {
 
       const linkP = document.createElement('p');
       const link = document.createElement('a');
+      link.className = 'secondary-action order-details-link';
       link.href = `/paginas/conta/pedido.html?id=${encodeURIComponent(order.id)}`;
       link.textContent = `Ver detalhes do pedido #${order.id}`;
       linkP.append(link);

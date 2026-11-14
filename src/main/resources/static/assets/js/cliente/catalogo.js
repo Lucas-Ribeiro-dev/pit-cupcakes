@@ -1,4 +1,4 @@
-import { formatCurrencyBRL, FALLBACK_IMAGE_PATH } from "../compartilhado/formatters.js";
+import { formatCurrencyBRL, resolveProductImage, FALLBACK_IMAGE_PATH } from "../compartilhado/formatters.js";
 import { addToCart } from "./acoes-carrinho.js";
 
 const loadingElement = document.getElementById("loadingState");
@@ -29,7 +29,7 @@ function createProductCard(product) {
 
   const img = document.createElement("img");
   img.className = "card-image";
-  img.src = product.imagemUrl ? product.imagemUrl : FALLBACK_IMAGE_PATH;
+  img.src = resolveProductImage(product);
   img.alt = product.nome ? product.nome : "Cupcake";
   img.onerror = () => {
     img.src = FALLBACK_IMAGE_PATH;
@@ -64,21 +64,21 @@ function createProductCard(product) {
   actions.className = "card-actions";
 
   const detailsLink = document.createElement("a");
-  detailsLink.className = "btn btn-primary btn-card";
+  detailsLink.className = "product-details-link";
   detailsLink.href = `produto.html?id=${encodeURIComponent(product.id)}`;
   detailsLink.textContent = "Ver detalhes";
   actions.appendChild(detailsLink);
 
   const addButton = document.createElement('button');
   addButton.type = 'button';
-  addButton.className = 'btn btn-card';
+  addButton.className = 'btn product-add-button';
   addButton.textContent = product.disponivel ? 'Adicionar ao carrinho' : 'Indisponível';
   addButton.disabled = !product.disponivel;
   const addMessage = document.createElement('p');
   addMessage.setAttribute('role', 'status');
   addMessage.setAttribute('aria-live', 'polite');
   addButton.addEventListener('click', () => addToCart(product.id, 1, addButton, addMessage));
-  actions.append(addButton, addMessage);
+  actions.append(addButton, detailsLink, addMessage);
 
   body.appendChild(title);
   body.appendChild(price);

@@ -45,7 +45,7 @@ Definida na nova [V2](../../src/main/resources/db/migration/V2__criar_tabela_usu
 - `uk_usuario_email_normalizado`: UNIQUE cria o índice único de e-mail. O serviço verifica duplicação e converte a violação concorrente dessa restrição em HTTP 409.
 - `chk_usuario_perfil`: CHECK limita o perfil a CLIENTE/ADMIN. Nenhum administrador ou usuário demo é criado pela migração.
 - Cadastro é transacional. A senha literal tem de 8 a 64 pontos de código e no máximo 72 bytes UTF-8; não é normalizada.
-- Sessões são mantidas pelo contêiner, fora desta tabela; sua persistência entre reinícios não é requisito. Não há tabela de carrinho ou compras.
+- Sessões são mantidas pelo contêiner, fora desta tabela; sua persistência entre reinícios não é requisito. Não há tabela de carrinho (mantido em `HttpSession`); as tabelas de pedidos e pagamento simulado estão definidas na seção 7 (`V4`).
 
 ## 5. Tabela `endereco`
 
@@ -89,70 +89,67 @@ Definidas na migração [V4__criar_pedidos_e_pagamento.sql](../../src/main/resou
 
 ### 7.1 Tabela `pedido`
 
-Armazena o cabeçalho do pedido, valores consolidados no servidor, estado do pagamento simulado, estado do atendimento e chave de idempotência da revisão.
+Armazena o cabeçalho do pedido, valores consolidados no servidor, estado do atendimento e chave de idempotência da revisão (`Order`).
 
 | Coluna | Tipo SQL | Nulo? | Padrão | Descrição |
 | --- | --- | --- | --- | --- |
-| `id` | `BIGINT GENERATED ALWAYS AS IDENTITY` | Não | Identidade | Chave primária do pedido |
-| `usuario_id` | `BIGINT` | Não | — | FK `usuario(id)` com `ON DELETE RESTRICT` |
-| `revisao_id` | `VARCHAR(64)` | Não | — | Identificador da revisão confirmada para idempotência por cliente |
-| `modalidade` | `VARCHAR(20)` | Não | — | `ENTREGA` ou `RETIRADA` (`chk_pedido_modalidade`) |
-| `subtotal_itens` | `NUMERIC(12, 2)` | Não | — | Soma dos subtotais dos itens (`> 0`) |
-| `valor_frete` | `NUMERIC(12, 2)` | Não | — | Valor de entrega (`>= 0`; obrigatoriamente `0.00` em `RETIRADA`) |
-| `valor_total` | `NUMERIC(12, 2)` | Não | — | Soma exata `subtotal_itens + valor_frete` (`chk_pedido_valores`) |
-| `status_pagamento` | `VARCHAR(20)` | Não | — | `APROVADO` ou `RECUSADO` (`chk_pedido_status_pagamento`) |
-| `status_atendimento` | `VARCHAR(30)` | Não | — | `RECEBIDO`, `EM_PREPARACAO`, `SAIU_PARA_ENTREGA`, `PRONTO_PARA_RETIRADA`, `CONCLUIDO`, `CANCELADO` ou `NAO_AUTORIZADO` |
+| `id` | `BIGINT GENERATED ALWAYS AS IDENTITY` | Não | Identidade | Chave primária do pedido (`PRIMARY KEY`) |
+| `usuario_id` | `BIGINT` | Não | — | FK `REFERENCES usuario(id)` (restrição padrão `NO ACTION` / `RESTRICT`) |
+| `revisao_id` | `VARCHAR(64)` | Não | — | Identificador da revisão confirmada (`CHECK (btrim(revisao_id) <> '')`) |
+| `modalidade` | `VARCHAR(20)` | Não | — | `ENTREGA` ou `RETIRADA` (`CHECK (modalidade IN ('ENTREGA', 'RETIRADA'))`) |
+| `status_atendimento` | `VARCHAR(30)` | Não | — | `RECEBIDO`, `EM_PREPARACAO`, `PRONTO_PARA_RETIRADA`, `SAIU_PARA_ENTREGA`, `CONCLUIDO`, `CANCELADO` ou `NAO_AUTORIZADO` |
+| `subtotal` | `NUMERIC(12, 2)` | Não | — | Soma dos subtotais dos itens (`CHECK (subtotal >= 0)`) |
+| `frete` | `NUMERIC(12, 2)` | Não | — | Valor de entrega (`CHECK (frete >= 0)`) |
+| `total` | `NUMERIC(12, 2)` | Não | — | Soma exata `subtotal + frete` (`CHECK (total >= 0)`) |
 | `criado_em` | `TIMESTAMPTZ` | Não | `CURRENT_TIMESTAMP` | Instante de criação do pedido |
-| `atualizado_em` | `TIMESTAMPTZ` | Não | `CURRENT_TIMESTAMP` | Instante da última transição de atendimento |
-| `versao` | `BIGINT` | Não | `0` | Controle de concorrência otimista (`@Version`) |
+| `versao` | `BIGINT` | Não | `0` | Controle de concorrência otimista (`CHECK (versao >= 0)`, JPA `@Version`) |
 
 - **Idempotência**: `CONSTRAINT uk_pedido_usuario_revisao UNIQUE (usuario_id, revisao_id)` impede pedidos duplicados para a mesma revisão em cliques repetidos, requisições concorrentes ou reenvio após perda de resposta.
-- **Coerência pagamento × atendimento**: `CONSTRAINT chk_pedido_coerencia_pagamento_atendimento` garante que `RECUSADO` tenha exclusivamente `status_atendimento = 'NAO_AUTORIZADO'` e que `APROVADO` nunca tenha `NAO_AUTORIZADO`.
-- **Coerência modalidade × atendimento**: `CONSTRAINT chk_pedido_coerencia_modalidade_atendimento` impede `PRONTO_PARA_RETIRADA` em pedidos de `ENTREGA` e impede `SAIU_PARA_ENTREGA` em pedidos de `RETIRADA`.
+- **Soma exata do total**: `CONSTRAINT chk_pedido_total_soma CHECK (total = subtotal + frete)`.
+- **Frete zero na retirada**: `CONSTRAINT chk_pedido_retirada_frete_zero CHECK (modalidade <> 'RETIRADA' OR frete = 0)`.
+- **Coerência modalidade × atendimento**: `CONSTRAINT chk_pedido_status_modalidade` impede `PRONTO_PARA_RETIRADA` em pedidos de `ENTREGA` e impede `SAIU_PARA_ENTREGA` em pedidos de `RETIRADA`. A coerência com o pagamento simulado (`APROVADO` inicia em `RECEBIDO`; `RECUSADO` permanece em `NAO_AUTORIZADO`) é garantida transacionalmente em `CheckoutService` e `OrderService`.
 - **Índices**: `idx_pedido_usuario_criado_em (usuario_id, criado_em DESC, id DESC)` e `idx_pedido_criado_em (criado_em DESC, id DESC)`.
 
 ### 7.2 Tabela `item_pedido`
 
-Preserva a fotografia histórica dos produtos comprados no momento da confirmação, independente de edições posteriores no catálogo.
+Preserva a fotografia histórica dos produtos comprados no momento da confirmação (`OrderItem`), independente de edições posteriores no catálogo.
 
 | Coluna | Tipo SQL | Nulo? | Descrição |
 | --- | --- | --- | --- |
-| `id` | `BIGINT GENERATED ALWAYS AS IDENTITY` | Não | Chave primária |
-| `pedido_id` | `BIGINT` | Não | FK `pedido(id)` com `ON DELETE RESTRICT` |
-| `produto_id` | `BIGINT` | Não | FK `produto(id)` com `ON DELETE RESTRICT` |
-| `nome_produto` | `VARCHAR(150)` | Não | Nome do produto congelado no momento da compra |
-| `preco_unitario` | `NUMERIC(10, 2)` | Não | Preço unitário congelado no momento da compra (`> 0`) |
-| `quantidade` | `INTEGER` | Não | Quantidade adquirida (`1` a `99`) |
-| `subtotal` | `NUMERIC(12, 2)` | Não | Valor da linha (`preco_unitario * quantidade`) |
+| `id` | `BIGINT GENERATED ALWAYS AS IDENTITY` | Não | Chave primária (`PRIMARY KEY`) |
+| `pedido_id` | `BIGINT` | Não | FK `REFERENCES pedido(id)` |
+| `produto_id` | `BIGINT` | Não | FK `REFERENCES produto(id)` |
+| `nome_produto` | `VARCHAR(150)` | Não | Nome do produto congelado no momento da compra (`CHECK (btrim(nome_produto) <> '')`) |
+| `preco_unitario` | `NUMERIC(12, 2)` | Não | Preço unitário congelado no momento da compra (`CHECK (preco_unitario > 0)`) |
+| `quantidade` | `INTEGER` | Não | Quantidade adquirida (`CHECK (quantidade BETWEEN 1 AND 99)`) |
 
-- **Índices**: `idx_item_pedido_pedido_id (pedido_id, id)` e `idx_item_pedido_produto_id (produto_id)`.
+- **Restrição e índice**: `CONSTRAINT uk_item_pedido_produto UNIQUE (pedido_id, produto_id)` e `idx_item_pedido_produto_id (produto_id)`. O subtotal da linha (`preco_unitario * quantidade`) é calculado no servidor em `OrderService` ao montar os DTOs de leitura.
 
 ### 7.3 Tabela `endereco_pedido`
 
-Preserva a fotografia histórica do endereço de entrega vinculado ao pedido (relação 1:1 opcional apenas para modalidade `ENTREGA`). Edições ou remoções posteriores em `endereco` não alteram pedidos já gravados.
+Preserva a fotografia histórica do endereço de entrega vinculado ao pedido (`OrderAddress`, relação 1:1 opcional apenas para modalidade `ENTREGA`, mapeada via `@MapsId`). Edições ou remoções posteriores em `endereco` não alteram pedidos já gravados.
 
 | Coluna | Tipo SQL | Nulo? | Descrição |
 | --- | --- | --- | --- |
-| `pedido_id` | `BIGINT` | Não | PK e FK `pedido(id)` com `ON DELETE RESTRICT` |
-| `destinatario` | `VARCHAR(120)` | Não | Nome do destinatário no momento do pedido |
-| `cep` | `VARCHAR(8)` | Não | Oito dígitos numéricos (`chk_endereco_pedido_cep`) |
-| `logradouro` | `VARCHAR(160)` | Não | Logradouro congelado |
-| `numero` | `VARCHAR(20)` | Não | Número ou `S/N` congelado |
+| `pedido_id` | `BIGINT` | Não | `PRIMARY KEY REFERENCES pedido(id)` |
+| `destinatario` | `VARCHAR(120)` | Não | Nome do destinatário no momento do pedido (`CHECK (btrim(destinatario) <> '')`) |
+| `cep` | `VARCHAR(8)` | Não | Oito dígitos numéricos (`CHECK (cep ~ '^[0-9]{8}$')`) |
+| `logradouro` | `VARCHAR(160)` | Não | Logradouro congelado (`CHECK (btrim(logradouro) <> '')`) |
+| `numero` | `VARCHAR(20)` | Não | Número ou `S/N` congelado (`CHECK (btrim(numero) <> '')`) |
 | `complemento` | `VARCHAR(120)` | Sim | Complemento opcional congelado |
-| `bairro` | `VARCHAR(100)` | Não | Bairro congelado |
-| `cidade` | `VARCHAR(100)` | Não | Cidade congelada |
-| `uf` | `VARCHAR(2)` | Não | UF congelada (`chk_endereco_pedido_uf`) |
+| `bairro` | `VARCHAR(100)` | Não | Bairro congelado (`CHECK (btrim(bairro) <> '')`) |
+| `cidade` | `VARCHAR(100)` | Não | Cidade congelada (`CHECK (btrim(cidade) <> '')`) |
+| `uf` | `VARCHAR(2)` | Não | UF congelada (`CHECK` das 27 UFs brasileiras) |
 
 ### 7.4 Tabela `pagamento_simulado`
 
-Registra a transação acadêmica de pagamento simulado (relação 1:1 com `pedido`), sem armazenar dados de cartão, PIX ou documento real.
+Registra a transação acadêmica de pagamento simulado (`SimulatedPayment`, relação 1:1 com `pedido`), sem armazenar dados de cartão, PIX ou documento real.
 
-| Coluna | Tipo SQL | Nulo? | Descrição |
-| --- | --- | --- | --- |
-| `pedido_id` | `BIGINT` | Não | PK e FK `pedido(id)` com `ON DELETE RESTRICT` |
-| `resultado` | `VARCHAR(20)` | Não | `APROVADO` ou `RECUSADO` (`chk_pagamento_simulado_resultado`) |
-| `codigo_referencia` | `VARCHAR(64)` | Não | Código de referência gerado pelo servidor (`SIM-APROVADO-...` / `SIM-RECUSADO-...`) |
-| `mensagem` | `VARCHAR(255)` | Não | Aviso explícito de simulação acadêmica sem cobrança financeira real |
-| `processado_em` | `TIMESTAMPTZ` | Não | Instante do processamento simulado |
+| Coluna | Tipo SQL | Nulo? | Padrão | Descrição |
+| --- | --- | --- | --- | --- |
+| `id` | `BIGINT GENERATED ALWAYS AS IDENTITY` | Não | Identidade | Chave primária (`PRIMARY KEY`) |
+| `pedido_id` | `BIGINT` | Não | — | FK `REFERENCES pedido(id)` |
+| `resultado` | `VARCHAR(20)` | Não | — | `APROVADO` ou `RECUSADO` (`CHECK (resultado IN ('APROVADO', 'RECUSADO'))`) |
+| `criado_em` | `TIMESTAMPTZ` | Não | `CURRENT_TIMESTAMP` | Instante de criação do registro de pagamento simulado |
 
-
+- **Restrição de unicidade**: `CONSTRAINT uk_pagamento_simulado_pedido UNIQUE (pedido_id)` garante no máximo um registro de pagamento simulado por pedido.

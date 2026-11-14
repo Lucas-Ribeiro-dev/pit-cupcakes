@@ -12,38 +12,43 @@
     <nav id="accountNavigation" aria-label="Conta"></nav>
     <p id="navigationMessage" role="status"></p>
   </div></header>
-  <main class="account-page">
-    <a href="/paginas/conta/minha-conta.html">Minha conta</a>
+  <main class="account-page address-page">
+    <a class="catalog-back-link address-back-link" href="/paginas/conta/minha-conta.html"><img class="back-arrow" src="/assets/img/arrow-raspberry.webp" alt="" aria-hidden="true">Minha conta</a>
     <h1>Endereços</h1>
+    <p class="page-description">Cadastre e gerencie seus endereços. Você escolhe qual usar em cada pedido.</p>
     <p id="pageMessage" role="status" aria-live="polite"></p>
-    <div id="privateContent" hidden>
-      <p>Você pode manter vários endereços. Nenhum é selecionado como padrão.</p>
-      <section aria-labelledby="savedTitle"><h2 id="savedTitle">Endereços salvos</h2><div id="addressList"></div></section>
-      <p>Retirada gratuita, sem endereço. Não é selecionada automaticamente.</p>
-      <button id="pickupButton" type="button">Consultar retirada</button>
-      <p id="shippingMessage" role="status" aria-live="polite"></p>
-      <p>A cotação usa o endereço salvo e pode mudar. Uma compra futura exigirá novo cálculo.</p>
-      <section aria-labelledby="formTitle">
+    <div id="privateContent" class="address-content" hidden>
+      <div class="address-layout">
+        <div class="address-sidebar">
+          <section class="address-list-section" aria-labelledby="savedTitle"><h2 id="savedTitle">Endereços salvos</h2><div id="addressList"></div></section>
+          <p class="address-support-note">O frete será recalculado na revisão do pedido.</p>
+          <section class="pickup-card" aria-labelledby="pickupTitle">
+            <h2 id="pickupTitle">Prefere retirar?</h2>
+            <p>Retirada gratuita, sem precisar cadastrar endereço.</p>
+            <button id="pickupButton" class="secondary-action" type="button">Consultar retirada</button>
+            <p id="shippingMessage" role="status" aria-live="polite"></p>
+          </section>
+        </div>
+      <section class="address-form-panel" aria-labelledby="formTitle">
         <h2 id="formTitle">Novo endereço</h2>
         <form id="addressForm">
-          <label for="recipient">Destinatário</label><input id="recipient" name="destinatario" required maxlength="120" autocomplete="shipping name">
-          <label for="postalCode">CEP</label><input id="postalCode" name="cep" required maxlength="9" pattern="[0-9]{5}-?[0-9]{3}" inputmode="numeric" autocomplete="shipping postal-code">
-          <button id="lookupButton" type="button">Buscar CEP</button>
-          <p id="postalMessage" role="status" aria-live="polite"></p>
-          <label for="street">Logradouro</label><input id="street" name="logradouro" required maxlength="160" autocomplete="shipping address-line1">
-          <label for="number">Número (ou S/N)</label><input id="number" name="numero" required maxlength="20">
-          <label for="complement">Complemento (opcional)</label><input id="complement" name="complemento" maxlength="120" autocomplete="shipping address-line2">
-          <label for="neighborhood">Bairro</label><input id="neighborhood" name="bairro" required maxlength="100">
-          <label for="city">Cidade / região administrativa</label><input id="city" name="cidade" required maxlength="100" autocomplete="shipping address-level2">
-          <label for="state">UF</label><input id="state" name="uf" required minlength="2" maxlength="2" autocomplete="shipping address-level1">
-          <p>Revise os campos acima antes de salvar. ViaCEP é apenas um auxílio: não comprova o imóvel nem a disponibilidade de entrega. Todos os campos podem ser preenchidos manualmente.</p>
-          <button type="submit">Salvar endereço</button>
-          <button id="cancelButton" type="button">Cancelar edição / limpar</button>
+          <div class="address-field address-field-full"><label for="recipient">Destinatário</label><input id="recipient" name="destinatario" required maxlength="120" autocomplete="shipping name"></div>
+          <div class="address-field address-field-cep"><label for="postalCode">CEP</label><div class="address-cep-row"><input id="postalCode" name="cep" required maxlength="9" pattern="[0-9]{5}-?[0-9]{3}" inputmode="numeric" autocomplete="shipping postal-code"><button id="lookupButton" class="secondary-action" type="button">Buscar CEP</button></div><small class="field-help">Use o CEP para ajudar no preenchimento. Você também pode informar o endereço manualmente.</small><p id="postalMessage" role="status" aria-live="polite"></p></div>
+          <div class="address-field address-field-street"><label for="street">Logradouro</label><input id="street" name="logradouro" required maxlength="160" autocomplete="shipping address-line1"></div>
+          <div class="address-field address-field-number"><label for="number">Número (ou S/N)</label><input id="number" name="numero" required maxlength="20"></div>
+          <div class="address-field"><label for="complement">Complemento (opcional)</label><input id="complement" name="complemento" maxlength="120" autocomplete="shipping address-line2"></div>
+          <div class="address-field"><label for="neighborhood">Bairro</label><input id="neighborhood" name="bairro" required maxlength="100"></div>
+          <div class="address-field address-field-city"><label for="city">Cidade / região administrativa</label><input id="city" name="cidade" required maxlength="100" autocomplete="shipping address-level2"></div>
+          <div class="address-field address-field-state"><label for="state">UF</label><input id="state" name="uf" required minlength="2" maxlength="2" autocomplete="shipping address-level1"></div>
+          <p class="address-form-help">Revise os campos acima antes de salvar. ViaCEP é apenas um auxílio: não comprova o imóvel nem a disponibilidade de entrega. Todos os campos podem ser preenchidos manualmente.</p>
+          <div class="address-form-actions"><button id="saveButton" class="btn btn-primary" type="submit">Salvar endereço</button><button id="cancelButton" class="secondary-action" type="button">Cancelar edição / limpar</button></div>
           <p id="formMessage" role="status" aria-live="polite"></p>
         </form>
       </section>
+      </div>
     </div>
   </main>
+  <footer><div class="footer-container"><p class="footer-brand">PIT Cupcakes</p><p>Projeto Integrador Transdisciplinar em Engenharia de Software</p></div></footer>
   <script type="module" src="/assets/js/cliente/navegacao.js"></script>
   <script type="module" src="/assets/js/cliente/enderecos.js"></script>
 </body>

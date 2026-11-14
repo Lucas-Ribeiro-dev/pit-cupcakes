@@ -47,7 +47,7 @@ Resultado final registrado: **11 cenários aprovados, zero falhos**. A primeira 
 
 **Aprovado pelo responsável e incorporado na segunda etapa, sem repetição do teste.** As coletas [antes](persistencia-antes.json) e [depois](persistencia-depois.json) conferem o banco `cupcakes`, V1 bem-sucedida com checksum 39887744 e quatro produtos. A comparação dos JSON confirmou histórico e todos os campos dos produtos idênticos, IDs preservados e nenhuma duplicação.
 
-O [roteiro de coleta somente de leitura](../casos/verificar_persistencia.ps1) fica disponível para referência. A [captura do reinício](../evidencias/TC08_persistencia-apos-reinicio.png) e a confirmação do responsável completam TC08. Isso não comprova V2 nem autenticação, verificadas separadamente no [registro da segunda etapa](verificacao-segunda-etapa.md).
+O [roteiro de coleta somente de leitura](../casos/verificar_persistencia.ps1) fica disponível para referência. Os snapshots versionados [persistencia-antes.json](persistencia-antes.json) e [persistencia-depois.json](persistencia-depois.json) (junto à confirmação do responsável; a captura bruta de terminal `TC08_persistencia-apos-reinicio.png` permanece apenas localmente fora do Git por conter caminho pessoal da máquina) completam TC08. Isso não comprova V2 nem autenticação, verificadas separadamente no [registro da segunda etapa](verificacao-segunda-etapa.md).
 
 ## Pendências reais
 

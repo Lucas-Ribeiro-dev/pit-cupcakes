@@ -1,0 +1,31 @@
+{
+  "execucao": "parcial",
+  "baseUrl": "http://localhost:8094",
+  "totalCenarios": 4,
+  "cenarios": [
+    {
+      "cenario": "CAT01 catalogo em 1280px",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1437/CAT01_catalogo-1280.png"
+    },
+    {
+      "cenario": "CAT01 catalogo em 360px",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1437/CAT01_catalogo-360.png"
+    },
+    {
+      "cenario": "CRT01 inclusão pelo catálogo",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1437/HU06_CRT01_adicionar-produto.png"
+    },
+    {
+      "cenario": "CRT01 carrinho visitante",
+      "resultado": "aprovado",
+      "evidencia": "docs/testes/evidencias/final-20261114-1437/HU06_CRT01_carrinho-visitante.png"
+    }
+  ],
+  "errosJavaScript": [
+    "FALLBACK_IMAGE_PATH is not defined",
+    "FALLBACK_IMAGE_PATH is not defined"
+  ]
+}
