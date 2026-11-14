@@ -1,6 +1,6 @@
 # Registro da quinta etapa — checkout, pedidos, pagamento simulado e administração
 
-Implementação conforme a [SPEC de conclusão funcional](../../../specs/12-SPEC-CONCLUSAO-FUNCIONAL.md), integrando os módulos existentes de catálogo, identidade, endereços, frete e carrinho em sessão.
+Implementação conforme o contrato consolidado de conclusão funcional, integrando os módulos existentes de catálogo, identidade, endereços, frete e carrinho em sessão.
 
 ## 1. Blocos implementados
 

@@ -1,6 +1,6 @@
 # Registro da quarta etapa — carrinho
 
-Implementação conforme a [SPEC](../../../specs/11-SPEC-CARRINHO.md). Carrinho temporário em sessão, sem migração ou tabela. Não foram implementados checkout, pedidos, pagamento ou administração.
+Implementação conforme o contrato consolidado de carrinho. Carrinho temporário em sessão, sem migração ou tabela. Não foram implementados checkout, pedidos, pagamento ou administração nesta etapa histórica.
 
 ## Implementação
 
@@ -60,7 +60,7 @@ Alterações prévias do README, do registro da primeira etapa e suas evidência
 
 ## Atualização na rodada consolidada da quinta etapa (10/11/2026)
 
-Conforme previsto na [SPEC de conclusão funcional](../../../specs/12-SPEC-CONCLUSAO-FUNCIONAL.md), as pendências acima foram executadas e fechadas na rodada única consolidada registrada na [verificação da quinta etapa](verificacao-quinta-etapa.md):
+Conforme previsto no contrato consolidado de conclusão funcional, as pendências acima foram executadas e fechadas na rodada única consolidada registrada na [verificação da quinta etapa](verificacao-quinta-etapa.md):
 
 - **Integração PostgreSQL (`CartPostgresIntegrationTest`)**: executada contra `cupcakes_test` (PostgreSQL 18.6) e **aprovada** (`1` teste, `0` falhas, `0` erros).
 - **Navegador real (`CRT01`, `CRT03`, `CRT08`, `CRT09`, `CRT13`)**: executados e **aprovados** em `http://localhost:8094` ([fluxo-completo-navegador.json](fluxo-completo-navegador.json)), incluindo inclusão pelo catálogo (`HU06_CRT01_adicionar-produto.png`), carrinho visitante (`HU06_CRT01_carrinho-visitante.png`), alteração de quantidade (`HU07_CRT03_quantidade.png`), recarga de sessão (`CRT08`), navegação por teclado e responsividade em `360px` e `1280px` (`HU06_CRT13_carrinho-360-teclado.png`, `HU06_CRT13_carrinho-1280-teclado.png`), remoção e estado vazio (`HU07_CRT03_removido.png`) e preservação do carrinho no login rumo ao checkout (`CHK01_checkout-apos-login-1280.png`).

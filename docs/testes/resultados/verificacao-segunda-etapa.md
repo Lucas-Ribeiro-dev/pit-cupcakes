@@ -1,6 +1,6 @@
 # Registro da segunda etapa — autenticação
 
-Implementação de HU03/HU04/HU05 conforme a [SPEC](../../../specs/09-SPEC-AUTENTICACAO.md). O registro inicial de pendências abaixo foi atualizado ao final desta etapa com os relatórios PostgreSQL atuais, a execução do navegador e a verificação manual complementar.
+Implementação de HU03/HU04/HU05 conforme o contrato consolidado de identidade. O registro inicial de pendências abaixo foi atualizado ao final desta etapa com os relatórios PostgreSQL atuais, a execução do navegador e a verificação manual complementar.
 
 ## Alterações
 

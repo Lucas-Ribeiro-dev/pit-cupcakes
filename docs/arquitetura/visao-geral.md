@@ -1,6 +1,6 @@
 # Arquitetura do Sistema — PIT Cupcakes
 
-Visão arquitetural consolidada da aplicação após a conclusão funcional da quinta etapa ([12-SPEC-CONCLUSAO-FUNCIONAL.md](../../specs/12-SPEC-CONCLUSAO-FUNCIONAL.md)).
+Visão arquitetural consolidada da aplicação após a conclusão funcional da quinta etapa. Os requisitos funcionais e visuais consolidados estão em [design e requisitos](../design/identidade-visual-e-especificacoes.md).
 
 ## 1. Organização em Módulos
 

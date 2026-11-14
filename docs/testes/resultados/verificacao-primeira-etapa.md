@@ -1,6 +1,6 @@
 # Registro da verificação da primeira etapa
 
-Este marco abrange somente catálogo e detalhes de produtos, conforme a [SPEC](../../../specs/07-SPEC-CATALOGO.md). O [plano e resultados](plano-e-resultados.md) é o índice dos casos, evidências e pendências.
+Este marco abrange somente catálogo e detalhes de produtos. O [plano e resultados](plano-e-resultados.md) é o índice dos casos, evidências e pendências.
 
 ## Proteção da integração
 

@@ -32,7 +32,7 @@ __pycache__/
 
 # Contexto e ferramentas locais fora do marco do catalogo
 /operacional/*
-!/operacional/design-system/
+/specs/
 /.agents/
 /skills-lock.json
 

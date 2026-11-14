@@ -1,6 +1,6 @@
 # Plano e resultados da primeira etapa
 
-Entrega limitada ao catálogo público e aos detalhes dos produtos, conforme a [SPEC](../../../specs/07-SPEC-CATALOGO.md). Não equivale à conclusão integral de HU01/HU02 nem da aplicação.
+Registro histórico da primeira etapa, limitada ao catálogo público e aos detalhes dos produtos. Não equivale à conclusão integral de HU01/HU02 nem da aplicação.
 
 ## Base de comprovação
 

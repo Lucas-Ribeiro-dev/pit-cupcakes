@@ -31,9 +31,15 @@ As tentativas parciais estão em [primeira tentativa](fluxo-completo-navegador-f
 - As capturas de catálogo, revisão de entrega e atendimento administrativo em 360 px e catálogo em 1280 px foram inspecionadas. Os controles permaneceram acessíveis e não houve rolagem horizontal nas verificações automatizadas.
 - O catálogo do banco isolado contém produtos de fixture, incluindo um produto sem imagem para exercitar o substituto visual. Esse conteúdo não representa o catálogo de produção.
 - A revisão dos arquivos destinados ao GitHub encontrou placeholders em `.env.example` e referências a variáveis de ambiente, sem valores de credenciais locais. Arquivos `.env*` reais, material local nominal, `target/`, `.venv/`, chaves e contexto operacional privado permanecem ignorados.
-- Skills e SPECs foram preservadas, conforme o adiamento da remoção. Não houve publicação em hospedagem.
+- Os arquivos locais de SPECs e ferramentas operacionais foram preservados no computador, mas retirados do índice do Git. Não houve publicação em hospedagem.
 
 ## Pendências
 
 - Publicação em hospedagem e validação de HTTPS/cookies no domínio final pertencem à próxima etapa.
 - A disponibilidade e os valores comerciais finais de frete em produção dependem da configuração do ambiente publicado.
+
+## Rastreabilidade
+
+Os contratos funcionais detalhados estão consolidados em [`histórias e casos de uso`](../requisitos/historias-e-casos-de-uso.md), [`visão arquitetural`](../arquitetura/visao-geral.md), [`dicionário de dados`](../banco-de-dados/dicionario-dados.md), [`manual de uso e publicação`](../manual/manual-usuario-e-publicacao.md), [`design e requisitos`](../design/identidade-visual-e-especificacoes.md) e nos registros de teste. As decisões técnicas individuais permanecem em [`docs/decisoes`](../decisoes/).
+
+O `README.md` foi preservado exatamente como solicitado. Por isso, a seção inicial ainda contém os links históricos para `specs/07-SPEC-CATALOGO.md`, `specs/09-SPEC-AUTENTICACAO.md`, `specs/10-SPEC-ENDERECOS-FRETE.md`, `specs/11-SPEC-CARRINHO.md` e `specs/12-SPEC-CONCLUSAO-FUNCIONAL.md`; esses cinco links ficam pendentes para a reformulação posterior do README pelo responsável. Nenhum outro documento final depende de caminho local em `specs/` ou `operacional/`.

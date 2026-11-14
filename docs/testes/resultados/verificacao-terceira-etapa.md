@@ -1,6 +1,6 @@
 # Registro da terceira etapa — endereços e frete
 
-Implementação de HU17/HU18 e consulta de frete necessária à HU08 conforme a [SPEC](../../../specs/10-SPEC-ENDERECOS-FRETE.md). Verificação consolidada: **48 testes independentes de PostgreSQL já aprovados, 13 testes PostgreSQL atuais conferidos sem repetição e 18 cenários de navegador aprovados com servidor real**. Brasília–DF é a referência confirmada. Faixas e valores comerciais finais permanecem pendentes.
+Implementação de HU17/HU18 e consulta de frete necessária à HU08 conforme o contrato consolidado de endereços e frete. Verificação consolidada: **48 testes independentes de PostgreSQL já aprovados, 13 testes PostgreSQL atuais conferidos sem repetição e 18 cenários de navegador aprovados com servidor real**. Brasília–DF é a referência confirmada. Faixas e valores comerciais finais permanecem pendentes.
 
 ## Alterações
 
