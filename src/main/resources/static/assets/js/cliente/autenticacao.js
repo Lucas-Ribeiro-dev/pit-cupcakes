@@ -45,8 +45,7 @@ form.addEventListener('submit', async event => {
         body: JSON.stringify({ nome: form.elements.nome.value, email: form.elements.email.value, senha: password })
       });
       form.reset();
-      message.textContent = 'Conta criada com sucesso. Entre para continuar.';
-      document.querySelector('#loginLink').focus();
+      location.replace('/index.html');
     } else {
       await api('/api/autenticacao/login', {
         method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -54,10 +53,12 @@ form.addEventListener('submit', async event => {
       });
       form.reset();
       await refreshCsrf();
-      location.replace(ALLOWED_DESTINATIONS[destination] || '/paginas/conta/minha-conta.html');
+      location.replace(ALLOWED_DESTINATIONS[destination] || '/index.html');
     }
   } catch (error) {
-    message.textContent = error.message;
+    message.textContent = !registration && error.status === 401
+      ? 'Não encontramos uma conta com este e-mail ou a senha está incorreta. Confira os dados ou crie sua conta.'
+      : error.message;
     form.elements.senha.value = '';
     if (registration) form.elements.confirmacao.value = '';
   } finally {
