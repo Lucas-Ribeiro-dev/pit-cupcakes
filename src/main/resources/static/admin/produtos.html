@@ -12,8 +12,8 @@
     <nav id="accountNavigation" aria-label="Conta"></nav>
     <p id="navigationMessage" role="status"></p>
   </div></header>
-  <main class="account-page">
-    <p><a href="/index.html">Catálogo público</a> | <a href="/admin/pedidos.html">Atendimento de pedidos</a></p>
+  <main class="account-page admin-page">
+    <nav class="admin-page-nav" aria-label="Administração"><a href="/index.html">Catálogo público</a><a href="/admin/pedidos.html">Atendimento de pedidos</a></nav>
     <h1>Administração de produtos</h1>
     <p id="adminPageMessage" role="status" aria-live="polite"></p>
 
@@ -28,7 +28,7 @@
     </section>
 
     <div id="adminContent" hidden>
-      <section aria-labelledby="productFormTitle">
+      <section class="admin-panel" aria-labelledby="productFormTitle">
         <h2 id="productFormTitle">Novo produto</h2>
         <form id="adminProductForm">
           <label for="productName">Nome do produto (1 a 150 caracteres)</label>
@@ -62,7 +62,7 @@
         </form>
       </section>
 
-      <section aria-labelledby="productListTitle">
+      <section class="admin-panel" aria-labelledby="productListTitle">
         <h2 id="productListTitle">Produtos cadastrados</h2>
         <div id="adminProductList"></div>
       </section>

@@ -12,11 +12,14 @@
     <nav id="accountNavigation" aria-label="Conta"></nav>
     <p id="navigationMessage" role="status"></p>
   </div></header>
-  <main class="account-page">
+  <main class="account-page admin-page">
     <a class="catalog-back-link" href="/index.html"><img class="back-arrow" src="/assets/img/arrow-raspberry.webp" alt="" aria-hidden="true">Voltar ao catálogo</a>
     <h1>Painel administrativo</h1>
-    <p><a href="/admin/produtos.html">Administração de produtos</a></p>
-    <p><a href="/admin/pedidos.html">Atendimento de pedidos</a></p>
+    <p class="admin-page-intro">Acompanhe o catálogo e o atendimento em um só lugar.</p>
+    <nav class="admin-dashboard-links" aria-label="Áreas administrativas">
+      <a class="admin-dashboard-link" href="/admin/produtos.html"><strong>Produtos</strong><span>Cadastre, edite e controle a disponibilidade.</span></a>
+      <a class="admin-dashboard-link" href="/admin/pedidos.html"><strong>Pedidos</strong><span>Consulte pedidos e atualize o atendimento.</span></a>
+    </nav>
   </main>
   <script type="module" src="/assets/js/cliente/navegacao.js"></script>
 </body>
