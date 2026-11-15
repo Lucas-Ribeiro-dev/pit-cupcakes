@@ -1,103 +1,149 @@
-# PIT Cupcakes — Loja Virtual Completa (Catálogo, Conta, Endereços, Frete, Carrinho, Checkout, Pedidos e Administração)
+# PIT Cupcakes
 
-Loja virtual acadêmica desenvolvida em Java 21, Spring Boot 3.4.2, Maven Wrapper 3.9.9, Spring Data JPA, Spring Security, Bean Validation, PostgreSQL, Flyway (`V1` a `V4`) e HTML/CSS/JavaScript vanilla.
+Loja virtual de cupcakes desenvolvida para o **Projeto Integrador Transdisciplinar em Engenharia de Software II**. O projeto reúne uma aplicação web responsiva para clientes, uma área administrativa e um banco de dados relacional, cobrindo o percurso de escolha dos produtos até o acompanhamento do pedido.
 
-## Estado funcional do projeto
+**[Acessar o site](https://pit-cupcakes.onrender.com)**
 
-Todos os módulos previstos nas especificações ([07-SPEC-CATALOGO](specs/07-SPEC-CATALOGO.md), [09-SPEC-AUTENTICACAO](specs/09-SPEC-AUTENTICACAO.md), [10-SPEC-ENDERECOS-FRETE](specs/10-SPEC-ENDERECOS-FRETE.md), [11-SPEC-CARRINHO](specs/11-SPEC-CARRINHO.md) e [12-SPEC-CONCLUSAO-FUNCIONAL](specs/12-SPEC-CONCLUSAO-FUNCIONAL.md)) estão implementados:
+![Cupcakes apresentados na identidade visual da loja](src/main/resources/static/assets/img/hero-cupcakes.webp)
 
-1. **Catálogo público e detalhes** (`/index.html`, `/produto.html?id=N`, `GET /api/produtos`, `GET /api/produtos/{id}`).
-2. **Cadastro de cliente, autenticação, sessão, CSRF e proteção contra abuso de login** (`/paginas/conta/cadastro.html`, `/paginas/conta/login.html`, `/paginas/conta/minha-conta.html`, `/api/usuarios`, `/api/autenticacao/**`).
-3. **Endereços do cliente, consulta opcional ViaCEP e cotação de frete por faixa ativa em Brasília–DF** (`/paginas/conta/enderecos.html`, `/api/conta/enderecos/**`, `/api/conta/cep/{cep}`, `POST /api/conta/frete/cotacao`).
-4. **Carrinho de compras em sessão (`HttpSession`)** (`/paginas/compra/carrinho.html`, `/api/carrinho/**`), preservado no login e limpo no logout ou após confirmação de pedido aprovado.
-5. **Checkout integrado, pagamento acadêmico simulado (`APROVADO` / `RECUSADO`), gravação transacional com idempotência e histórico de pedidos do cliente** (`/paginas/compra/checkout.html`, `/paginas/conta/pedidos.html`, `/paginas/conta/pedido.html`, `POST /api/conta/checkout/revisao`, `POST /api/conta/pedidos`, `GET /api/conta/pedidos`, `GET /api/conta/pedidos/{id}`).
-6. **Administração de produtos e atendimento de pedidos com controle de permissão (`ROLE_ADMIN`) e concorrência otimista (`versao`)** (`/admin/index.html`, `/admin/produtos.html`, `/admin/pedidos.html`, `/api/admin/produtos/**`, `/api/admin/pedidos/**`).
+## Sobre o projeto
 
-## Preparação e execução local (`cupcakes`)
+O PIT Cupcakes foi construído para aplicar, em uma solução integrada, levantamento de requisitos, modelagem, desenvolvimento de interfaces, regras de negócio, persistência, segurança e testes de software.
 
-São necessários JDK 21 e PostgreSQL acessível em `localhost:5432` com os bancos `cupcakes` (desenvolvimento) e `cupcakes_test` (exclusivo para testes automatizados e verificação).
+O cenário escolhido é o de uma pequena loja de cupcakes que precisa apresentar seus produtos, receber pedidos para entrega ou retirada e organizar o atendimento. A solução permite ao cliente realizar uma compra simulada e ao administrador gerenciar o catálogo e a evolução dos pedidos.
 
-No PowerShell, configure `JAVA_HOME`, as credenciais locais do banco `cupcakes` e, opcionalmente, o provisionamento controlado de um administrador para testar o painel `/admin`:
+O pagamento é exclusivamente acadêmico: **nenhum valor é cobrado e não há coleta de dados de cartão**.
+
+## Funcionalidades
+
+### Para o cliente
+
+- Consultar o catálogo, a descrição, o preço e a disponibilidade dos produtos.
+- Criar uma conta, entrar e sair com autenticação por sessão.
+- Cadastrar, editar e remover endereços, com auxílio opcional de preenchimento pelo ViaCEP.
+- Adicionar produtos ao carrinho, alterar quantidades e remover itens.
+- Escolher entrega em endereço cadastrado ou retirada gratuita.
+- Consultar o frete conforme as faixas de CEP atendidas.
+- Revisar os itens e valores antes de confirmar o pedido.
+- Simular pagamento aprovado ou recusado.
+- Consultar o histórico e os detalhes dos próprios pedidos.
+
+O catálogo e o carrinho podem ser utilizados por visitantes. A autenticação é obrigatória para concluir o pedido.
+
+### Para o administrador
+
+- Cadastrar e editar produtos, imagens, preços e disponibilidade.
+- Consultar os pedidos recebidos e seus detalhes.
+- Atualizar o atendimento conforme as transições permitidas para entrega ou retirada.
+- Cancelar pedidos nos estados autorizados pelo sistema.
+
+A administração exige perfil próprio. O cadastro público cria exclusivamente contas de cliente.
+
+## Evolução da solução
+
+O desenvolvimento ocorreu de forma incremental, com entregas funcionais verificadas ao longo do processo:
+
+1. **Catálogo e persistência:** consulta pública de produtos, página de detalhes, banco PostgreSQL e migrações de estrutura.
+2. **Contas e segurança:** cadastro, autenticação, encerramento de sessão e separação de permissões entre cliente e administrador.
+3. **Endereços e recebimento:** manutenção dos endereços, integração opcional com ViaCEP e cálculo de frete por faixa de CEP.
+4. **Fluxo de compra:** carrinho em sessão, revisão do pedido, pagamento simulado e registro do histórico.
+5. **Administração e qualidade:** gestão de produtos e pedidos, testes integrados e tratamento dos apontamentos de avaliação.
+6. **Acabamento e publicação:** padronização visual das telas, imagens dos produtos, ajustes de responsividade e implantação no Render com banco no Neon.
+
+Entre as melhorias de usabilidade estão a confirmação mais perceptível de inclusão no carrinho, a identificação das opções de pagamento simulado e a organização das informações em telas estreitas. O [laudo de qualidade](docs/entrega/avaliacao-participantes-e-laudo.md) registra o tratamento dos apontamentos, seus limites e as evidências de reteste.
+
+## Tecnologias
+
+| Camada | Tecnologias |
+| --- | --- |
+| Interface | HTML, CSS e JavaScript vanilla |
+| Backend | Java 21 e Spring Boot 3.4.2 |
+| Segurança | Spring Security, sessões HTTP, BCrypt e proteção CSRF |
+| Persistência | Spring Data JPA, Hibernate e PostgreSQL |
+| Evolução do banco | Flyway |
+| Build | Maven Wrapper |
+| Testes | JUnit, Spring Boot Test, MockMvc, H2, PostgreSQL e Playwright |
+| Publicação | Docker e Render |
+| Banco hospedado | Neon PostgreSQL |
+
+## Arquitetura
+
+A aplicação é um monólito modular organizado por domínio: catálogo, identidade, endereços, frete, carrinho e pedidos. Controllers recebem as requisições, services executam regras de negócio e repositories fazem o acesso ao banco. A interface utiliza os endpoints da aplicação para consultar e atualizar informações.
+
+Os preços, subtotais, frete e total são calculados no servidor. A confirmação do pedido revalida os dados e utiliza transações e controle de repetição para evitar registros duplicados. Os pedidos preservam os dados históricos dos itens e do endereço usados na compra.
+
+O carrinho fica na sessão HTTP. Usuários, endereços, produtos e pedidos são persistidos no PostgreSQL. As migrações Flyway versionam a estrutura do banco.
+
+Detalhes em [visão arquitetural](docs/arquitetura/visao-geral.md) e [carrinho em sessão](docs/arquitetura/carrinho-em-sessao.md).
+
+## Identidade visual
+
+A interface utiliza Raspberry Pink (`#BC164D`), Pale Pink (`#FFD0DF`) e pequenos detalhes em Butter Yellow (`#FFE164`). Lilita One dá destaque aos títulos; Varela Round é usada nos textos e controles. A marca combina as duas famílias.
+
+As telas compartilham padrões de navegação, campos, mensagens e ações. As imagens dos cupcakes são ilustrativas, produzidas para a demonstração acadêmica. As licenças das fontes acompanham seus arquivos.
+
+## Executar localmente
+
+### Requisitos
+
+- JDK 21, com `JAVA_HOME` configurado para a instalação local.
+- PostgreSQL disponível e um banco de desenvolvimento chamado `cupcakes`.
+- Git para obter o repositório. O Maven é disponibilizado pelo wrapper do projeto.
+
+Clone o repositório e abra sua pasta:
 
 ```powershell
-# Caso necessario, defina JAVA_HOME apontando para sua instalacao do JDK 21:
-# $env:JAVA_HOME = '<CAMINHO_DO_JDK_21>'; $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+git clone https://github.com/Lucas-Ribeiro-dev/pit-cupcakes.git
+cd pit-cupcakes
+```
 
-$dbCred = Get-Credential -Message 'Credenciais locais do banco cupcakes'
+No PowerShell, configure a conexão e inicie a aplicação:
+
+```powershell
 $env:DB_URL = 'jdbc:postgresql://localhost:5432/cupcakes'
-$env:DB_USERNAME = $dbCred.UserName
-$env:DB_PASSWORD = $dbCred.GetNetworkCredential().Password
-
-# Opcional: provisionar conta administrativa na inicializacao (informe os tres ou nenhum)
-$adminCred = Get-Credential -Message 'Credenciais do administrador local (UserName = e-mail)'
-$env:ADMIN_EMAIL = $adminCred.UserName
-$env:ADMIN_NAME = 'Administrador PIT Cupcakes'
-$env:ADMIN_PASSWORD = $adminCred.GetNetworkCredential().Password
-
-# Perfil local,demo carrega de forma idempotente os 4 cupcakes iniciais e 2 faixas de frete em Brasilia-DF (70000000-70999999 e 71000000-71999999)
+$env:DB_USERNAME = Read-Host 'Usuário do PostgreSQL'
+$dbCredential = Get-Credential -UserName $env:DB_USERNAME -Message 'Senha do PostgreSQL'
+$env:DB_PASSWORD = $dbCredential.GetNetworkCredential().Password
 $env:SPRING_PROFILES_ACTIVE = 'local,demo'
 .\mvnw.cmd spring-boot:run
 ```
 
-Na inicialização, o Flyway aplica as migrações pendentes até a [V4__criar_pedidos_e_pagamento.sql](src/main/resources/db/migration/V4__criar_pedidos_e_pagamento.sql) sem alterar `V1`, `V2` ou `V3`.
+Acesse **http://localhost:8080**. O Flyway aplica as migrações pendentes; não é necessário criar as tabelas manualmente. O perfil `demo` carrega quatro produtos e duas faixas de frete quando as respectivas tabelas estão vazias.
 
-### Principais páginas da aplicação
+O arquivo [.env.example](.env.example) documenta as variáveis disponíveis; ele não é carregado automaticamente pelo Spring Boot.
 
-- **Vitrine e compra**: [Catálogo](http://localhost:8080/index.html) | [Carrinho](http://localhost:8080/paginas/compra/carrinho.html) | [Checkout](http://localhost:8080/paginas/compra/checkout.html)
-- **Conta do cliente**: [Entrar](http://localhost:8080/paginas/conta/login.html) | [Criar conta](http://localhost:8080/paginas/conta/cadastro.html) | [Minha conta](http://localhost:8080/paginas/conta/minha-conta.html) | [Meus endereços](http://localhost:8080/paginas/conta/enderecos.html) | [Meus pedidos](http://localhost:8080/paginas/conta/pedidos.html)
-- **Administração (`ROLE_ADMIN`)**: [Painel admin](http://localhost:8080/admin/index.html) | [Produtos admin](http://localhost:8080/admin/produtos.html) | [Pedidos admin](http://localhost:8080/admin/pedidos.html)
+### Acesso administrativo
 
-## Contratos de Checkout, Pedidos e Administração (Etapa 5)
+Para provisionar um administrador, configure simultaneamente `ADMIN_EMAIL`, `ADMIN_NAME` e `ADMIN_PASSWORD` no ambiente antes da inicialização. Não há credenciais administrativas públicas ou padrão. O provisionamento não promove uma conta de cliente já existente nem sobrescreve silenciosamente um administrador.
 
-Todas as rotas `/api/conta/**` exigem sessão autenticada; todas as rotas `/api/admin/**` exigem perfil `ADMIN` (`401` para visitante, `403` para `CLIENTE`). Mutações (`POST`, `PUT`, `DELETE`) exigem cabeçalho CSRF.
+Após entrar com a conta administrativa, acesse `/admin/index.html`. Consulte o [manual](docs/manual/manual-usuario-e-publicacao.md) para configuração e operação.
 
-| Endpoint | Entrada | Sucesso |
-| --- | --- | --- |
-| `POST /api/conta/checkout/revisao` | `modalidade` (`ENTREGA` com `enderecoId` e `versaoEndereco`, ou `RETIRADA`) | `200 OK`; `revisaoId`, `expiraEm` (10 min), itens validados, `subtotal`, `frete`, `total` |
-| `POST /api/conta/pedidos` | `revisaoId`, `resultadoSimulado` (`APROVADO` ou `RECUSADO`) | `201 Created` na criação; `200 OK` em repetição idempotente |
-| `GET /api/conta/pedidos` | — | `200 OK`; resumos dos pedidos do cliente autenticado |
-| `GET /api/conta/pedidos/{id}` | ID positivo do próprio cliente | `200 OK`; detalhes, itens históricos, endereço congelado e pagamento simulado |
-| `GET /api/admin/produtos` | — | `200 OK`; todos os produtos ordenados por ID com `versao` |
-| `POST /api/admin/produtos` | `nome`, `descricao`, `preco`, `imagemCaminho` opcional, `disponivel` | `201 Created`; produto criado |
-| `PUT /api/admin/produtos/{id}` | Dados do produto e `versao` atual | `200 OK`; produto atualizado (`409` se desatualizado) |
-| `GET /api/admin/pedidos` | — | `200 OK`; todos os pedidos ordenados do mais recente ao mais antigo |
-| `GET /api/admin/pedidos/{id}` | ID positivo | `200 OK`; detalhes completos para atendimento (sem hash de senha) |
-| `PUT /api/admin/pedidos/{id}/status` | `statusAtendimento` e `versao` atual | `200 OK`; transição validada por modalidade e estado (`409` em conflito) |
+## Qualidade e testes
 
-## Testes automatizados e rodada consolidada (`cupcakes_test`)
+A verificação final de 14/11/2026 registrou:
 
-### 1. Suíte rápida sem PostgreSQL externo (H2 + MockMvc)
+| Verificação | Resultado |
+| --- | --- |
+| H2 e MockMvc | 64 testes aprovados |
+| Integração com PostgreSQL | 15 testes aprovados |
+| Navegador Microsoft Edge | 28 cenários aprovados, sem erros JavaScript |
 
-```powershell
-# Caso necessario, defina JAVA_HOME apontando para sua instalacao do JDK 21:
-# $env:JAVA_HOME = '<CAMINHO_DO_JDK_21>'; $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
-.\mvnw.cmd '-Dtest=CheckoutOrderAdminApiTest,CartApiTest,AddressValidationTest,AddressApiTest,PostalCodeClientTest,AuthenticationSecurityTest,RegistrationServiceTest,ProductControllerTest,ProductServiceTest,ProductRepositoryTest,DemoDataLoaderTest,PostgresTestDatabaseGuardTest' test
-```
+Os testes Java totalizaram **79 aprovações**, sem falhas, erros ou casos ignorados nas execuções registradas. O navegador verificou o fluxo de entrega em larguras de desktop e celular; a retirada também foi coberta pelas suítes de API e PostgreSQL. A consulta externa de CEP teve respostas controladas nos testes de navegador.
 
-Essa suíte executa **64 testes automatizados** (incluindo os 9 cenários integrados de `CheckoutOrderAdminApiTest`) com **0 falhas, 0 erros e 0 ignorados**.
+Os testes PostgreSQL utilizam exclusivamente `cupcakes_test`, com proteção de conexão. Não devem ser executados sobre o banco publicado ou o banco de desenvolvimento.
 
-### 2. Rodada única consolidada de PostgreSQL (`cupcakes_test`) e navegador real
+Consulte o [relatório final](docs/testes/resultados/verificacao-final-publicacao.md), os [roteiros de teste](docs/testes/casos/) e as [evidências](docs/testes/evidencias/). As instruções de reprodução estão no [manual](docs/manual/manual-usuario-e-publicacao.md).
 
-A rodada consolidada contra PostgreSQL 18.6 (`cupcakes_test`) e navegador real (`Microsoft Edge` na porta `8094`) foi executada e aprovada com **15 testes PostgreSQL (`0` falhas)** e **21 cenários em navegador real (`0` erros JavaScript)**, totalizando **79 testes automatizados aprovados** no projeto (detalhes em [verificacao-quinta-etapa.md](docs/testes/resultados/verificacao-quinta-etapa.md) e [fluxo-completo-navegador.json](docs/testes/resultados/fluxo-completo-navegador.json)).
+## Publicação e limites da demonstração
 
-Para repetir a rodada consolidada localmente (sem parâmetros obrigatórios; `-ServerTarget StoreFlow` é o padrão, e `-SkipTests` ou `-StartBrowserServerOnly` podem ser usados para iniciar apenas o servidor em `8094`):
+A aplicação é executada em contêiner Docker no Render e utiliza PostgreSQL no Neon, com configuração por variáveis de ambiente. As credenciais ficam nos serviços de hospedagem.
 
-```powershell
-.\docs\testes\casos\executar_rodada_consolidada.ps1
-```
+- O serviço gratuito pode levar algum tempo para responder após um período de inatividade.
+- Sessão e carrinho são temporários e podem ser perdidos após expiração ou reinício da aplicação; os pedidos gravados permanecem no banco.
+- A entrega utiliza faixas de CEP demonstrativas de Brasília/DF, sem representar cobertura de toda a cidade. A retirada é gratuita.
+- A disponibilidade dos produtos é apresentada como disponível ou indisponível, sem controle quantitativo de estoque.
+- Pagamentos são simulados. Filtros de catálogo e estimativa de prazo de entrega são possibilidades de evolução.
 
-Com o servidor isolado em execução na porta `8094`, execute em outro terminal o roteiro Playwright do fluxo completo:
+## Autor
 
-```powershell
-python docs/testes/casos/verificar_fluxo_completo.py --base-url http://localhost:8094
-```
-
-## Documentação do projeto
-
-- [Verificação final para entrega acadêmica (14/11/2026)](docs/testes/resultados/verificacao-final-publicacao.md): 64 testes H2/MockMvc, 15 testes PostgreSQL em `cupcakes_test` e 28 cenários no navegador real, com evidências novas e falhas corrigidas.
-- [Arquitetura e limites transacionais](docs/arquitetura/visao-geral.md) e [modelo de carrinho em sessão](docs/arquitetura/carrinho-em-sessao.md)
-- [Dicionário de dados (V1 a V4)](docs/banco-de-dados/dicionario-dados.md) e [decisão técnica ViaCEP](docs/decisoes/DT01-viacep.md)
-- [Histórias de usuário e casos de uso](docs/requisitos/historias-e-casos-de-uso.md) e [diagramas UML (classes, casos de uso, sequência e atividade)](docs/modelagem/diagramas-uml.md)
-- [Manual de uso, operação e publicação (incluindo Dockerfile multi-stage Java 21 e passo a passo Render + Neon)](docs/manual/manual-usuario-e-publicacao.md)
-- [Avaliações recebidas (AV01 a AV05), retestes de usabilidade e laudo de qualidade](docs/entrega/avaliacao-participantes-e-laudo.md)
-- Registros de verificação por etapa: [1ª etapa](docs/testes/resultados/verificacao-primeira-etapa.md), [2ª etapa](docs/testes/resultados/verificacao-segunda-etapa.md), [3ª etapa](docs/testes/resultados/verificacao-terceira-etapa.md), [4ª etapa](docs/testes/resultados/verificacao-quarta-etapa.md) e [5ª etapa](docs/testes/resultados/verificacao-quinta-etapa.md)
+Desenvolvido por [Lucas Ribeiro](https://github.com/Lucas-Ribeiro-dev) como projeto acadêmico do curso de Engenharia de Software.
