@@ -25,7 +25,10 @@ const PRODUCT_IMAGE_PATHS = [
   ["chocolate", "/assets/img/cupcake-chocolate.webp"],
   ["frutas vermelhas", "/assets/img/cupcake-frutas-vermelhas.webp"],
   ["frutas-vermelhas", "/assets/img/cupcake-frutas-vermelhas.webp"],
-  ["caramelo", "/assets/img/cupcake-caramelo.webp"]
+  ["caramelo", "/assets/img/cupcake-caramelo.webp"],
+  ["limão siciliano", "/assets/img/cupcake-limao-siciliano.webp"],
+  ["limao siciliano", "/assets/img/cupcake-limao-siciliano.webp"],
+  ["chocolate branco", "/assets/img/cupcake-coco-chocolate-branco.webp"]
 ];
 
 export function resolveProductImage(product) {
