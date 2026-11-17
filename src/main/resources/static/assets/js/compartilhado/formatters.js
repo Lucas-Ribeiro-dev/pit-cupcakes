@@ -22,13 +22,13 @@ export const FALLBACK_IMAGE_PATH = "/assets/img/cupcake-placeholder.svg";
 
 const PRODUCT_IMAGE_PATHS = [
   ["baunilha", "/assets/img/cupcake-baunilha.webp"],
+  ["chocolate branco", "/assets/img/cupcake-coco-chocolate-branco.webp"],
   ["chocolate", "/assets/img/cupcake-chocolate.webp"],
   ["frutas vermelhas", "/assets/img/cupcake-frutas-vermelhas.webp"],
   ["frutas-vermelhas", "/assets/img/cupcake-frutas-vermelhas.webp"],
   ["caramelo", "/assets/img/cupcake-caramelo.webp"],
   ["limão siciliano", "/assets/img/cupcake-limao-siciliano.webp"],
-  ["limao siciliano", "/assets/img/cupcake-limao-siciliano.webp"],
-  ["chocolate branco", "/assets/img/cupcake-coco-chocolate-branco.webp"]
+  ["limao siciliano", "/assets/img/cupcake-limao-siciliano.webp"]
 ];
 
 export function resolveProductImage(product) {
