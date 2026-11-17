@@ -30,6 +30,8 @@ public class AdminProductService {
             "/assets/img/cupcake-chocolate.webp",
             "/assets/img/cupcake-frutas-vermelhas.webp",
             "/assets/img/cupcake-caramelo.webp",
+            "/assets/img/cupcake-limao-siciliano.webp",
+            "/assets/img/cupcake-coco-chocolate-branco.webp",
             "/assets/img/cupcake-placeholder.svg"
     );
 
@@ -109,8 +111,8 @@ public class AdminProductService {
             }
         }
 
-        String name = parseRequiredText(body.get("nome"), 150);
-        String description = parseRequiredText(body.get("descricao"), 2000);
+        String name = parseRequiredText(body.get("nome"), 150, "O nome do produto deve ter entre 1 e 150 caracteres.");
+        String description = parseRequiredText(body.get("descricao"), 2000, "A descrição deve ter entre 1 e 2000 caracteres.");
         BigDecimal price = parsePrice(body.get("preco"));
         String imagePath = parseImagePath(body.get("imagemCaminho"));
 
@@ -132,14 +134,14 @@ public class AdminProductService {
         return new ValidatedProductInput(name, description, price, imagePath, available, version);
     }
 
-    private static String parseRequiredText(JsonNode node, int maxLength) {
+    private static String parseRequiredText(JsonNode node, int maxLength, String invalidMessage) {
         if (node == null || !node.isTextual()) {
-            throw new ValidationException("Campo textual obrigatório ausente.");
+            throw new ValidationException(invalidMessage);
         }
         String stripped = node.asText().strip();
         int codePoints = stripped.codePointCount(0, stripped.length());
         if (stripped.isEmpty() || codePoints > maxLength || stripped.length() > maxLength) {
-            throw new ValidationException("Texto fora dos limites permitidos.");
+            throw new ValidationException(invalidMessage);
         }
         return stripped;
     }

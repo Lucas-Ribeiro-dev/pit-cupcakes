@@ -56,7 +56,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(409).body(new ErrorResponse("EMAIL_JA_CADASTRADO", "E-mail já cadastrado."));
     }
 
-    @ExceptionHandler({ValidationException.class, MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(ValidationException ex) {
+        return ResponseEntity.badRequest().body(new ErrorResponse("DADOS_INVALIDOS", ex.getMessage()));
+    }
+
+    @ExceptionHandler({MethodArgumentNotValidException.class, HttpMessageNotReadableException.class})
     public ResponseEntity<ErrorResponse> handleInvalidData(Exception ex) {
         return ResponseEntity.badRequest().body(new ErrorResponse("DADOS_INVALIDOS", "Confira os campos informados e os limites permitidos."));
     }
