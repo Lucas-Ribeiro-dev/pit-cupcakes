@@ -9,6 +9,7 @@ const form = document.getElementById('adminProductForm');
 const formTitle = document.getElementById('productFormTitle');
 const formMessage = document.getElementById('productFormMessage');
 const productList = document.getElementById('adminProductList');
+const deleteButton = document.getElementById('deleteProductButton');
 
 let editingProduct = null;
 let busy = false;
@@ -25,6 +26,7 @@ function resetForm() {
   form.elements.disponivel.value = 'true';
   formTitle.textContent = 'Novo produto';
   formMessage.textContent = '';
+  deleteButton.hidden = true;
 }
 
 document.getElementById('cancelProductButton').addEventListener('click', resetForm);
@@ -61,6 +63,7 @@ async function loadProducts() {
         form.elements.disponivel.value = current.disponivel ? 'true' : 'false';
         formTitle.textContent = `Editar produto #${current.id}`;
         formMessage.textContent = '';
+        deleteButton.hidden = false;
         form.elements.nome.focus();
       } catch (error) {
         formMessage.textContent = error.message;
@@ -110,6 +113,30 @@ form.addEventListener('submit', async event => {
     }
   } finally {
     saveButton.disabled = false;
+    busy = false;
+  }
+});
+
+deleteButton.addEventListener('click', async () => {
+  if (!editingProduct || busy) return;
+  const confirmed = window.confirm(`Excluir o produto "${editingProduct.nome}"? Essa ação não pode ser desfeita.`);
+  if (!confirmed) return;
+
+  busy = true;
+  deleteButton.disabled = true;
+  formMessage.textContent = '';
+  try {
+    await api(`/api/admin/produtos/${editingProduct.id}?versao=${encodeURIComponent(editingProduct.versao)}`, {
+      method: 'DELETE'
+    });
+    resetForm();
+    formMessage.textContent = 'Produto excluído com sucesso.';
+    await loadProducts();
+  } catch (error) {
+    formMessage.textContent = error.message;
+    if (error.status === 409) await loadProducts().catch(() => {});
+  } finally {
+    deleteButton.disabled = false;
     busy = false;
   }
 });

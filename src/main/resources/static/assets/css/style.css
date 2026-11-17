@@ -70,6 +70,8 @@ main { width: min(100%, var(--content-max)); flex: 1; margin: 0 auto; padding: v
 #adminProductList article button:hover, #adminOrdersList article button:hover, #adminStatusForm button:hover, #adminProductForm > button:hover { background: var(--color-brand-soft); }
 #adminProductForm #saveProductButton, #adminStatusForm #updateStatusButton { background: var(--color-brand); color: var(--color-surface); }
 #adminProductForm #saveProductButton:hover, #adminStatusForm #updateStatusButton:hover { background: var(--color-brand-hover); }
+#adminProductForm #deleteProductButton { border-color: var(--color-error); color: var(--color-error); }
+#adminProductForm #deleteProductButton:hover:not(:disabled) { background: var(--color-error-soft); }
 #adminProductForm > button { margin-right: var(--space-2); }
 #adminSelectedOrderBody ul { margin: var(--space-3) 0; padding-left: 1.25rem; }
 #adminSelectedOrderNotice, #adminPageMessage, #adminOrdersMessage, #productFormMessage { color: var(--color-text-muted); }

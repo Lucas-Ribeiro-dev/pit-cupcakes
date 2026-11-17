@@ -98,6 +98,33 @@ public class AdminProductService {
         }
     }
 
+    @Transactional
+    public void delete(Long id, Long version) {
+        validatePositiveId(id);
+        if (version == null || version < 0) {
+            throw new ValidationException("Informe a versão atual não negativa do produto.");
+        }
+
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Produto não encontrado para o identificador informado."));
+        if (!product.getVersion().equals(version)) {
+            throw new AccountOperationException(409, "PRODUTO_DESATUALIZADO",
+                    "Produto alterado em outra sessão. Atualize os dados antes de tentar novamente.");
+        }
+        if (productRepository.existsReferencedByOrder(id)) {
+            throw new AccountOperationException(409, "PRODUTO_VINCULADO_A_PEDIDO",
+                    "Não é possível excluir um produto que já aparece em pedidos.");
+        }
+
+        try {
+            productRepository.delete(product);
+            productRepository.flush();
+        } catch (ObjectOptimisticLockingFailureException ex) {
+            throw new AccountOperationException(409, "PRODUTO_DESATUALIZADO",
+                    "Produto alterado em outra sessão. Atualize os dados antes de tentar novamente.");
+        }
+    }
+
     private static ValidatedProductInput parseAndValidate(JsonNode body, boolean update) {
         if (body == null || !body.isObject()) {
             throw new ValidationException("Corpo da requisição inválido.");

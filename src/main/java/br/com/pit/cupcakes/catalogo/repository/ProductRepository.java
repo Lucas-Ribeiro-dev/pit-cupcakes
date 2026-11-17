@@ -16,6 +16,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findAllByOrderByIdAsc();
 
+    @Query(value = "select exists (select 1 from item_pedido where produto_id = :id)", nativeQuery = true)
+    boolean existsReferencedByOrder(@Param("id") Long id);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select p from Product p where p.id in :ids order by p.id asc")
     List<Product> findAllByIdInOrderByIdAscForUpdate(@Param("ids") Collection<Long> ids);
